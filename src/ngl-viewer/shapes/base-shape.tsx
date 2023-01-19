@@ -61,6 +61,7 @@ export default class BaseShape extends React.Component<
         viewSettings.forEach((viewSetting) => {
           component.addRepresentation(viewSetting.type, viewSetting.params)
         })
+        stage.autoView()
         this.setState({component : component})
       }
     }

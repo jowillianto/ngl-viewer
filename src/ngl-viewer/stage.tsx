@@ -19,6 +19,7 @@ export default class NGLStage extends React.Component<
   NGLStageProps, NGLStageState
 >{
   stageRef            : React.RefObject<HTMLDivElement>
+  observer            : ResizeObserver | undefined
   constructor(props : NGLStageProps){
     super(props)
     this.state  = {
@@ -33,6 +34,13 @@ export default class NGLStage extends React.Component<
         htmlElm, this.props.viewSettings
       )
       this.setState({stage : stage})
+      this.addObserver()
+    }
+  }
+  addObserver(){
+    if(this.stageRef.current){
+      this.observer   = new ResizeObserver(this.resizeStage)
+      this.observer.observe(this.stageRef.current)
     }
   }
   resizeStage = () => {
@@ -40,6 +48,7 @@ export default class NGLStage extends React.Component<
   }
   componentWillUnmount(){
     this.state.stage?.dispose()
+    this.observer?.disconnect()
   }
   render(): React.ReactNode {
     const height  = this.props.height
@@ -53,8 +62,7 @@ export default class NGLStage extends React.Component<
           </div>
         </StageContext.Provider>
         <div 
-          className = 'ngl-viewer-stage' ref = {this.stageRef} style = {style}
-          onResize = {this.resizeStage}
+          className = 'ngl-viewer-canvas' ref = {this.stageRef} style = {style}
         />
       </div>
     )

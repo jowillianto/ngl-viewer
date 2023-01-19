@@ -41,7 +41,7 @@ export default class NGLFile extends React.Component<
               viewSetting.type, viewSetting.params
             )
           })
-          component.autoView()
+          stage.autoView()
           this.setState({component : component})
         }
       })
