@@ -4,7 +4,7 @@ import React from 'react'
 import { ViewSettings } from '../interfaces/interfaces'
 import { StageContext } from '../stage'
 
-interface BasicShapeProps{
+export interface BasicShapeProps{
   viewSettings  : ViewSettings, 
   shapeParams?  : Partial<ShapeParameters>
 }
@@ -13,12 +13,12 @@ export interface ExtendedShapeProps extends BasicShapeProps{
   name? : string
 }
 
-interface BaseShapeProps extends BasicShapeProps{
+export interface BaseShapeProps extends BasicShapeProps{
   addShape      : (shape : NGL.Shape) => NGL.Shape
   hash          : any
 }
 
-interface BaseShapeState{
+export interface BaseShapeState{
   component   : NGL.Component | null
 }
 

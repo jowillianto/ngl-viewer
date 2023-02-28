@@ -1,13 +1,13 @@
 import React from 'react'
 import * as NGL from 'ngl'
 
-interface NGLStageProps extends React.PropsWithChildren{
+export interface NGLStageProps extends React.PropsWithChildren{
   height        : string,
   width         : string,
   viewSettings? : NGL.StageParameters
 }
 
-interface NGLStageState{
+export interface NGLStageState{
   stage : NGL.Stage | null
 }
 

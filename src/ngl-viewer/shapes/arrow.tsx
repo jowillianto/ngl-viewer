@@ -3,7 +3,7 @@ import BaseShape, { ExtendedShapeProps } from './base-shape'
 import * as NGL from 'ngl'
 import {randomString} from '../utils/utils'
 
-interface NGLArrowProps extends ExtendedShapeProps{
+export interface NGLArrowProps extends ExtendedShapeProps{
   position1   : NGL.Vector3 | [number, number, number]
   position2   : NGL.Vector3 | [number, number, number]
   color       : NGL.Color | [number, number, number]

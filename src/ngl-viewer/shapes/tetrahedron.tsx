@@ -3,7 +3,7 @@ import BaseShape, { ExtendedShapeProps } from './base-shape'
 import * as NGL from 'ngl'
 import {randomString} from '../utils/utils'
 
-interface NGLTetrahedronProps extends ExtendedShapeProps{
+export interface NGLTetrahedronProps extends ExtendedShapeProps{
   position      : NGL.Vector3 | [number, number, number]
   depthAxis     : NGL.Vector3 | [number, number, number]
   heightAxis    : NGL.Vector3 | [number, number, number]

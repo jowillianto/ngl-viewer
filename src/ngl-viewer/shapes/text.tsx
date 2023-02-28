@@ -2,7 +2,7 @@ import React from 'react'
 import BaseShape, { ExtendedShapeProps } from './base-shape'
 import * as NGL from 'ngl'
 
-interface NGLTextProps extends ExtendedShapeProps{
+export interface NGLTextProps extends ExtendedShapeProps{
   position      : NGL.Vector3 | [number, number, number]
   text          : string
   size          : number

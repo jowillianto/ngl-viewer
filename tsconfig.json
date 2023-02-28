@@ -1,6 +1,12 @@
 {
   "compilerOptions": {
     "target": "es5",
+    "baseUrl": "./src",
+    "paths" : {
+      "text-editor" : [
+        "../node_modules/@jowillianto/draftjs-wysiwyg/src/text-editor"
+      ]
+    },
     "lib": [
       "dom",
       "dom.iterable",
@@ -21,6 +27,7 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "src"
+    "src", 
+    "node_modules/@jowillianto"
   ]
 }

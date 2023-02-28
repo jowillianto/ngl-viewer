@@ -3,7 +3,7 @@ import BaseShape, { ExtendedShapeProps } from './base-shape'
 import * as NGL from 'ngl'
 import {randomString} from '../utils/utils'
 
-interface NGLEllipsoidProps extends ExtendedShapeProps{
+export interface NGLEllipsoidProps extends ExtendedShapeProps{
   position      : NGL.Vector3 | [number, number, number]
   majorAxis     : NGL.Vector3 | [number, number, number]
   minorAxis     : NGL.Vector3 | [number, number, number]

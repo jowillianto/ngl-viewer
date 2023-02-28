@@ -3,16 +3,18 @@ import * as NGL from 'ngl'
 import { StageContext } from '../stage'
 import { StageLoadFileParams } from 'ngl/dist/declarations/stage/stage'
 import { ViewSettings } from '../interfaces/interfaces'
+import StructureComponentContext from 'ngl-viewer/context/component-context'
 
-interface NGLFileProps{
+export interface NGLFileProps extends React.PropsWithChildren{
   file          : Blob | string | null,
   viewSettings  : ViewSettings
   fileSettings? : Partial<StageLoadFileParams>
   controls?     : Object
 }
-interface NGLFileState{
+export interface NGLFileState{
   showRepr      : boolean,
-  component     : NGL.Component | null
+  component     : NGL.StructureComponent | null,
+  update        : boolean
 }
 
 export default class NGLFile extends React.Component<
@@ -24,14 +26,15 @@ export default class NGLFile extends React.Component<
     super(props)
     this.state  = {
       showRepr  : true,
-      component : null
+      component : null, 
+      update    : false
     }
   }
   loadFileToStage(){
     const stage     = this.context.stage
     const file      = this.props.file
-    this.removeComponentIfExist()
-    if(stage && file){
+    if(stage && file && !this.state.update){
+      this.removeComponentIfExist()
       stage.loadFile(file, this.props.fileSettings)
       .then((component) => {
         const viewSettings  = this.props.viewSettings
@@ -42,7 +45,9 @@ export default class NGLFile extends React.Component<
             )
           })
           stage.autoView()
-          this.setState({component : component})
+          this.setState({
+            component : component as NGL.StructureComponent, update : true
+          }, () => this.setState({update : false}))
         }
       })
       .catch((err) => {
@@ -51,9 +56,7 @@ export default class NGLFile extends React.Component<
     }
   }
   compareState(nextState : Readonly<NGLFileState>) : boolean{
-    const sameRepr  = nextState.showRepr === this.state.showRepr
-    const component = nextState.component === this.state.component
-    return !(sameRepr && component)
+    return nextState.update
   }
   removeComponentIfExist(){
     const stage     = this.context.stage
@@ -69,11 +72,11 @@ export default class NGLFile extends React.Component<
     nextContext: React.ContextType<typeof StageContext>
   ): boolean {
     // Make Update Conditions here
-    const sameFile    = this.props.file === nextProps.file
-    const sameSettings= this.props.viewSettings === nextProps.viewSettings
-    const sameStage   = this.context.stage === nextContext.stage
-    const sameState   = this.compareState(nextState)
-    return !(sameFile && sameSettings && sameStage && sameState)
+    const diffFile    = this.props.file !== nextProps.file
+    const diffSettings= this.props.viewSettings !== nextProps.viewSettings
+    const diffStage   = this.context.stage !== nextContext.stage
+    const diffState   = this.compareState(nextState)
+    return diffFile || diffSettings || diffStage || diffState
   }
   componentDidUpdate(): void {
     this.loadFileToStage()
@@ -83,9 +86,11 @@ export default class NGLFile extends React.Component<
   }
   render(): React.ReactNode {
     return (
-      <div className = 'file-controls'>
-
-      </div>
+      <StructureComponentContext.Provider value = {this.state}>
+        <div className = 'file-controls'>
+          {this.props.children}
+        </div>
+      </StructureComponentContext.Provider>
     )
   }
 }

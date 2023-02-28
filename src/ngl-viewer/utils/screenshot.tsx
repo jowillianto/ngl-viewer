@@ -2,7 +2,7 @@ import React from "react";
 import { StageContext } from "../stage";
 import { PromiseButtonProps, RenderProps } from "./utils";
 
-interface ImageParameters{
+export interface ImageParameters{
   trim        : boolean;
   factor      : number;
   antialias   : boolean;
@@ -10,7 +10,7 @@ interface ImageParameters{
   onProgress  : Function | undefined;
 }
 
-interface NGLScreenshotProps extends RenderProps<PromiseButtonProps>{
+export interface NGLScreenshotProps extends RenderProps<PromiseButtonProps>{
   params? : Partial<ImageParameters>
 }
 
