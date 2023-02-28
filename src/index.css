@@ -1,0 +1,34 @@
+.ngl-viewer-stage{
+  display         : flex;
+  flex-flow       : row-reverse wrap;
+  justify-content : flex-end;
+  background-color: #c3c3c3;
+  border-radius   : 1em;
+  padding         : 0.5em;
+}
+.ngl-viewer-stage>div{
+  margin-right    : 1em;
+  border-radius   : 1em;
+}
+.ngl-viewer-tab{
+  display         : flex;
+  flex-flow       : column wrap;
+  align-items     : center;
+  width           : 16vw;
+}
+.ngl-viewer-tab>div{
+  display         : flex;
+  flex-flow       : column wrap;
+  width           : 100%;
+  margin-bottom   : 1em;
+}
+.add-new-cont input{
+  border          : 0;
+  border-radius   : 1em;
+  background-color: red;
+  outline         : 0;
+  color           : white;
+  font-weight     : 900;
+  width           : 100%;
+  padding         : 0.5em 0;
+}

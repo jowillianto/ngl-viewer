@@ -1,40 +1,63 @@
 import React from "react";
 import NGLFile from "./ngl-viewer/file/file";
 import NGLStage from "./ngl-viewer/stage";
+import "./index.css"
 
-export default class App extends React.Component<
-  any, any
->{
+export default class App extends React.Component<any, any>{
   constructor(props : any){
     super(props)
     this.state  = {
-      file    : null,
-      radius  : 10, 
-      img     : ''
+      components : []
     }
   }
-  saveFile = (event : React.ChangeEvent<HTMLInputElement>) => {
-    if(event.target.files)
-      this.setState({
-        file : event.target.files[0]
-      })
+  addComponent = (e : React.ChangeEvent<HTMLInputElement>) => {
+    const components  = this.state.components.slice()
+    if (e.target.files){
+      components.push(e.target.files[0])
+      this.setState({ components })
+    }
   }
-  saveImage = (img : string) => {
-    this.setState({img : img})
+  renderFile = () => {
+    return (this.state.components as Array<File>)
+    .map((file) => 
+      <NGLFile 
+        file          = {file}
+        fileSettings  = {{ext : 'pdb'}}
+        viewSettings  = {[{type : 'cartoon'}]}
+      />
+    )
+  }
+  renderUploaded = () => {
+    return (this.state.components as Array<File>)
+    .map((file, id) => 
+      <div className = 'uploaded-entry'>
+        <p>Name : {file.name}</p>
+        <button onClick = {() => this.removeFile(id)}>
+          Remove
+        </button>
+      </div>
+    )
+  }
+  removeFile = (id : number) => {
+    const components  = this.state.components.slice()
+    components.splice(id, 1)
+    this.setState({ components })
   }
   render(): React.ReactNode {
     return (
       <NGLStage 
-        width = "100%" height = "900px"
+        width = "80vw" height = "900px"
       >
-        <NGLFile 
-          file          = {this.state.file}
-          fileSettings  = {{ext : 'pdb'}}
-          viewSettings  = {[{
-            type : 'cartoon'
-          }]}
-        />
-        <input type = 'file' onChange = {this.saveFile}/>
+        {this.renderFile()}
+        <div className = 'uploaded-cont'>
+          {this.renderUploaded()}
+        </div>
+        <div className = 'add-new-cont'>
+          <input 
+            type      = 'file'
+            onChange  = {this.addComponent}
+          />
+        </div>
       </NGLStage>
     )
   }
