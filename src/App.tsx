@@ -1,6 +1,10 @@
 import React from "react";
 import NGLFile from "./ngl-viewer/file/file";
 import NGLStage from "./ngl-viewer/stage";
+import NGLArrow from "ngl-viewer/shapes/arrow";
+import NGLBox from "ngl-viewer/shapes/box";
+import NGLCone from "ngl-viewer/shapes/cone";
+import { NGLBoxProps } from "ngl-viewer/shapes/box";
 import "./index.css"
 
 export default class App extends React.Component<any, any>{
@@ -19,13 +23,16 @@ export default class App extends React.Component<any, any>{
   }
   renderFile = () => {
     return (this.state.components as Array<File>)
-    .map((file) => 
-      <NGLFile 
+    .map((file) => (
+      <React.Fragment>
+        <NGLFile 
         file          = {file}
         fileSettings  = {{ext : 'pdb'}}
         viewSettings  = {[{type : 'cartoon'}]}
       />
+      </React.Fragment>
     )
+  )
   }
   renderUploaded = () => {
     return (this.state.components as Array<File>)
@@ -58,7 +65,15 @@ export default class App extends React.Component<any, any>{
             onChange  = {this.addComponent}
           />
         </div>
+      
+        
       </NGLStage>
+      
+
     )
   }
 }
+
+
+
+
