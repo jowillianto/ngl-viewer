@@ -1,5 +1,5 @@
 import React from "react";
-import { StageContext } from "../stage";
+import { StageContext } from "../photoshop/stage";
 import { PromiseButtonProps, RenderProps } from "./utils";
 
 export interface ImageParameters{

@@ -8,9 +8,9 @@ import NGLTetrahedron from "ngl-viewer/shapes/tetrahedron";
 import NGLText from "ngl-viewer/shapes/text";
 import NGLCylinder from "ngl-viewer/shapes/cylinder";
 import NGLTorus from "ngl-viewer/shapes/torus";
-import { mockComponentsData } from "ngl-viewer/componentData";
-import { ComponentDataT } from "ngl-viewer/componentData";
+import { ComponentDataT } from "ngl-viewer/photoshop/componentData";
 import React from "react";
+import NGLFile from "ngl-viewer/file/file";
 
 
 export default class ComponentSwitch extends React.Component<ComponentDataT>{
@@ -49,8 +49,13 @@ export default class ComponentSwitch extends React.Component<ComponentDataT>{
                 return <NGLText {...value.props}/>
                 
             case 'torus':
-                return <NGLTorus {...value.props}/> 
-            }       
+                return <NGLTorus {...value.props}/>
+            
+            case 'file':
+                return <NGLFile {...value.props}/>    
+
+            }
+                   
         
     }
 }

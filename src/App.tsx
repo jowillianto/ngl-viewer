@@ -1,10 +1,7 @@
 import React from "react";
 import NGLFile from "./ngl-viewer/file/file";
-import NGLStage from "./ngl-viewer/stage";
-import NGLArrow from "ngl-viewer/shapes/arrow";
-import NGLBox from "ngl-viewer/shapes/box";
-import NGLCone from "ngl-viewer/shapes/cone";
-import { NGLBoxProps } from "ngl-viewer/shapes/box";
+import NGLStage from "./ngl-viewer/photoshop/stage";
+import MyContextProvider from "ngl-viewer/photoshop/photoshop";
 import "./index.css"
 
 export default class App extends React.Component<any, any>{
@@ -52,23 +49,22 @@ export default class App extends React.Component<any, any>{
   }
   render(): React.ReactNode {
     return (
-      <NGLStage 
-        width = "80vw" height = "900px"
-      >
-        {this.renderFile()}
-        <div className = 'uploaded-cont'>
-          {this.renderUploaded()}
-        </div>
-        <div className = 'add-new-cont'>
-          <input 
-            type      = 'file'
-            onChange  = {this.addComponent}
-          />
-        </div>
-      
-        
-      </NGLStage>
-      
+
+      <MyContextProvider>
+        <NGLStage 
+          width = "80vw" height = "900px">
+          {this.renderFile()}
+            <div className = 'uploaded-cont'>
+              {this.renderUploaded()}
+            </div>
+            <div className = 'add-new-cont'>
+              <input 
+                type = 'file'
+                onChange = {this.addComponent}/>
+            </div>
+        </NGLStage>
+      </MyContextProvider>
+    
 
     )
   }
