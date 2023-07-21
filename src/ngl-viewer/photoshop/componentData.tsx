@@ -14,9 +14,8 @@ import { NGLFileProps } from "../file/file";
 export type ComponentType = ComponentDataT["type"]
 
 export type GenericComponentData<T, P> = {
-  type: T;
-  props: P;
-};
+  type: T, props: P
+}
 
 export type ComponentDataT =
   | GenericComponentData<"arrow", NGLArrowProps>
@@ -30,6 +29,12 @@ export type ComponentDataT =
   | GenericComponentData<"text", NGLTextProps>
   | GenericComponentData<"octahedron", NGLOctahedronProps>
   | GenericComponentData<"file", NGLFileProps>
+
+export type ComponentUIDataT = {
+  type : ComponentDataT["type"], 
+  props? : ComponentDataT["props"]
+  config : any  
+}
 
 
   export const mockComponentsData: ComponentDataT[] = [

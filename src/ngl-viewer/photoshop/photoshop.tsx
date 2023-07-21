@@ -1,49 +1,36 @@
-import React, { Component, ReactNode } from "react";
+import React, { useState, useContext } from "react";
 import MyContext, { ContextTypeT }from "./context";
-import { ComponentDataT } from "./componentData";
+import { ComponentUIDataT } from "./componentData";
 
-interface MyContextProviderProps extends React.PropsWithChildren{
-  children: ReactNode;
+interface MyContextProviderProps {
+  children: React.ReactNode;
 }
 
-interface MyContextProviderState {
-  componentsArray: ComponentDataT[];
+const Photoshop: React.FC<MyContextProviderProps> = ({ children }) => {
+  const [componentsArray, setComponentsArray] = useState<ComponentUIDataT[]>([]);
+
+  const addComponent = (component: ComponentUIDataT) => {
+    setComponentsArray(prevArray => [...prevArray, component]);
+  };
+
+  const removeComponent = (index: number) => {
+    setComponentsArray(prevArray => prevArray.filter((_, i) => i !== index));
+  };
+
+  const replaceComponent = (updatedComponent: ComponentUIDataT, index: number) => {
+    setComponentsArray(prevArray => 
+      prevArray.map((component, i) => (i === index ? updatedComponent : component))
+    );
+  };
+
+  const contextValue: ContextTypeT = {
+    components: componentsArray,
+    addComponent,
+    removeComponent,
+    replaceComponent
+  };
+
+  return <MyContext.Provider value={contextValue}>{children}</MyContext.Provider>;
 }
 
-class MyContextProvider extends Component<MyContextProviderProps, MyContextProviderState> {
-  state: MyContextProviderState = {
-    componentsArray: [],
-  };
-
-  addComponent = (component: any) => {
-    const newArray = this.state.componentsArray.slice()
-    newArray.push(component)
-    this.setState({componentsArray : newArray})
-  };
-
-  removeComponent = (index: number) => {
-    const newArray = this.state.componentsArray.slice()
-    newArray.slice(index, 1)
-    this.setState({componentsArray: newArray})
-  };
-
-  replaceComponent = (updatedComponent: ComponentDataT, index: number) => {
-    const newArray = this.state.componentsArray.slice()
-    newArray[index] = updatedComponent
-    this.setState({componentsArray:newArray})
-  };
-
-  render() {
-    const { children } = this.props;
-    const contextValue: ContextTypeT = {
-      components: this.state.componentsArray,
-      addComponent: this.addComponent,
-      removeComponent: this.removeComponent,
-      replaceComponent: this.replaceComponent
-    };
-
-    return <MyContext.Provider value={contextValue}>{children}</MyContext.Provider>;
-  }
-}
-
-export default MyContextProvider;
+export default Photoshop;

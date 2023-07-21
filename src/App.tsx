@@ -1,75 +1,55 @@
-import React from "react";
+import React, { useState } from "react";
 import NGLFile from "./ngl-viewer/file/file";
-import NGLStage from "./ngl-viewer/photoshop/stage";
-import MyContextProvider from "ngl-viewer/photoshop/photoshop";
+import PhotoshopStage from "ngl-viewer/photoshop/photoshopRender";
 import "./index.css"
+import Photoshop from "ngl-viewer/photoshop/photoshop";
+import PhotoshopSelector from "ngl-viewer/photoshop/photoshopSelector";
 
-export default class App extends React.Component<any, any>{
-  constructor(props : any){
-    super(props)
-    this.state  = {
-      components : []
+const App = () => {
+  const [components, setComponents] = useState<File[]>([]);
+
+  const addComponent = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0){
+      const file = e.target.files[0];
+      if(file){
+        setComponents(prevComponents => [...prevComponents, file]);
+      }
     }
   }
-  addComponent = (e : React.ChangeEvent<HTMLInputElement>) => {
-    const components  = this.state.components.slice()
-    if (e.target.files){
-      components.push(e.target.files[0])
-      this.setState({ components })
-    }
-  }
-  renderFile = () => {
-    return (this.state.components as Array<File>)
-    .map((file) => (
+
+  const renderFile = () => {
+    return components.map((file) => (
       <React.Fragment>
         <NGLFile 
-        file          = {file}
-        fileSettings  = {{ext : 'pdb'}}
-        viewSettings  = {[{type : 'cartoon'}]}
-      />
+          file          = {file}
+          fileSettings  = {{ext : 'pdb'}}
+          viewSettings  = {[{type : 'cartoon'}]}
+        />
       </React.Fragment>
-    )
-  )
+    ))
   }
-  renderUploaded = () => {
-    return (this.state.components as Array<File>)
-    .map((file, id) => 
-      <div className = 'uploaded-entry'>
+
+  const renderUploaded = () => {
+    return components.map((file, id) => 
+      <div className='uploaded-entry'>
         <p>Name : {file.name}</p>
-        <button onClick = {() => this.removeFile(id)}>
+        <button onClick={() => removeFile(id)}>
           Remove
         </button>
       </div>
     )
   }
-  removeFile = (id : number) => {
-    const components  = this.state.components.slice()
-    components.splice(id, 1)
-    this.setState({ components })
-  }
-  render(): React.ReactNode {
-    return (
 
-      <MyContextProvider>
-        <NGLStage 
-          width = "80vw" height = "900px">
-          {this.renderFile()}
-            <div className = 'uploaded-cont'>
-              {this.renderUploaded()}
-            </div>
-            <div className = 'add-new-cont'>
-              <input 
-                type = 'file'
-                onChange = {this.addComponent}/>
-            </div>
-        </NGLStage>
-      </MyContextProvider>
-    
-
-    )
+  const removeFile = (id: number) => {
+    setComponents(prevComponents => prevComponents.filter((_, index) => index !== id));
   }
+
+  return (
+    <Photoshop>
+      <PhotoshopSelector options={["sphere"]}/>
+      <PhotoshopStage/>
+    </Photoshop>
+  );
 }
 
-
-
-
+export default App;

@@ -1,12 +1,12 @@
 // types.ts
 import { createContext } from "react";
-import { ComponentDataT } from "./componentData";
+import { ComponentDataT, ComponentUIDataT } from "./componentData";
 
 
 export type ContextTypeT = {
-  components : ComponentDataT[];
-  addComponent : (component : ComponentDataT) => void
-  replaceComponent : (component : ComponentDataT, id : number) => void
+  components : ComponentUIDataT[];
+  addComponent : (component : ComponentUIDataT) => void
+  replaceComponent : (component : ComponentUIDataT, id : number) => void
   removeComponent : (id : number) => void
 }
 

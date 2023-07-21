@@ -1,26 +1,53 @@
-import React from "react";
-import Select from 'react-select'
+import React, { useState, useContext } from "react";
 import { ComponentDataT } from "./componentData";
+import MyContext from "./context";
 
-interface SelectProps {
-    options: ComponentDataT[]
+var Select = require('react-select').default
+
+type OptionData = {
+  label : string,
+  value : number
 }
 
-export default class Selector extends React.Component<SelectProps> {
-
-    state = {
-        selectedComponent:null
-    }
-
-    handleSelectChange = (selectedOption:any) => {
-        this.setState({selectedComponent: selectedOption});
-    }
-
-    render() {
-        const { selectedComponent } = this.state;
-    
-        return (
-            <Select options={}/>
-        )
-    }
+interface SelectorP {
+    options: Array<ComponentDataT["type"]>
 }
+
+const PhotoshopSelector: React.FC<SelectorP> = (props) => {
+  const context = useContext(MyContext);
+
+  const [selectedComponent, setSelectedComponent] = useState<OptionData["value"] | null>(null);
+
+  const handleSelectChange = (selectedOption: OptionData | null) => {
+    if (selectedOption)
+      setSelectedComponent(selectedOption.value);
+  }
+
+  const addToContext = () => {
+    const selected = selectedComponent
+    if (!selected) return
+    const entry = props.options[selected]
+    context.addComponent({ type : entry, config : {}})
+  }
+
+  const makeOptions = () : Array<OptionData> => {
+    return props.options.map((val, id) => {
+      return {
+        label : val.charAt(0).toUpperCase() + val.slice(1).toLowerCase(),
+        value : id
+      }
+    })
+  }
+
+  return (
+    <div>
+      <Select 
+        options = {makeOptions()}
+        onChange = {handleSelectChange}          
+      />
+      <button onClick = {addToContext}>Add</button>
+    </div>
+  );
+}
+
+export default PhotoshopSelector;

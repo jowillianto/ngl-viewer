@@ -1,7 +1,7 @@
 import React from "react";
 import NGLStage from "./stage";
 
-export default class StageRender extends React.Component {
+export default class PhotoshopStage extends React.Component {
 
   render(): React.ReactNode {
     return (
