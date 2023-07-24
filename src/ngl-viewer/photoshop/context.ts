@@ -8,16 +8,18 @@ export type ContextTypeT = {
   addComponent : (component : ComponentUIDataT) => void
   replaceComponent : (component : ComponentUIDataT, id : number) => void
   removeComponent : (id : number) => void
+  addComponentByType: (component: ComponentUIDataT["type"]) => void
 }
 
 
-const MyContext = createContext<ContextTypeT>({
+const PhotoShopContext = createContext<ContextTypeT>({
   components: [],
   addComponent: () => {},
   replaceComponent: () => {},
   removeComponent: () => {},
+  addComponentByType: () => {}
 });
 
-export default MyContext;
+export default PhotoShopContext;
 
  

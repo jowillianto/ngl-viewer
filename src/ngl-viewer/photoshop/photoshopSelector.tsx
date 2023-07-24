@@ -1,8 +1,7 @@
 import React, { useState, useContext } from "react";
-import { ComponentDataT } from "./componentData";
-import MyContext from "./context";
-
-var Select = require('react-select').default
+import { ComponentDataT, ComponentUIDataT } from "./componentData";
+import PhotoShopContext from "./context";
+import Select from 'react-select'
 
 type OptionData = {
   label : string,
@@ -10,11 +9,12 @@ type OptionData = {
 }
 
 interface SelectorP {
-    options: Array<ComponentDataT["type"]>
+    options: Array<ComponentDataT["type"]>,
+    onAdd: (component :ComponentUIDataT) => void
 }
 
 const PhotoshopSelector: React.FC<SelectorP> = (props) => {
-  const context = useContext(MyContext);
+  const context = useContext(PhotoShopContext);
 
   const [selectedComponent, setSelectedComponent] = useState<OptionData["value"] | null>(null);
 
@@ -27,7 +27,7 @@ const PhotoshopSelector: React.FC<SelectorP> = (props) => {
     const selected = selectedComponent
     if (!selected) return
     const entry = props.options[selected]
-    context.addComponent({ type : entry, config : {}})
+    context.addComponentByType(entry)
   }
 
   const makeOptions = () : Array<OptionData> => {

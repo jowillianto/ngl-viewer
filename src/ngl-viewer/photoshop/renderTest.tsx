@@ -13,8 +13,7 @@ import { ComponentDataT } from "ngl-viewer/photoshop/componentData";
 import NGLFile from "ngl-viewer/file/file";
 
 const ComponentSwitch: React.FC<ComponentDataT> = (props) => {
-    const { type, props: valueProps } = props;
-
+    const {type, props : valueProps} = props
     switch(type){
         case 'arrow':
             return <NGLArrow {...valueProps}/>
@@ -50,7 +49,7 @@ const ComponentSwitch: React.FC<ComponentDataT> = (props) => {
             return <NGLFile {...valueProps}/>    
         
         default:
-            return null
+            return <h1>HELLOOOOOO</h1>
     }
 }
 
