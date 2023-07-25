@@ -10,7 +10,7 @@ const RenderShapes = (props : NGLStageProps) => {
       render = {ComponentTwo}  
       props = {props}
     />
-  )
+  ) 
 }
 
 export default RenderShapes;

@@ -11,6 +11,7 @@ type ComponentTwoP = NGLStageProps & { array: ComponentUIDataT[] };
 
 export const ComponentTwo = ({ array, ...stageProps }: ComponentTwoP) => {
   
+
   const filteredArray = React.useMemo(() => {
     return array
     .filter((entry) => "props" in entry)
@@ -20,13 +21,8 @@ export const ComponentTwo = ({ array, ...stageProps }: ComponentTwoP) => {
   }, [array])
   return (
     <NGLStage {...stageProps} >
-      {/* {filteredArray.map((entry) => <ComponentSwitch {...entry} />)} */}
-      <NGLText 
-        position = {[0, 0, 0]} text = "LOL" size = {20} color = {[255, 255, 255]}
-        viewSettings = {[{
-          type : "cartoon"
-        }]}
-      />
+      {filteredArray.map((entry) => <ComponentSwitch {...entry} />)}
     </NGLStage>
-  );
+  );  
 }
+

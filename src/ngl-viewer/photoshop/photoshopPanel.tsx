@@ -1,41 +1,53 @@
-import React, { useContext } from 'react';
-import PhotoShopContext from './context';
-import PhotoshopSelector from './photoshopSelector';
-import ComponentSwitch from './renderTest';
-import { ComponentUIDataT } from './componentData';
+import React, { useContext, useState } from "react";
+import PhotoshopContext, { ContextTypeT } from "./context";
+import { ComponentUIDataT } from "./componentData";
 
-const PhotoShopPanel: React.FC = () => {
-    const { components, addComponent, replaceComponent, removeComponent } = useContext(PhotoShopContext);
+const PhotoshopPanel: React.FC = () => {
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const { components, replaceComponent } = useContext<ContextTypeT>(PhotoshopContext);
 
-    const handleUpdateComponent = (id: number) => (newProps: ComponentUIDataT["props"]) => {
-        const component = components[id];
-        if (!component) return;
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>, propName: keyof ComponentUIDataT["props"]) => {
+    const newValue = event.target.value;
 
-        replaceComponent({ ...component, props: newProps }, id);
+    if (selectedIndex !== null) {
+      let updatedComponent = { ...components[selectedIndex] };
+      if (updatedComponent.props) {
+        updatedComponent.props[] = newValue;
+        replaceComponent(updatedComponent, selectedIndex);
+      }
     }
+  };
 
-    const handleRemoveComponent = (id: number) => () => {
-        removeComponent(id);
-    }
-
-    // const renderComponentItem = (component: ComponentUIDataT, id: number) => {
-    //     return (
-    //         <div key={id}>
-    //             <ComponentSwitch type={component.type} props={component.props} onUpdate={handleUpdateComponent(id)} />
-    //             <button onClick={handleRemoveComponent(id)}>Remove</button>
-    //         </div>
-    //     );
-    // }
-
-    const handleAddComponent = (component: ComponentUIDataT) => {
-        addComponent(component);
-    }
-
-    return (
+  return (
+    <div>
+      <h3>Photoshop Panel</h3>
+      <select value={selectedIndex ?? ''} onChange={(e) => setSelectedIndex(e.target.value ? Number(e.target.value) : null)}>
+        <option value=''>-- Select a component --</option>
+        {components.map((_, index) => (
+          <option value={index} key={index}>
+            {`Component ${index}`}
+          </option>
+        ))}
+      </select>
+      {selectedIndex !== null && (
         <div>
-          
+            <h4>Selected Component Properties:</h4>
+            {components[selectedIndex].props ? Object.entries(components[selectedIndex].props).map(([key, value]) => (
+            <div key={key}>
+                <label>
+                {key}:{" "}
+                <input
+                    type="text"
+                    value={String(value)}
+                    onChange={(e) => handleChange(e, key as keyof ComponentUIDataT["props"])}
+                />
+                </label>
+            </div>
+            )) : <p>No properties for this component</p>}
         </div>
-    );
-}
+)}
+    </div>
+  );
+};
 
-export default PhotoShopPanel;
+export default PhotoshopPanel;

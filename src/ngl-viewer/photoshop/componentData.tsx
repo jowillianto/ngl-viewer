@@ -11,13 +11,12 @@ import { NGLTorusProps } from "../shapes/torus";
 import { NGLTetrahedronProps } from "../shapes/tetrahedron";
 import { NGLFileProps } from "../file/file";
 
-export type ComponentType = ComponentDataT["type"]
+export type ComponentType = ComponentDataT["type"];
 
 export type GenericComponentData<T, P> = {
-  type: T, props: P
-}
-
-
+  type: T;
+  props: P;
+};
 
 export type ComponentDataT =
   | GenericComponentData<"arrow", NGLArrowProps>
@@ -30,46 +29,74 @@ export type ComponentDataT =
   | GenericComponentData<"tetrahedron", NGLTetrahedronProps>
   | GenericComponentData<"text", NGLTextProps>
   | GenericComponentData<"octahedron", NGLOctahedronProps>
-  | GenericComponentData<"file", NGLFileProps>
-
-
+  | GenericComponentData<"file", NGLFileProps>;
 
 export type ComponentUIDataT = {
-  type : ComponentDataT["type"], 
-  props? : ComponentDataT["props"]
-  config : any  
-}
+  type: ComponentDataT["type"];
+  props?: ComponentDataT["props"];
+  config: {};
+};
 
-
-
-
-export const mockComponentsDataMap : Record<
- ComponentDataT["type"], ComponentDataT
+export const mockComponentsDataMap: Record<
+  ComponentUIDataT["type"],
+  ComponentUIDataT
 > = {
   arrow: {
-    type : "arrow",
+    type: "arrow",
     props: {
       position1: [0, 0, 0],
       position2: [2, 2, 2],
       color: [255, 0, 0],
       radius: 0.5,
-      viewSettings: [],
+      viewSettings: [
+        {
+          type: "zoom",
+          params: {
+            zoomLevel: 1.5,
+          },
+        },
+        {
+          type: "rotation",
+          params: {
+            x: 45,
+            y: 90,
+            z: 180,
+          },
+        },
+      ],
       shapeParams: {},
-      name: "Arrow"
-    }
+      name: "Arrow",
+    },
+    config: {}
   },
   box: {
     type: "box",
     props: {
       position: [1, 1, 1],
-      color: [0, 255, 0], 
+      color: [0, 255, 0],
       size: 1,
       heightAxis: [0, 1, 0],
       depthAxis: [1, 0, 0],
-      viewSettings: [],
+      viewSettings: [
+        {
+          type: "zoom",
+          params: {
+            zoomLevel: 2.0,
+          },
+        },
+        {
+          type: "rotation",
+          params: {
+            x: 90,
+            y: 180,
+            z: 270,
+          },
+        },
+      ],
       shapeParams: {},
-      name: "Box"
-    }
+      name: "Box",
+    },
+    config: {}
   },
 
   cone: {
@@ -79,104 +106,232 @@ export const mockComponentsDataMap : Record<
       position2: [3, 3, 3],
       color: [0, 0, 255],
       radius: 1,
-      viewSettings: [],
+      viewSettings: [
+        {
+          type: "zoom",
+          params: {
+            zoomLevel: 1.5,
+          },
+        },
+        {
+          type: "rotation",
+          params: {
+            x: 0,
+            y: 0,
+            z: 180,
+          },
+        },
+      ],
       shapeParams: {},
-      name: "Cone"
-    }
+      name: "Cone",
+    },
+    config: {}
   },
 
   cylinder: {
-    type:'cylinder',
-    props:{
-        position1:[0, 1, 2],
-        position2:[2, 3, 1],
-        color:[255, 255, 0],
-        radius:0.75,
-        viewSettings:[],
-        name:'Cylinder'
-    }
+    type: "cylinder",
+    props: {
+      position1: [0, 1, 2],
+      position2: [2, 3, 1],
+      color: [255, 255, 0],
+      radius: 0.75,
+      viewSettings: [
+        {
+          type: "zoom",
+          params: {
+            zoomLevel: 2.0,
+          },
+        },
+        {
+          type: "rotation",
+          params: {
+            x: 45,
+            y: 90,
+            z: 135,
+          },
+        },
+      ],
+      name: "Cylinder",
+    },
+    config: {}
   },
 
   sphere: {
-    type:'sphere',
-    props:{
-        position:[3, 3, 3],
-        color:[150, 200, 255],
-        radius:1.5,
-        name:'Sphere',
-        viewSettings:[]
-    }
+    type: "sphere",
+    props: {
+      position: [3, 3, 3],
+      color: [150, 200, 255],
+      radius: 1.5,
+      name: "Sphere",
+      viewSettings: [
+        {
+          type: "zoom",
+          params: {
+            zoomLevel: 0.75,
+          },
+        },
+        {
+          type: "rotation",
+          params: {
+            x: 30,
+            y: 30,
+            z: 60,
+          },
+        },
+      ],
+    },
+    config: {}
   },
 
   ellipsoid: {
-    type:'ellipsoid',
-    props:{
-        position:[4, 4, 4],
-        majorAxis:[2, 1, 3],
-        minorAxis:[1, 2, 1],
-        color:[255, 255, 255],
-        radius:2,
-        viewSettings:[],
-        name:'Ellipsoid'
-    }
+    type: "ellipsoid",
+    props: {
+      position: [4, 4, 4],
+      majorAxis: [2, 1, 3],
+      minorAxis: [1, 2, 1],
+      color: [255, 255, 255],
+      radius: 2,
+      viewSettings: [
+        {
+          type: "zoom",
+          params: {
+            zoomLevel: 1.0,
+          },
+        },
+        {
+          type: "rotation",
+          params: {
+            x: 0,
+            y: 180,
+            z: 0,
+          },
+        },
+      ],
+      name: "Ellipsoid",
+    },
+    config: {}
   },
 
   octahedron: {
-    type:'octahedron',
-    props:{
-        position:[5, 5, 5],
-        heightAxis:[1, 2, 3],
-        depthAxis:[3, 2, 1],
-        color:[150, 150, 200],
-        size:1.5,
-        viewSettings:[],
-        name:'Octahedron',
-    }
+    type: "octahedron",
+    props: {
+      position: [5, 5, 5],
+      heightAxis: [1, 2, 3],
+      depthAxis: [3, 2, 1],
+      color: [150, 150, 200],
+      size: 1.5,
+      viewSettings: [
+        {
+          type: "zoom",
+          params: {
+            zoomLevel: 1.5,
+          },
+        },
+        {
+          type: "rotation",
+          params: {
+            x: 45,
+            y: 45,
+            z: 45,
+          },
+        },
+      ],
+      name: "Octahedron",
+    },
+    config: {}
   },
 
   text: {
-    type:'text',
-    props:{
-        position:[0, 0, -1],
-        text:'Hello World',
-        color:[100, 255, 200],
-        size:0.5,
-        viewSettings:[],
-        name:'Text'
-    }
+    type: "text",
+    props: {
+      position: [0, 0, -1],
+      text: "Hello World",
+      color: [100, 255, 200],
+      size: 0.5,
+      viewSettings: [
+        {
+          type: "zoom",
+          params: {
+            zoomLevel: 0.5,
+          },
+        },
+      ],
+      name: "Text",
+    },
+    config: {}
   },
 
   torus: {
-    type:'torus',
-    props:{
-        position:[-1, -1, -1],
-        majorAxis:[1, 1, 1],
-        minorAxis:[0, 0, 0],
-        color:[200, 200, 150],
-        radius:2,
-        viewSettings:[],
-        name:'Torus',
-    }
+    type: "torus",
+    props: {
+      position: [-1, -1, -1],
+      majorAxis: [1, 1, 1],
+      minorAxis: [0, 0, 0],
+      color: [200, 200, 150],
+      radius: 2,
+      viewSettings: [
+        {
+          type: "zoom",
+          params: {
+            zoomLevel: 0.75,
+          },
+        },
+        {
+          type: "rotation",
+          params: {
+            x: 90,
+            y: 0,
+            z: 0,
+          },
+        },
+      ],
+      name: "Torus",
+    },
+    config: {}
   },
 
   tetrahedron: {
-    type:'tetrahedron',
-    props:{
-        position:[2, 3, 4],
-        depthAxis:[1, 2, 3],
-        heightAxis:[3, 2, 1],
-        color:[200, 150, 150],
-        size:1,
-        viewSettings:[],
-        name:'Tetrahedron',
-    }
+    type: "tetrahedron",
+    props: {
+      position: [2, 3, 4],
+      depthAxis: [1, 2, 3],
+      heightAxis: [3, 2, 1],
+      color: [200, 150, 150],
+      size: 1,
+      viewSettings: [
+        {
+          type: "zoom",
+          params: {
+            zoomLevel: 1.0,
+          },
+        },
+        {
+          type: "rotation",
+          params: {
+            x: 30,
+            y: 60,
+            z: 90,
+          },
+        },
+      ],
+      name: "Tetrahedron",
+    },
+    config: {}
   },
 
   file: {
-    type:'file',
-    props:{
-      file:'rscb://7rdr',
-      viewSettings:[],
-    }
-  }
-}
+    type: "file",
+    props: {
+      file: "rscb://7rdr",
+      viewSettings: [
+        {
+          type: "zoom",
+          params: {
+            zoomLevel: 1.5,
+          },
+        },
+      ],
+    },
+    config: {}
+  },
+};
