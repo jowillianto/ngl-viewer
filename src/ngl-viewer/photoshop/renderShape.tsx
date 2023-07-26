@@ -3,14 +3,18 @@ import { ComponentTwo } from './componentArray'
 import ComponentPropsReader from './contextreader'
 import { mockComponentsDataMap } from './componentData'
 import { NGLStageProps } from './stage'
+import { PhotoshopPanel } from './photoshopPanel'
 
-const RenderShapes = (props : NGLStageProps) => {
+const PhotoshopStage = (props : NGLStageProps) => {
   return (
-    <ComponentPropsReader 
-      render = {ComponentTwo}  
-      props = {props}
-    />
+    <div className='shape-render'>
+      <ComponentPropsReader 
+        render = {ComponentTwo}  
+        props = {props}
+      />
+    </div>
+    
   ) 
 }
 
-export default RenderShapes;
+export default PhotoshopStage;

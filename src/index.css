@@ -6,15 +6,15 @@
   border-radius   : 1em;
   padding         : 0.5em;
 }
-.ngl-viewer-stage>div{
+/* .ngl-viewer-stage>div{
   margin-right    : 1em;
   border-radius   : 1em;
-}
+} */
 .ngl-viewer-tab{
   display         : flex;
   flex-flow       : column wrap;
   align-items     : center;
-  width           : 16vw;
+  /* width           : 16vw; */
 }
 .ngl-viewer-tab>div{
   display         : flex;
@@ -31,4 +31,9 @@
   font-weight     : 900;
   width           : 100%;
   padding         : 0.5em 0;
+}
+
+.shape-render {
+  display: flex;
+  justify-content: space-evenly;
 }

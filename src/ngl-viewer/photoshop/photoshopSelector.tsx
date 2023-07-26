@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 import { ComponentUIDataT } from "./componentData";
 import Select from 'react-select'
+import PhotoShopContext from "./context";
 
 type OptionData = {
   label : string,
-  value : ComponentUIDataT
+  value : ComponentUIDataT["type"]
 }
 
 interface SelectorP {
-    options: Array<ComponentUIDataT>
-    onAdd: (type: ComponentUIDataT["type"]) => void
-  
+  options: Array<ComponentUIDataT["type"]>
 }
 
-export const PhotoshopSelector: React.FC<SelectorP> = ({ options, onAdd }) => {
+export const PhotoshopSelector = ({ options } : SelectorP) => {
   const [selectedComponent, setSelectedComponent] = useState<OptionData["value"] | null>(null);
+  const {addComponentByType} = React.useContext(PhotoShopContext)
   
   const handleSelectChange = (selectedOption: OptionData | null) => {
     if (selectedOption)
@@ -23,7 +23,7 @@ export const PhotoshopSelector: React.FC<SelectorP> = ({ options, onAdd }) => {
 
   const addToContext = () => {
     if (!selectedComponent) return;
-    onAdd(selectedComponent.type);
+    addComponentByType(selectedComponent);
   };
 
  
@@ -31,7 +31,7 @@ export const PhotoshopSelector: React.FC<SelectorP> = ({ options, onAdd }) => {
   const makeOptions = (): Array<OptionData> => {
     return options.map((val, id) => {
       return {
-        label: val.type.charAt(0).toUpperCase() + val.type.slice(1).toLowerCase(),
+        label: val.charAt(0).toUpperCase() + val.slice(1).toLowerCase(),
         value: val,
       };
     });

@@ -1,17 +1,24 @@
 import "./index.css";
 import Photoshop from "ngl-viewer/photoshop/photoshop";
-import RenderShapes from "ngl-viewer/photoshop/renderShape";
-
+import { PhotoshopPanel } from "ngl-viewer/photoshop/photoshopPanel";
+import { mockComponentsDataMap } from "ngl-viewer/photoshop/componentData";
+import { PhotoshopSelector } from "ngl-viewer/photoshop/photoshopSelector";
+import PhotoshopStage from "ngl-viewer/photoshop/renderShape";
 
 const App = () => {
 
   return (
     <Photoshop>
-      <RenderShapes 
-        width = "1100px"
-        height = "85vh"
-      />
-  </Photoshop>
+      <div style = {{display : 'flex'}}>
+        <PhotoshopStage width = "60vw" height = "80vh" />
+        <div style = {{display : 'flex', flexFlow : 'column wrap'}}>
+          <PhotoshopSelector 
+            options = {Object.keys(mockComponentsDataMap) as any}
+          />
+          <PhotoshopPanel />
+        </div>
+      </div>
+    </Photoshop>
   );
 };
 

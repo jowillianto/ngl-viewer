@@ -33,7 +33,7 @@ export type ComponentDataT =
 
 export type ComponentUIDataT = {
   type: ComponentDataT["type"];
-  props?: ComponentDataT["props"];
+  props: ComponentDataT["props"];
   config: {};
 };
 

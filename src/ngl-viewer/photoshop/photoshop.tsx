@@ -1,63 +1,65 @@
 import React, { useState, useContext } from "react";
-import MyContext, { ContextTypeT } from "./context";
+import PhotoshopContext, { ContextTypeT } from "./context";
 import { ComponentUIDataT } from "./componentData";
 import { mockComponentsDataMap } from "./componentData";
-import { PhotoshopSelector } from "./photoshopSelector";         
-interface MyContextProviderProps {
-  children: React.ReactNode;
-}
+import { PhotoshopSelector } from "./photoshopSelector";    
 
-const Photoshop: React.FC<MyContextProviderProps> = ({ children }) => {
-  const [componentsArray, setComponentsArray] = useState<ComponentUIDataT[]>([]);
+type PhotoshopP = {
+  default? : Array<ComponentUIDataT>
+} & React.PropsWithChildren
 
-  const addComponent = (component: ComponentUIDataT) => {
+const Photoshop = (props : PhotoshopP) => {
+  const [componentsArray, setComponentsArray] = useState(props.default ? props.default : []);
+
+  const addComponent = React.useCallback((component: ComponentUIDataT) => {
     setComponentsArray((componentArray) => [...componentArray, component]);
-  };
+  }, [setComponentsArray])
 
-  const addComponentByType = (type: ComponentUIDataT["type"]) => {
+  const addComponentByType = React.useCallback((type: ComponentUIDataT["type"]) => {
     const newComponent: ComponentUIDataT = {
       type: mockComponentsDataMap[type].type,
       props: mockComponentsDataMap[type].props,
       config: {},
     };
     addComponent(newComponent);
-  };
+  }, [addComponent])
 
-  const removeComponent = (index: number) => {
+  const removeComponent = React.useCallback((index: number) => {
     setComponentsArray((componentsArray) => componentsArray.filter((_, i) => i !== index));
-  };
+  }, [setComponentsArray])
 
 
-  const replaceComponent = (
-    updatedComponent: ComponentUIDataT,
-    index: number
+  const replaceComponent = React.useCallback((
+    updatedComponent: ComponentUIDataT, index: number
   ) => {
-    setComponentsArray((prevArray) =>
-      prevArray.map((component, i) =>
-        i === index ? updatedComponent : component
-      )
-    );
-  };
+    setComponentsArray(componentsArray => {
+      const newComponents = [...componentsArray];
+      newComponents[index] = updatedComponent;
+      return newComponents;
+    })
+  }, [setComponentsArray]);
+  
 
-  const contextValue: ContextTypeT = {
-    components: componentsArray,
-    addComponent,
-    removeComponent,
-    replaceComponent,
-    addComponentByType,
-
-    
-  };
+  const contextValue = React.useMemo(() => {
+    return {
+      components: componentsArray,
+      addComponent,
+      removeComponent,
+      replaceComponent,
+      addComponentByType,
+    }
+  }, [
+    componentsArray, 
+    addComponent, 
+    removeComponent, 
+    replaceComponent, 
+    addComponentByType
+  ])
 
   return (
-    <MyContext.Provider value={contextValue}>
-      <PhotoshopSelector
-        options={Object.values(mockComponentsDataMap)}
-        onAdd={addComponentByType}  
-
-      />
-      {children}
-    </MyContext.Provider>
+    <PhotoshopContext.Provider value={contextValue}>
+      {props.children}
+    </PhotoshopContext.Provider>
   );
 };
 

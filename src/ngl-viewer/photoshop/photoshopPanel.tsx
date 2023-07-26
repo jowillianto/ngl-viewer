@@ -1,19 +1,37 @@
 import React, { useContext, useState } from "react";
-import PhotoshopContext, { ContextTypeT } from "./context";
 import { ComponentUIDataT } from "./componentData";
+import { mockComponentsDataMap } from "./componentData";
+import { ColorPicker } from "ngl-viewer/forms/color-picker";
+import PhotoShopContext from "./context";
 
-const PhotoshopPanel: React.FC = () => {
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const { components, replaceComponent } = useContext<ContextTypeT>(PhotoshopContext);
+export const PhotoshopPanel = () => {
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const [components, setComponents] = useState<ComponentUIDataT[]>(Object.values(mockComponentsDataMap));
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>, propName: keyof ComponentUIDataT["props"]) => {
-    const newValue = event.target.value;
+  const context = useContext(PhotoShopContext)
 
+
+  const handleColorChange = (color: [number, number, number]) => {
     if (selectedIndex !== null) {
-      let updatedComponent = { ...components[selectedIndex] };
-      if (updatedComponent.props) {
-        updatedComponent.props[] = newValue;
-        replaceComponent(updatedComponent, selectedIndex);
+      const newComponents = context.components.slice()
+      const selectedComponentProps = newComponents[selectedIndex].props;
+      console.log(selectedComponentProps)
+      // Ensure all necessary properties exist
+      if ('color' in selectedComponentProps  &&  
+          'position' in selectedComponentProps &&
+          'depthAxis' in selectedComponentProps &&
+          'heightAxis' in selectedComponentProps &&
+          'size' in selectedComponentProps &&
+          'viewSettings' in selectedComponentProps) {
+        newComponents[selectedIndex] = {
+          ...newComponents[selectedIndex],
+          props: {
+            ...selectedComponentProps,
+            color  // Only the color is being updated here
+          },
+        };
+        context.replaceComponent(component, 0)
+        setComponents(newComponents);
       }
     }
   };
@@ -21,33 +39,13 @@ const PhotoshopPanel: React.FC = () => {
   return (
     <div>
       <h3>Photoshop Panel</h3>
-      <select value={selectedIndex ?? ''} onChange={(e) => setSelectedIndex(e.target.value ? Number(e.target.value) : null)}>
-        <option value=''>-- Select a component --</option>
-        {components.map((_, index) => (
-          <option value={index} key={index}>
-            {`Component ${index}`}
-          </option>
-        ))}
-      </select>
-      {selectedIndex !== null && (
-        <div>
-            <h4>Selected Component Properties:</h4>
-            {components[selectedIndex].props ? Object.entries(components[selectedIndex].props).map(([key, value]) => (
-            <div key={key}>
-                <label>
-                {key}:{" "}
-                <input
-                    type="text"
-                    value={String(value)}
-                    onChange={(e) => handleChange(e, key as keyof ComponentUIDataT["props"])}
-                />
-                </label>
-            </div>
-            )) : <p>No properties for this component</p>}
-        </div>
-)}
+      <div>
+        <ColorPicker
+          value={(components[selectedIndex]?.props as any).color}
+          onChange={handleColorChange}
+          readOnly={false}
+        />
+      </div>
     </div>
   );
 };
-
-export default PhotoshopPanel;
