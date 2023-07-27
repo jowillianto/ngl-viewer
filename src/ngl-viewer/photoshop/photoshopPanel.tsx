@@ -3,48 +3,102 @@ import { ComponentUIDataT } from "./componentData";
 import { mockComponentsDataMap } from "./componentData";
 import { ColorPicker } from "ngl-viewer/forms/color-picker";
 import PhotoShopContext from "./context";
+import Vector3DInput from "ngl-viewer/forms/3d-vector";
+import { Vector3 } from "ngl";
 
 export const PhotoshopPanel = () => {
-  const [selectedIndex, setSelectedIndex] = useState<number>(0);
-  const [components, setComponents] = useState<ComponentUIDataT[]>(Object.values(mockComponentsDataMap));
-
-  const context = useContext(PhotoShopContext)
-
+  const context = useContext(PhotoShopContext);
+  const selectedIndex = 0;
 
   const handleColorChange = (color: [number, number, number]) => {
-    if (selectedIndex !== null) {
-      const newComponents = context.components.slice()
-      const selectedComponentProps = newComponents[selectedIndex].props;
-      console.log(selectedComponentProps)
-      // Ensure all necessary properties exist
-      if ('color' in selectedComponentProps  &&  
-          'position' in selectedComponentProps &&
-          'depthAxis' in selectedComponentProps &&
-          'heightAxis' in selectedComponentProps &&
-          'size' in selectedComponentProps &&
-          'viewSettings' in selectedComponentProps) {
-        newComponents[selectedIndex] = {
-          ...newComponents[selectedIndex],
-          props: {
-            ...selectedComponentProps,
-            color  // Only the color is being updated here
-          },
-        };
-        context.replaceComponent(component, 0)
-        setComponents(newComponents);
-      }
-    }
+    const component = context.components[selectedIndex];
+    const oldProps = component.props;
+    const newProps = Object.assign(oldProps, { color });
+    const newComponent = Object.assign(component, { props: newProps });
+    console.log(color);
+    context.replaceComponent(newComponent, selectedIndex);
   };
 
+  const handleCoordinateChange = (
+    position: [number, number, number] | Vector3 | undefined,
+    position1: [number, number, number] | Vector3 | undefined,
+    position2: [number, number, number] | Vector3 | undefined
+  ) => {
+    const component = context.components[selectedIndex];
+    const oldProps = component.props;
+    let newProps;
+  
+    if (
+      ["arrow", "cone", "cylinder"].includes(
+        context.components[selectedIndex].type
+      )
+    ) {
+      newProps = Object.assign(oldProps, { position1, position2 });
+    } else if (position) {
+      newProps = Object.assign(oldProps, { position });
+    }
+  
+    const newComponent = Object.assign(component, { props: newProps });
+    context.replaceComponent(newComponent, selectedIndex);
+  };
+  
+  const component = context.components[selectedIndex];
+  
+
+  // in the PhotoShopPanel component
   return (
     <div>
       <h3>Photoshop Panel</h3>
       <div>
-        <ColorPicker
-          value={(components[selectedIndex]?.props as any).color}
-          onChange={handleColorChange}
-          readOnly={false}
-        />
+        {component && "color" in component.props && (
+          <ColorPicker
+            value={component.props.color as [number, number, number]}
+            onChange={handleColorChange}
+            readOnly={false}
+          />
+        )}
+
+        {component &&
+          "position1" in component.props &&
+          "position2" in component.props && (
+            <>
+              <Vector3DInput
+                value={component.props.position1 as [number, number, number]}
+                onChange={(position1: [number, number, number]) => {
+                  if ("position2" in component.props) {
+                    handleCoordinateChange(
+                      undefined,
+                      position1,
+                      component.props.position2
+                    );
+                  }
+                }}
+                readOnly={false}
+              />
+              <Vector3DInput
+                value={component.props.position2 as [number, number, number]}
+                onChange={(position2: [number, number, number]) => {
+                  if ("position1" in component.props) {
+                    handleCoordinateChange(
+                      undefined,
+                      component.props.position1,
+                      position2
+                    );
+                  }
+                }}
+                readOnly={false}
+              />
+            </>
+          )}
+        {component && "position" in component.props && (
+          <Vector3DInput
+            value={component.props.position as [number, number, number]}
+            onChange={(position: [number, number, number]) => {
+              handleCoordinateChange(position, undefined, undefined);
+            }}
+            readOnly={false}
+          />
+        )}
       </div>
     </div>
   );

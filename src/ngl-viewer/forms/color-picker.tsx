@@ -1,36 +1,50 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FormP } from "./common";
 
-export type ColorPickerP = FormP<[number, number, number]>
+export type ColorPickerP = FormP<[number, number, number]>;
 
 export const ColorPicker: React.FC<ColorPickerP> = ({ value, onChange }) => {
-  const handleColorChange = (colorIndex: number, newValue: string) => {
-    const newColor = [...value];
-    newColor[colorIndex] = parseInt(newValue);
+  const rgbToHex = (rgb: [number, number, number]) =>
+    "#" +
+    rgb
+      .map((x) => {
+        const hex = x.toString(16);
+        return hex.length === 1 ? "0" + hex : hex;
+      })
+      .join("");
 
-    if(newColor.length !== 3) {
-      throw new Error('Color must be an array of exactly three numbers');
-    }
-
-    onChange(newColor as [number, number, number]);
+  const hexToRgb = (hex: string): [number, number, number] => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result
+      ? [
+          parseInt(result[1], 16),
+          parseInt(result[2], 16),
+          parseInt(result[3], 16),
+        ]
+      : [0, 0, 0];
   };
-  console.log(value)
+
+  const [color, setColor] = useState(rgbToHex(value));
+
+  useEffect(() => {
+    setColor(rgbToHex(value));
+  }, [value]);
+
+  const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const rgbColor = hexToRgb(event.target.value);
+    onChange(rgbColor);
+    setColor(event.target.value);
+  };
+
   return (
     <div>
-      {["Red", "Green", "Blue"].map((colorName, index) => (
-        <div key={colorName}>
-          <label>
-            {colorName}:{" "}
-            <input
-              type="number"
-              min="0"
-              max="255"
-              value={value[index]}
-              onChange={(e) => handleColorChange(index, e.target.value)}
-            />
-          </label>
-        </div>
-      ))}
+      <label htmlFor="colorPicker">Color Picker</label>
+      <input
+        type="color"
+        id="colorPicker"
+        value={color}
+        onChange={handleColorChange}
+      />
     </div>
   );
 };

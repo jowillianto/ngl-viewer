@@ -49,7 +49,7 @@ const ComponentSwitch: React.FC<ComponentDataT> = (props) => {
             return <NGLFile {...valueProps}/>    
         
         default:
-            return <h1>HELLOOOOOO</h1>
+            return null
     }
 }
 

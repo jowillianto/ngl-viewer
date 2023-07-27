@@ -265,8 +265,8 @@ export const mockComponentsDataMap: Record<
     type: "torus",
     props: {
       position: [-1, -1, -1],
-      majorAxis: [1, 1, 1],
-      minorAxis: [0, 0, 0],
+      majorAxis: [7, 3, 1],
+      minorAxis: [0, -1, 0],
       color: [200, 200, 150],
       radius: 2,
       viewSettings: [
@@ -332,6 +332,6 @@ export const mockComponentsDataMap: Record<
         },
       ],
     },
-    config: {}
+    config: {},
   },
 };
