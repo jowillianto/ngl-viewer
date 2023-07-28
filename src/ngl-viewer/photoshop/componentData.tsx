@@ -52,7 +52,7 @@ export const mockComponentsDataMap: Record<
         {
           type: "zoom",
           params: {
-            zoomLevel: 1.5,
+            zoomLevel: 1,
           },
         },
         {
@@ -81,7 +81,7 @@ export const mockComponentsDataMap: Record<
         {
           type: "zoom",
           params: {
-            zoomLevel: 2.0,
+            zoomLevel: 2,
           },
         },
         {
@@ -110,7 +110,7 @@ export const mockComponentsDataMap: Record<
         {
           type: "zoom",
           params: {
-            zoomLevel: 1.5,
+            zoomLevel: 1,
           },
         },
         {
@@ -139,7 +139,7 @@ export const mockComponentsDataMap: Record<
         {
           type: "zoom",
           params: {
-            zoomLevel: 2.0,
+            zoomLevel: 2,
           },
         },
         {
@@ -167,7 +167,7 @@ export const mockComponentsDataMap: Record<
         {
           type: "zoom",
           params: {
-            zoomLevel: 0.75,
+            zoomLevel: 0,
           },
         },
         {
@@ -195,7 +195,7 @@ export const mockComponentsDataMap: Record<
         {
           type: "zoom",
           params: {
-            zoomLevel: 1.0,
+            zoomLevel: 1,
           },
         },
         {
@@ -224,7 +224,7 @@ export const mockComponentsDataMap: Record<
         {
           type: "zoom",
           params: {
-            zoomLevel: 1.5,
+            zoomLevel: 2,
           },
         },
         {
@@ -252,7 +252,7 @@ export const mockComponentsDataMap: Record<
         {
           type: "zoom",
           params: {
-            zoomLevel: 0.5,
+            zoomLevel: 1,
           },
         },
       ],
@@ -273,7 +273,7 @@ export const mockComponentsDataMap: Record<
         {
           type: "zoom",
           params: {
-            zoomLevel: 0.75,
+            zoomLevel: 0,
           },
         },
         {
@@ -302,7 +302,7 @@ export const mockComponentsDataMap: Record<
         {
           type: "zoom",
           params: {
-            zoomLevel: 1.0,
+            zoomLevel: 1,
           },
         },
         {
@@ -322,12 +322,12 @@ export const mockComponentsDataMap: Record<
   file: {
     type: "file",
     props: {
-      file: "rscb://7rdr",
+      file: null,
       viewSettings: [
         {
           type: "zoom",
           params: {
-            zoomLevel: 1.5,
+            zoomLevel: 2,
           },
         },
       ],

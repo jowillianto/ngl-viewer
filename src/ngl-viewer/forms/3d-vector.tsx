@@ -7,7 +7,7 @@ const Vector3DInput = (props: Vector3DInputP) => {
 
   const handleInputChange =
     (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      const updatedValue = [...props.value]; // Copy the array instead of mutating it
+      const updatedValue = [...props.value]; 
       updatedValue[index] = parseFloat(event.target.value);
       props.onChange(updatedValue as [number, number, number]);
     };

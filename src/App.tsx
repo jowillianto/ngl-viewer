@@ -4,6 +4,8 @@ import { PhotoshopPanel } from "ngl-viewer/photoshop/photoshopPanel";
 import { mockComponentsDataMap } from "ngl-viewer/photoshop/componentData";
 import { PhotoshopSelector } from "ngl-viewer/photoshop/photoshopSelector";
 import PhotoshopStage from "ngl-viewer/photoshop/renderShape";
+import FileRenderer from "ngl-viewer/forms/file-renderer";
+import PDBViewer from "ngl-viewer/forms/file-renderer";
 
 const App = () => {
 

@@ -5,6 +5,8 @@ import { ColorPicker } from "ngl-viewer/forms/color-picker";
 import PhotoShopContext from "./context";
 import Vector3DInput from "ngl-viewer/forms/3d-vector";
 import { Vector3 } from "ngl";
+import { ViewSettings } from "ngl-viewer/interfaces/interfaces";
+import ViewSettingsInput from "ngl-viewer/forms/view-settings";
 
 export const PhotoshopPanel = () => {
   const context = useContext(PhotoShopContext);
@@ -41,11 +43,20 @@ export const PhotoshopPanel = () => {
     const newComponent = Object.assign(component, { props: newProps });
     context.replaceComponent(newComponent, selectedIndex);
   };
+
+  const handleViewSettings = (viewSettings: ViewSettings) => {
+    const component = context.components[selectedIndex];
+    const oldProps = component.props;
+    const newProps = Object.assign(oldProps, { viewSettings });
+    const newComponent = Object.assign(component, { props: newProps });
+    context.replaceComponent(newComponent, selectedIndex);
+  };
+
+
   
   const component = context.components[selectedIndex];
   
 
-  // in the PhotoShopPanel component
   return (
     <div>
       <h3>Photoshop Panel</h3>
@@ -99,6 +110,13 @@ export const PhotoshopPanel = () => {
             readOnly={false}
           />
         )}
+
+      {component && "viewSettings" in component.props && (
+        <ViewSettingsInput
+          value={component.props.viewSettings}
+          onChange={handleViewSettings}
+        />
+      )}
       </div>
     </div>
   );

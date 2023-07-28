@@ -1,6 +1,6 @@
 interface ViewSetting{
   type    : string,
-  params? : Object
+  params: { [key: string]: number }; 
 }
 
 export type ViewSettings = Array<ViewSetting>
