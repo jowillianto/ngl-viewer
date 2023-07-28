@@ -5,13 +5,13 @@ import { StageLoadFileParams } from 'ngl/dist/declarations/stage/stage'
 import { ViewSettings } from '../interfaces/interfaces'
 import StructureComponentContext from 'ngl-viewer/context/component-context'
 
-export interface NGLFileProps extends React.PropsWithChildren{
+export type NGLFileProps = React.PropsWithChildren & {
   file          : Blob | string | null,
   viewSettings  : ViewSettings
   fileSettings? : Partial<StageLoadFileParams>
   controls?     : Object
 }
-export interface NGLFileState{
+export type  NGLFileState = {
   showRepr      : boolean,
   component     : NGL.StructureComponent | null,
   update        : boolean

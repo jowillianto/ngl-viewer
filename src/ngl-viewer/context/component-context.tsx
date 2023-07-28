@@ -1,11 +1,12 @@
 import React from 'react'
 import * as NGL from 'ngl'
 
-export interface StructureComponentContextType{
+export type StructureComponentContextT = {
   component   : NGL.StructureComponent | null
 }
 
-const StructureComponentContext  = React.createContext<StructureComponentContextType>({
+const StructureComponentContext = 
+React.createContext<StructureComponentContextT>({
   component : null
 })
 

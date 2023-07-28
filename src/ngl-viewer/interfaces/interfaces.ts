@@ -1,4 +1,4 @@
-interface ViewSetting{
+type ViewSetting = {
   type    : string,
   params: { [key: string]: number }; 
 }
