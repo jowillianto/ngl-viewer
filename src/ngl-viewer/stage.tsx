@@ -5,7 +5,6 @@ export interface NGLStageProps extends React.PropsWithChildren{
   height        : string,
   width         : string,
   viewSettings? : NGL.StageParameters,
-  pdbData? : string
 }
 
 export interface NGLStageState{

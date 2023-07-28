@@ -9,10 +9,10 @@ import NGLTetrahedron from "ngl-viewer/shapes/tetrahedron";
 import NGLText from "ngl-viewer/shapes/text";
 import NGLCylinder from "ngl-viewer/shapes/cylinder";
 import NGLTorus from "ngl-viewer/shapes/torus";
-import { ComponentDataT } from "ngl-viewer/photoshop/componentData";
+import { ComponentDataT } from "ngl-viewer/user-interface/component-data";
 import NGLFile from "ngl-viewer/file/file";
 
-const ComponentSwitch: React.FC<ComponentDataT> = (props) => {
+const ComponentSwitch = (props : ComponentDataT) => {
     const {type, props : valueProps} = props
     switch(type){
         case 'arrow':

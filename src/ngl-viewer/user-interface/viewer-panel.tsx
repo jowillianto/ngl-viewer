@@ -1,15 +1,15 @@
 import React, { useContext, useState } from "react";
-import { ComponentUIDataT } from "./componentData";
-import { mockComponentsDataMap } from "./componentData";
+import { ComponentUIDataT } from "./component-data";
+import { mockComponentsDataMap } from "./component-data";
 import { ColorPicker } from "ngl-viewer/forms/color-picker";
-import PhotoShopContext from "./context";
 import Vector3DInput from "ngl-viewer/forms/3d-vector";
 import { Vector3 } from "ngl";
 import { ViewSettings } from "ngl-viewer/interfaces/interfaces";
 import ViewSettingsInput from "ngl-viewer/forms/view-settings";
+import ViewerContext from "./viewer-context";
 
-export const PhotoshopPanel = () => {
-  const context = useContext(PhotoShopContext);
+const ViewerPanel = () => {
+  const context = useContext(ViewerContext);
   const selectedIndex = 0;
 
   const handleColorChange = (color: [number, number, number]) => {
@@ -121,3 +121,5 @@ export const PhotoshopPanel = () => {
     </div>
   );
 };
+
+export default ViewerPanel
