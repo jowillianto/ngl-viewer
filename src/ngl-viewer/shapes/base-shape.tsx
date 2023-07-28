@@ -2,7 +2,7 @@ import * as NGL from 'ngl'
 import { ShapeParameters } from 'ngl/dist/declarations/geometry/shape'
 import React from 'react'
 import { ViewSettings } from '../interfaces/interfaces'
-import { StageContext } from '../photoshop/stage'
+import { StageContext } from '../stage'
 
 export interface BasicShapeProps{
   viewSettings  : ViewSettings, 

@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { ComponentDataT, ComponentUIDataT } from './componentData';
 import ComponentSwitch from './renderTest';
-import NGLStage, { NGLStageProps } from './stage';
+import NGLStage, { NGLStageProps } from '../stage';
 import NGLText from 'ngl-viewer/shapes/text';
 import UploadAndViewer from 'ngl-viewer/forms/file-renderer';
 
