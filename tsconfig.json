@@ -2,17 +2,12 @@
   "compilerOptions": {
     "target": "es5",
     "baseUrl": "./src",
-    "paths" : {
-      "text-editor" : [
-        "../node_modules/@jowillianto/draftjs-wysiwyg/src/text-editor"
-      ]
-    },
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
     ],
-    "allowJs": true,
+    "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -23,11 +18,12 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx"
-  },
-  "include": [
-    "src", 
-    "node_modules/@jowillianto"
+    "noEmit": false,
+    "jsx": "react-jsx", 
+    "outDir": "dist", 
+    "declaration": true
+  }, 
+  "include" : [
+    "./src/ngl-viewer"
   ]
 }
