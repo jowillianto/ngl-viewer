@@ -1,5 +1,5 @@
 import React from "react";
-import { StageContext } from "ngl-viewer/stage";
+import { StageContext } from "..//stage";
 
 export type ImageParameters = {
   trim        : boolean;
