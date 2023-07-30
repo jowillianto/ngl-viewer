@@ -6,7 +6,7 @@ import { ViewSettings } from '../interfaces/interfaces'
 import StructureComponentContext from 'ngl-viewer/context/component-context'
 
 export interface NGLFileProps extends React.PropsWithChildren{
-  file          : Blob | string | null,
+  file          : File | undefined
   viewSettings  : ViewSettings
   fileSettings? : Partial<StageLoadFileParams>
   controls?     : Object

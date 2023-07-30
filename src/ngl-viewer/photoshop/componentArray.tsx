@@ -2,18 +2,14 @@ import React, { useState, useMemo } from 'react';
 import { ComponentDataT, ComponentUIDataT } from './componentData';
 import ComponentSwitch from './renderTest';
 import NGLStage, { NGLStageProps } from './stage';
-import NGLText from 'ngl-viewer/shapes/text';
-import UploadAndViewer from 'ngl-viewer/forms/file-renderer';
+import NGLFile from 'ngl-viewer/file/file';
+
 
 type ComponentTwoP = NGLStageProps & { array: ComponentUIDataT[] };
 
 export const ComponentTwo = ({ array, ...stageProps }: ComponentTwoP) => {
-  const [pdbData, setPdbData] = useState<string>('');
-
-  const handleFileRead = (fileContent: string) => {
-    setPdbData(fileContent);
-  };
-
+  const [file, setFile] = useState<File | undefined>(undefined);
+  
   const filteredArray = useMemo(() => {
     return array
       .filter((entry) => "props" in entry)
@@ -22,14 +18,23 @@ export const ComponentTwo = ({ array, ...stageProps }: ComponentTwoP) => {
       });
   }, [array]);
 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0];
+    setFile(selectedFile);
+  };
+
+
   return (
     <div>
-      <UploadAndViewer onFileRead={handleFileRead} />
-      <NGLStage pdbData={pdbData} {...stageProps}>
+      <NGLStage {...stageProps}>
         {filteredArray.map((entry) => (
           <ComponentSwitch {...entry} />
         ))}
+        <input type="file" onChange={handleFileChange} />
+        <NGLFile file={file} viewSettings={[{type:'cartoon', params:{}}]} /> {/* Render NGLFile component */}
       </NGLStage>
     </div>
   );
 };
+
+export default ComponentTwo;

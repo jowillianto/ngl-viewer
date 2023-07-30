@@ -322,7 +322,7 @@ export const mockComponentsDataMap: Record<
   file: {
     type: "file",
     props: {
-      file: null,
+      file: undefined,
       viewSettings: [
         {
           type: "zoom",

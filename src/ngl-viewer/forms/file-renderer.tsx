@@ -1,57 +1,46 @@
-import React, { useState, useEffect, useRef, ChangeEvent } from 'react';
-import * as NGL from 'ngl';
+import React, { useEffect, useRef } from "react";
+import { NGLFileProps } from "ngl-viewer/file/file";
+import * as NGL from "ngl";
 
-interface PDBViewerProps {
-  pdbData: string;
-}
-
-const PDBViewer: React.FC<PDBViewerProps> = ({ pdbData }) => {
-  const stageRef = useRef<any>();
+const NGLFile: React.FC<NGLFileProps> = ({ file }) => {
+  const viewerRef = useRef<HTMLDivElement>(null);
+  let stage: any;
 
   useEffect(() => {
-    if (!stageRef.current) {
-      stageRef.current = new NGL.Stage('viewport');
+    if (file && viewerRef.current) {
+      if (stage) {
+        stage.removeAllComponents();
+      } else {
+        stage = new NGL.Stage(viewerRef.current);
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const pdbData = e.target?.result;
+        if (pdbData) {
+          stage
+            .loadFile({ ext: 'pdb', defaultRepresentation: true })
+            .then(function (o: {
+              addRepresentation: (arg0: string) => void;
+              autoView: () => void;
+            }) {
+              o.addRepresentation("cartoon");
+              o.autoView();
+            });
+            
+        }
+      };
+      reader.readAsText(file);
     }
 
-    // Clear any previous structures
-    stageRef.current.removeAllComponents();
-
-    // Load new PDB structure from uploaded data
-    stageRef.current.loadFile(pdbData, { ext: 'pdb' }).then((component: any) => {
-      component.addRepresentation('cartoon');
-      stageRef.current.autoView();
-    });
-
-    // Cleanup on unmount
     return () => {
-      stageRef.current.dispose();
-      stageRef.current = null;
+      if (stage) {
+        stage.dispose();
+      }
     };
-  }, [pdbData]);
+  }, [file]);
 
-  return <div id="viewport" style={{ width: '600px', height: '400px' }} />;
+  return <div ref={viewerRef}></div>;
 };
 
-type UploaderProps = {
-  onFileRead: (fileContent: string) => void;
-}
-
-const FileUploader: React.FC<UploaderProps> = ({ onFileRead }) => {
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-
-    reader.onload = function(e) {
-      const content = (e.target?.result || '') as string;
-      onFileRead(content);
-    };
-
-    reader.readAsText(file);
-  };
-
-  return <input type="file" onChange={handleFileChange} />;
-};
-
-export default FileUploader
+export default NGLFile;
