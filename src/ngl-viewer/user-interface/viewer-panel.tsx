@@ -1,12 +1,12 @@
-import { useContext } from "react";
-import { ColorPicker } from "ngl-viewer/forms/color-picker";
-import Vector3DInput from "ngl-viewer/forms/3d-vector";
+import React, { useContext, useState } from "react";
+import { ComponentUIDataT } from "./component-data";
+import { mockComponentsDataMap } from "./component-data";
+import { ColorPicker } from "../forms/color-picker";
+import Vector3DInput from "../forms/3d-vector";
 import { Vector3 } from "ngl";
-import { ViewSettings } from "ngl-viewer/interfaces/interfaces";
-import ViewSettingsInput from "ngl-viewer/forms/viewer/view-settings";
+import { ViewSettings } from "../interfaces/interfaces";
+import ViewSettingsInput from "../forms/viewer/view-settings";
 import ViewerContext from "./viewer-context";
-import FileUploader from "ngl-viewer/forms/file-reader";
-import FileViewSettings from "ngl-viewer/forms/viewer/file-view-settings";
 
 const ViewerPanel = () => {
   const context = useContext(ViewerContext);
