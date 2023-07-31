@@ -1,6 +1,6 @@
 import NGLRenderer  from './ngl-renderer'
 import GenericRenderer from './generic-renderer'
-import { NGLStageProps } from 'ngl-viewer/stage'
+import { NGLStageProps } from '../stage'
 
 const ViewerStage = (props : NGLStageProps) => {
   return (
