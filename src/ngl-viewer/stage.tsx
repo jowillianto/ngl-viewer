@@ -4,7 +4,7 @@ import * as NGL from 'ngl'
 export type NGLStageProps = React.PropsWithChildren<{
   height        : string,
   width         : string,
-  viewSettings? : NGL.StageParameters,
+  viewSettings? : Partial<NGL.StageParameters>,
 }>
 
 export type NGLStageState = {
