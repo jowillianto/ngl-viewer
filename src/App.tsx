@@ -1,9 +1,9 @@
 import React from "react"
 import "./index.css"
-import ProteinViewer from "ngl-viewer/user-interface/protein-viewer"
-import ViewerSelector from "ngl-viewer/user-interface/component-selector"
-import ViewerStage from "ngl-viewer/user-interface/viewer-stage"
-import ViewerPanel from "ngl-viewer/user-interface/viewer-panel"
+import ProteinViewer from "./ngl-viewer/user-interface/protein-viewer"
+import ViewerSelector from "./ngl-viewer/user-interface/component-selector"
+import ViewerStage from "./ngl-viewer/user-interface/viewer-stage"
+import ViewerPanel from "./ngl-viewer/user-interface/viewer-panel"
 
 const App = () => {
   return (
