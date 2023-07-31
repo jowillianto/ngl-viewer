@@ -1,8 +1,8 @@
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import { useContext } from "react";
-import { ColorPicker } from "..//forms/color-picker";
-import Vector3DInput from "..//forms/3d-vector";
-import ViewSettingsInput from "..//forms/view-settings";
+import { ColorPicker } from "../forms/color-picker";
+import Vector3DInput from "../forms/3d-vector";
+import ViewSettingsInput from "../forms/view-settings";
 import ViewerContext from "./viewer-context";
 var ViewerPanel = function () {
     var context = useContext(ViewerContext);

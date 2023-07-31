@@ -10,17 +10,17 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 import { jsx as _jsx } from "react/jsx-runtime";
-import NGLArrow from "..//shapes/arrow";
-import NGLBox from "..//shapes/box";
-import NGLCone from "..//shapes/cone";
-import NGLEllipsoid from "..//shapes/ellipsoid";
-import NGLOctahedron from "..//shapes/octahedron";
-import NGLSphere from "..//shapes/sphere";
-import NGLTetrahedron from "..//shapes/tetrahedron";
-import NGLText from "..//shapes/text";
-import NGLCylinder from "..//shapes/cylinder";
-import NGLTorus from "..//shapes/torus";
-import NGLFile from "..//file/file";
+import NGLArrow from "../shapes/arrow";
+import NGLBox from "../shapes/box";
+import NGLCone from "../shapes/cone";
+import NGLEllipsoid from "../shapes/ellipsoid";
+import NGLOctahedron from "../shapes/octahedron";
+import NGLSphere from "../shapes/sphere";
+import NGLTetrahedron from "../shapes/tetrahedron";
+import NGLText from "../shapes/text";
+import NGLCylinder from "../shapes/cylinder";
+import NGLTorus from "../shapes/torus";
+import NGLFile from "../file/file";
 var ComponentSwitch = function (props) {
     var type = props.type, valueProps = props.props;
     switch (type) {
