@@ -1,17 +1,20 @@
 import React from 'react'
 import * as NGL from 'ngl'
-import { StageContext } from '../photoshop/stage'
+import { StageContext } from '../stage'
 import { StageLoadFileParams } from 'ngl/dist/declarations/stage/stage'
 import { ViewSettings } from '../interfaces/interfaces'
 import StructureComponentContext from 'ngl-viewer/context/component-context'
 
-export interface NGLFileProps extends React.PropsWithChildren{
-  file          : File | undefined
+export type NGLFileProps = React.PropsWithChildren & {
+  file          : Blob | string | null,
   viewSettings  : ViewSettings
   fileSettings? : Partial<StageLoadFileParams>
   controls?     : Object
+  surface? : Object
+  licorice? : Object
+  cartoon? : Object
 }
-export interface NGLFileState{
+export type  NGLFileState = {
   showRepr      : boolean,
   component     : NGL.StructureComponent | null,
   update        : boolean
@@ -71,7 +74,7 @@ export default class NGLFile extends React.Component<
     nextState: Readonly<NGLFileState>, 
     nextContext: React.ContextType<typeof StageContext>
   ): boolean {
-    // Make Update Conditions here
+
     const diffFile    = this.props.file !== nextProps.file
     const diffSettings= this.props.viewSettings !== nextProps.viewSettings
     const diffStage   = this.context.stage !== nextContext.stage

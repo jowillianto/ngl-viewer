@@ -14,14 +14,10 @@ export function randomString(length : number):string{
     return result;
 }
 
-export interface ClickButtonProps{
+export type ClickButtonProps = {
   onClick : () => void
 }
 
-export interface PromiseButtonProps{
+export type PromiseButtonProps = {
   onClick : () => Promise<any>
-}
-
-export interface RenderProps<T>{
-  render  : React.ReactElement<T>
 }

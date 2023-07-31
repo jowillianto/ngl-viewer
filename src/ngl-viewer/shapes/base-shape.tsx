@@ -2,23 +2,21 @@ import * as NGL from 'ngl'
 import { ShapeParameters } from 'ngl/dist/declarations/geometry/shape'
 import React from 'react'
 import { ViewSettings } from '../interfaces/interfaces'
-import { StageContext } from '../photoshop/stage'
+import { StageContext } from '../stage'
 
-export interface BasicShapeProps{
+export type BasicShapeProps<T = {}> = {
   viewSettings  : ViewSettings, 
   shapeParams?  : Partial<ShapeParameters>
-}
+} & T
 
-export interface ExtendedShapeProps extends BasicShapeProps{
-  name? : string
-}
+export type ExtendedShapeProps<T = {}> = BasicShapeProps<{name? : string} & T>
 
-export interface BaseShapeProps extends BasicShapeProps{
+export type BaseShapeProps = BasicShapeProps<{
   addShape      : (shape : NGL.Shape) => NGL.Shape
   hash          : any
-}
+}>
 
-export interface BaseShapeState{
+export type BaseShapeState = {
   component   : NGL.Component | null
 }
 

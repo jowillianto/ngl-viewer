@@ -1,15 +1,15 @@
-import React, { useContext, useState } from "react";
-import { ComponentUIDataT } from "./componentData";
-import { mockComponentsDataMap } from "./componentData";
+import { useContext } from "react";
 import { ColorPicker } from "ngl-viewer/forms/color-picker";
-import PhotoShopContext from "./context";
 import Vector3DInput from "ngl-viewer/forms/3d-vector";
 import { Vector3 } from "ngl";
 import { ViewSettings } from "ngl-viewer/interfaces/interfaces";
-import ViewSettingsInput from "ngl-viewer/forms/view-settings";
+import ViewSettingsInput from "ngl-viewer/forms/viewer/view-settings";
+import ViewerContext from "./viewer-context";
+import FileUploader from "ngl-viewer/forms/file-reader";
+import FileViewSettings from "ngl-viewer/forms/viewer/file-view-settings";
 
-export const PhotoshopPanel = () => {
-  const context = useContext(PhotoShopContext);
+const ViewerPanel = () => {
+  const context = useContext(ViewerContext);
   const selectedIndex = 0;
 
   const handleColorChange = (color: [number, number, number]) => {
@@ -29,7 +29,7 @@ export const PhotoshopPanel = () => {
     const component = context.components[selectedIndex];
     const oldProps = component.props;
     let newProps;
-  
+
     if (
       ["arrow", "cone", "cylinder"].includes(
         context.components[selectedIndex].type
@@ -39,7 +39,7 @@ export const PhotoshopPanel = () => {
     } else if (position) {
       newProps = Object.assign(oldProps, { position });
     }
-  
+
     const newComponent = Object.assign(component, { props: newProps });
     context.replaceComponent(newComponent, selectedIndex);
   };
@@ -52,10 +52,23 @@ export const PhotoshopPanel = () => {
     context.replaceComponent(newComponent, selectedIndex);
   };
 
+  const handleFileUp = (file: File) => {
+    const component = context.components[selectedIndex];
+    const oldProps = component.props;
+    const newProps = Object.assign(oldProps, { file });
+    const newComponent = Object.assign(component, { props: newProps });
+    context.replaceComponent(newComponent, selectedIndex);
+  };
 
-  
+  const handleViewSettingsChange = (viewSettings: ViewSettings[]) => {
+    const component = context.components[selectedIndex];
+    const oldProps = component.props;
+    const newProps = Object.assign(oldProps, { viewSettings });
+    const newComponent = Object.assign(component, { props: newProps });
+    context.replaceComponent(newComponent, selectedIndex);
+  };
+
   const component = context.components[selectedIndex];
-  
 
   return (
     <div>
@@ -111,13 +124,37 @@ export const PhotoshopPanel = () => {
           />
         )}
 
-      {component && "viewSettings" in component.props && (
-        <ViewSettingsInput
-          value={component.props.viewSettings}
-          onChange={handleViewSettings}
-        />
-      )}
+        {component && "file" in component.props && (
+          <FileUploader
+            onChange={handleFileUp}
+            readOnly={false}
+            value={component.props.file as File}
+          />
+        )}
+
+        {component && "viewSettings" in component.props && (
+          <ViewSettingsInput
+            value={component.props.viewSettings}
+            onChange={handleViewSettings}
+          />
+        )}
+
+        {component && "viewSettings" in component.props && (
+          <FileViewSettings
+            options={[
+              "cartoon",
+              "ribbon",
+              "surface",
+              "licorice",
+              "ball+stick",
+              
+            ]}
+            value={component.props.viewSettings as unknown as ViewSettings[]}
+            onChange={handleViewSettingsChange} readOnly={false}          />
+        )}
       </div>
     </div>
   );
 };
+
+export default ViewerPanel;

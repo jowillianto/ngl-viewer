@@ -3,13 +3,13 @@ import BaseShape, { ExtendedShapeProps } from './base-shape'
 import * as NGL from 'ngl'
 import {randomString} from '../utils/utils'
 
-export interface NGLOctahedronProps extends ExtendedShapeProps{
+export type NGLOctahedronProps = ExtendedShapeProps<{
   position      : NGL.Vector3 | [number, number, number]
   depthAxis     : NGL.Vector3 | [number, number, number]
   heightAxis    : NGL.Vector3 | [number, number, number]
   color         : [number, number, number] | NGL.Color
   size          : number
-}
+}>
 
 export default class NGLOctahedron extends React.Component<NGLOctahedronProps>{
   randomName  : string

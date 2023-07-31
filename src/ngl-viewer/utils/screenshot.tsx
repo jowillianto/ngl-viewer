@@ -1,8 +1,7 @@
 import React from "react";
-import { StageContext } from "../photoshop/stage";
-import { PromiseButtonProps, RenderProps } from "./utils";
+import { StageContext } from "ngl-viewer/stage";
 
-export interface ImageParameters{
+export type ImageParameters = {
   trim        : boolean;
   factor      : number;
   antialias   : boolean;
@@ -10,31 +9,37 @@ export interface ImageParameters{
   onProgress  : Function | undefined;
 }
 
-export interface NGLScreenshotProps extends RenderProps<PromiseButtonProps>{
+export type NGLScreenshotButtonP<T> = {
+  onClick : () => Promise<Blob>
+} & T
+
+export type NGLScreenshotP<T>= {
+  render : 
+    React.ComponentType<NGLScreenshotButtonP<T>> | 
+    React.LazyExoticComponent<React.ComponentType<NGLScreenshotButtonP<T>>>
+  props : T
   params? : Partial<ImageParameters>
 }
 
-export default class NGLScreenshot extends React.Component<
-  NGLScreenshotProps
->{
-  context !: React.ContextType<typeof StageContext>
-  static contextType  = StageContext
-  onClick = () : Promise<Blob> => {
-    return new Promise((res, rej) => {
-      const stage   = this.context.stage
-      const image   = stage?.makeImage(this.props.params)
-      if(image)
-        image
-        .then((img) => res(img))
-        .catch((err) => rej(err))
-      else 
-        rej(undefined)
+const NGLScreenshot = <T,>({params, render, props} : NGLScreenshotP<T>) => {
+  const { stage } = React.useContext(StageContext)
+  const onClick = React.useCallback(() => {
+    const image = stage?.makeImage(params)
+    return new Promise<Blob>((res, rej) => {
+      if (image) return image
+      else rej(undefined)
     })
-  }
-  render(): React.ReactNode {
-    const render  = this.props.render
-    return React.cloneElement(
-      render, {...render.props, onClick : this.onClick}
-    )
-  }
+  }, [ stage, params])
+  const Component = render
+  const renderProps = {
+    onClick, ...props
+  } as (
+    NGLScreenshotButtonP<T> & 
+    React.PropsWithRef<NGLScreenshotButtonP<T>>
+  )
+  return (
+    <Component {...renderProps} />
+  )
 }
+
+export default NGLScreenshot

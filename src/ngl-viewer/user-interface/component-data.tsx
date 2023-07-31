@@ -322,16 +322,33 @@ export const mockComponentsDataMap: Record<
   file: {
     type: "file",
     props: {
-      file: undefined,
+      file: null,
       viewSettings: [
         {
-          type: "zoom",
-          params: {
-            zoomLevel: 2,
-          },
+          type: "cartoon",
+          params: {}
         },
       ],
+      surface : [{
+        repr : 'cartoon', settings : {colorScheme : 'element'}
+      }, {
+        repr : 'surface', settings : {
+          sele : 'polymer', opacity : '0.5',
+          colorScheme : 'electrostatic',
+          colorDomain : [-80, 80], surfaceType : 'av'
+        }
+      },
+    ],
+    licorice  : [{
+      repr: 'ball+stick'
+    }],
+    cartoon   :[{
+      repr : 'cartoon'
+    }]
+      
     },
     config: {},
   },
 };
+export const componentTypes = Object.keys(mockComponentsDataMap) as
+ComponentDataT["type"][]

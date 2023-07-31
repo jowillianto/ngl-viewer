@@ -5,10 +5,11 @@ type ViewSettingsInputProps = {
   onChange: (viewSettings: ViewSettings) => void;
 };
 
-const ViewSettingsInput: React.FC<ViewSettingsInputProps> = ({
+const ViewSettingsInput = ({
   value,
   onChange,
-}) => {
+} : ViewSettingsInputProps) => {
+  
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     index: number,

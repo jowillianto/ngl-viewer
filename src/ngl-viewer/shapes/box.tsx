@@ -3,13 +3,13 @@ import BaseShape, { ExtendedShapeProps } from './base-shape'
 import * as NGL from 'ngl'
 import {randomString} from '../utils/utils'
 
-export interface NGLBoxProps extends ExtendedShapeProps{
+export type NGLBoxProps = ExtendedShapeProps<{
   position  : NGL.Vector3 | [number, number, number]
   color     : [number, number, number] | NGL.Color
   size      : number
   heightAxis: NGL.Vector3 | [number, number, number]
   depthAxis : NGL.Vector3 | [number, number, number]
-}
+}>
 
 export default class NGLBox extends React.Component<NGLBoxProps>{
   randomName  : string

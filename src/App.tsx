@@ -1,27 +1,24 @@
-import "./index.css";
-import Photoshop from "ngl-viewer/photoshop/photoshop";
-import { PhotoshopPanel } from "ngl-viewer/photoshop/photoshopPanel";
-import { mockComponentsDataMap } from "ngl-viewer/photoshop/componentData";
-import { PhotoshopSelector } from "ngl-viewer/photoshop/photoshopSelector";
-import PhotoshopStage from "ngl-viewer/photoshop/renderShape";
-import FileRenderer from "ngl-viewer/forms/file-renderer";
-import PDBViewer from "ngl-viewer/forms/file-renderer";
+import React from "react"
+import "./index.css"
+import ProteinViewer from "ngl-viewer/user-interface/protein-viewer"
+import ViewerSelector from "ngl-viewer/user-interface/component-selector"
+import ViewerStage from "ngl-viewer/user-interface/viewer-stage"
+import ViewerPanel from "ngl-viewer/user-interface/viewer-panel"
 
 const App = () => {
-
   return (
-    <Photoshop>
-      <div style = {{display : 'flex'}}>
-        <PhotoshopStage width = "60vw" height = "80vh" />
-        <div style = {{display : 'flex', flexFlow : 'column wrap'}}>
-          <PhotoshopSelector 
-            options = {Object.keys(mockComponentsDataMap) as any}
-          />
-          <PhotoshopPanel />
+    <ProteinViewer>
+      <div className = 'container'>
+        <div className = 'viewer'>
+          <ViewerStage height = "80vh" width = "80vw" />
+        </div>
+        <div className = 'selector'>
+          <ViewerSelector />
+          <ViewerPanel />
         </div>
       </div>
-    </Photoshop>
-  );
-};
+    </ProteinViewer>
+  )
+}
 
-export default App;
+export default App

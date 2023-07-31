@@ -3,13 +3,13 @@ import BaseShape, { ExtendedShapeProps } from './base-shape'
 import * as NGL from 'ngl'
 import {randomString} from '../utils/utils'
 
-export interface NGLTorusProps extends ExtendedShapeProps{
+export type NGLTorusProps = ExtendedShapeProps<{
   position      : NGL.Vector3 | [number, number, number]
   majorAxis     : NGL.Vector3 | [number, number, number]
   minorAxis     : NGL.Vector3 | [number, number, number]
   color         : [number, number, number] | NGL.Color
   radius        : number,
-}
+}>
 
 export default class NGLTorus extends React.Component<NGLTorusProps>{
   randomName  : string
