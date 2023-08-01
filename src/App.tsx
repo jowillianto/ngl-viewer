@@ -13,11 +13,7 @@ const App = () => {
           <ViewerStage height = "80vh" width = "80vw" />
         </div>
         <div className = 'selector'>
-<<<<<<< HEAD
-          <ViewerSelector />
-=======
-          <ViewerSelector options = {["box", "arrow"]}/>
->>>>>>> 7e6b4a9498d1f66147cd42a51bb9e666709b02f4
+          <ViewerSelector/>
           <ViewerPanel />
         </div>
       </div>

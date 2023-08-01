@@ -7,6 +7,8 @@ import { Vector3 } from "ngl";
 import { ViewSettings } from "../interfaces/interfaces";
 import ViewSettingsInput from "../forms/viewer/view-settings";
 import ViewerContext from "./viewer-context";
+import FileUploader from "ngl-viewer/forms/file-reader";
+import FileViewSettings from "ngl-viewer/forms/viewer/file-view-settings";
 
 const ViewerPanel = () => {
   const context = useContext(ViewerContext);
@@ -62,11 +64,14 @@ const ViewerPanel = () => {
 
   const handleViewSettingsChange = (viewSettings: ViewSettings[]) => {
     const component = context.components[selectedIndex];
-    const oldProps = component.props;
-    const newProps = Object.assign(oldProps, { viewSettings });
-    const newComponent = Object.assign(component, { props: newProps });
-    context.replaceComponent(newComponent, selectedIndex);
+    if (component.type === 'file') {
+      const oldProps = component.props;
+      const newProps = Object.assign(oldProps, { viewSettings });
+      const newComponent = Object.assign(component, { props: newProps });
+      context.replaceComponent(newComponent, selectedIndex);
+    }
   };
+  
 
   const component = context.components[selectedIndex];
 
@@ -131,27 +136,30 @@ const ViewerPanel = () => {
             value={component.props.file as File}
           />
         )}
-
+        {/* 
         {component && "viewSettings" in component.props && (
           <ViewSettingsInput
             value={component.props.viewSettings}
             onChange={handleViewSettings}
           />
-        )}
+        )} */}
 
-        {component && "viewSettings" in component.props && (
-          <FileViewSettings
-            options={[
-              "cartoon",
-              "ribbon",
-              "surface",
-              "licorice",
-              "ball+stick",
-              
-            ]}
-            value={component.props.viewSettings as unknown as ViewSettings[]}
-            onChange={handleViewSettingsChange} readOnly={false}          />
-        )}
+        {component &&
+          "viewSettings" in component.props &&
+          "file" in component.props && (
+            <FileViewSettings
+              options={[
+                "cartoon",
+                "ribbon",
+                "surface",
+                "licorice",
+                "ball+stick",
+              ]}
+              value={component.props.viewSettings as unknown as ViewSettings[]}
+              onChange={handleViewSettingsChange}
+              readOnly={false}
+            />
+          )}
       </div>
     </div>
   );
