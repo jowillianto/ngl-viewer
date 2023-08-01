@@ -65,7 +65,6 @@ var NGLFile = /** @class */ (function (_super) {
         this.loadFileToStage();
     };
     NGLFile.prototype.shouldComponentUpdate = function (nextProps, nextState, nextContext) {
-        // Make Update Conditions here
         var diffFile = this.props.file !== nextProps.file;
         var diffSettings = this.props.viewSettings !== nextProps.viewSettings;
         var diffStage = this.context.stage !== nextContext.stage;

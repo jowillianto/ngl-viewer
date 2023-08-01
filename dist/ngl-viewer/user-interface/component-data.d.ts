@@ -21,3 +21,4 @@ export type ComponentUIDataT = {
     config: {};
 };
 export declare const mockComponentsDataMap: Record<ComponentUIDataT["type"], ComponentUIDataT>;
+export declare const componentTypes: ("text" | "file" | "arrow" | "box" | "cone" | "ellipsoid" | "torus" | "sphere" | "cylinder" | "tetrahedron" | "octahedron")[];

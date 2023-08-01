@@ -11,9 +11,20 @@ import { jsx as _jsx } from "react/jsx-runtime";
 import React from "react";
 import { mockComponentsDataMap } from "./component-data";
 import ViewerContext from "./viewer-context";
-var ProteinViewer = function (_a) {
-    var _b = _a.initialComponents, initialComponents = _b === void 0 ? [] : _b, children = _a.children;
-    var _c = React.useState(initialComponents), components = _c[0], setComponents = _c[1];
+var ProteinViewer = function (props) {
+    var _a = props.initialComponents, initialComponents = _a === void 0 ? [] : _a, children = props.children;
+    var _b = React.useState(props.components ? props.components : initialComponents), internalComp = _b[0], setInternalComp = _b[1];
+    var components = React.useMemo(function () {
+        return props.components ? props.components : internalComp;
+    }, [props.components, internalComp]);
+    var setComponents = React.useCallback(function (comp) {
+        setInternalComp(function (components) {
+            var newComponents = comp(components);
+            if (props.onComponentsChange)
+                props.onComponentsChange(newComponents);
+            return newComponents;
+        });
+    }, [props.onComponentsChange, setInternalComp]);
     var addComponent = React.useCallback(function (component) {
         setComponents(function (components) { return __spreadArray(__spreadArray([], components, true), [component], false); });
     }, [setComponents]);
