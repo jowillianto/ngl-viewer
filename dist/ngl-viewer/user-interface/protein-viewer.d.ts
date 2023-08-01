@@ -1,7 +1,9 @@
 import React from "react";
 import { ComponentUIDataT } from "./component-data";
-type ProteinViewerP = {
+type ProteinViewerP = React.PropsWithChildren<{
     initialComponents?: Array<ComponentUIDataT>;
-} & React.PropsWithChildren;
-declare const ProteinViewer: ({ initialComponents, children }: ProteinViewerP) => JSX.Element;
+    components?: Array<ComponentUIDataT>;
+    onComponentsChange?: (arr: Array<ComponentUIDataT>) => void;
+}>;
+declare const ProteinViewer: (props: ProteinViewerP) => JSX.Element;
 export default ProteinViewer;

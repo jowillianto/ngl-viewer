@@ -2,9 +2,10 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from "react";
 import ViewerContext from "./viewer-context";
 import Select from 'react-select';
+import { componentTypes } from "./component-data";
 var ViewerSelector = function (_a) {
-    var options = _a.options, _b = _a.addButton, addButton = _b === void 0 ? 'Add' : _b;
-    var _c = React.useState(null), selected = _c[0], setSelected = _c[1];
+    var _b = _a.options, options = _b === void 0 ? componentTypes : _b, _c = _a.addButton, addButton = _c === void 0 ? 'Add' : _c;
+    var _d = React.useState(null), selected = _d[0], setSelected = _d[1];
     var addComponentByType = React.useContext(ViewerContext).addComponentByType;
     var onSelectChange = React.useCallback(function (option) {
         if (option)
