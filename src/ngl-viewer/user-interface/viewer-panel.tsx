@@ -5,8 +5,10 @@ import { ColorPicker } from "../forms/color-picker";
 import Vector3DInput from "../forms/3d-vector";
 import { Vector3 } from "ngl";
 import { ViewSettings } from "../interfaces/interfaces";
-import ViewSettingsInput from "../forms/view-settings";
+import ViewSettingsInput from "../forms/viewer/view-settings";
 import ViewerContext from "./viewer-context";
+import FileUploader from "../forms/file-reader";
+import FileViewSettings from "../forms/viewer/file-view-settings";
 
 const ViewerPanel = () => {
   const context = useContext(ViewerContext);
@@ -29,7 +31,7 @@ const ViewerPanel = () => {
     const component = context.components[selectedIndex];
     const oldProps = component.props;
     let newProps;
-  
+
     if (
       ["arrow", "cone", "cylinder"].includes(
         context.components[selectedIndex].type
@@ -39,7 +41,7 @@ const ViewerPanel = () => {
     } else if (position) {
       newProps = Object.assign(oldProps, { position });
     }
-  
+
     const newComponent = Object.assign(component, { props: newProps });
     context.replaceComponent(newComponent, selectedIndex);
   };
@@ -52,10 +54,23 @@ const ViewerPanel = () => {
     context.replaceComponent(newComponent, selectedIndex);
   };
 
+  const handleFileUp = (file: File) => {
+    const component = context.components[selectedIndex];
+    const oldProps = component.props;
+    const newProps = Object.assign(oldProps, { file });
+    const newComponent = Object.assign(component, { props: newProps });
+    context.replaceComponent(newComponent, selectedIndex);
+  };
 
-  
+  const handleViewSettingsChange = (viewSettings: ViewSettings[]) => {
+    const component = context.components[selectedIndex];
+    const oldProps = component.props;
+    const newProps = Object.assign(oldProps, { viewSettings });
+    const newComponent = Object.assign(component, { props: newProps });
+    context.replaceComponent(newComponent, selectedIndex);
+  };
+
   const component = context.components[selectedIndex];
-  
 
   return (
     <div>
@@ -111,15 +126,37 @@ const ViewerPanel = () => {
           />
         )}
 
-      {component && "viewSettings" in component.props && (
-        <ViewSettingsInput
-          value={component.props.viewSettings}
-          onChange={handleViewSettings}
-        />
-      )}
+        {component && "file" in component.props && (
+          <FileUploader
+            onChange={handleFileUp}
+            readOnly={false}
+            value={component.props.file as File}
+          />
+        )}
+
+        {component && "viewSettings" in component.props && (
+          <ViewSettingsInput
+            value={component.props.viewSettings}
+            onChange={handleViewSettings}
+          />
+        )}
+
+        {component && "viewSettings" in component.props && (
+          <FileViewSettings
+            options={[
+              "cartoon",
+              "ribbon",
+              "surface",
+              "licorice",
+              "ball+stick",
+              
+            ]}
+            value={component.props.viewSettings as unknown as ViewSettings[]}
+            onChange={handleViewSettingsChange} readOnly={false}          />
+        )}
       </div>
     </div>
   );
 };
 
-export default ViewerPanel
+export default ViewerPanel;

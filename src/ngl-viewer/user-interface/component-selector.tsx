@@ -2,6 +2,7 @@ import React from "react";
 import { ComponentUIDataT } from "./component-data"
 import ViewerContext from "./viewer-context";
 import Select from 'react-select'
+import { componentTypes } from "./component-data";
 
 type OptionData = {
   label: string;
@@ -9,13 +10,13 @@ type OptionData = {
 };
 
 type SelectorP = {
-  options : Array<ComponentUIDataT["type"]>,
+  options? : Array<ComponentUIDataT["type"]>,
   addButton? : React.ReactNode
 }
 
 type SelectorS = OptionData["value"] | null
 
-const ViewerSelector = ({ options, addButton = 'Add' } : SelectorP) => {
+const ViewerSelector = ({ options = componentTypes, addButton = 'Add' } : SelectorP) => {
   const [selected, setSelected] = React.useState<SelectorS>(null)
   const { addComponentByType } = React.useContext(ViewerContext)
   const onSelectChange = React.useCallback(

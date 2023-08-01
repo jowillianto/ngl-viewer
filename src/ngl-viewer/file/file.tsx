@@ -10,6 +10,9 @@ export type NGLFileProps = React.PropsWithChildren & {
   viewSettings  : ViewSettings
   fileSettings? : Partial<StageLoadFileParams>
   controls?     : Object
+  surface? : Object
+  licorice? : Object
+  cartoon? : Object
 }
 export type  NGLFileState = {
   showRepr      : boolean,
@@ -71,7 +74,7 @@ export default class NGLFile extends React.Component<
     nextState: Readonly<NGLFileState>, 
     nextContext: React.ContextType<typeof StageContext>
   ): boolean {
-    // Make Update Conditions here
+
     const diffFile    = this.props.file !== nextProps.file
     const diffSettings= this.props.viewSettings !== nextProps.viewSettings
     const diffStage   = this.context.stage !== nextContext.stage
