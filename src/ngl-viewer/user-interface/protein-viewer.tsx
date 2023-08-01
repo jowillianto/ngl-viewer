@@ -2,12 +2,31 @@ import React from "react";
 import { ComponentUIDataT, mockComponentsDataMap } from "./component-data";
 import ViewerContext from "./viewer-context";
 
-type ProteinViewerP = {
-  initialComponents? : Array<ComponentUIDataT>
-} & React.PropsWithChildren
+type CompatFunc = (component : ComponentUIDataT[]) => ComponentUIDataT[]
 
-const ProteinViewer = ({initialComponents = [], children} : ProteinViewerP) => {
-  const [components, setComponents] = React.useState(initialComponents)
+type ProteinViewerP = React.PropsWithChildren<{
+  initialComponents? : Array<ComponentUIDataT>
+  components? : Array<ComponentUIDataT>
+  onComponentsChange? : (arr : Array<ComponentUIDataT>) => void
+}>
+
+const ProteinViewer = (props : ProteinViewerP) => {
+  const { initialComponents = [], children } = props
+  const [internalComp, setInternalComp] = React.useState(
+    props.components ? props.components : initialComponents
+  )
+  const components = React.useMemo(() => {
+    return props.components ? props.components : internalComp
+  }, [ props.components, internalComp ])
+  const setComponents = React.useCallback(
+    (comp : CompatFunc) => {
+      setInternalComp((components) => {
+        const newComponents = comp(components)
+        if (props.onComponentsChange) props.onComponentsChange(newComponents)
+        return newComponents
+      })
+    }, [props.onComponentsChange, setInternalComp]
+  )
   const addComponent = React.useCallback(
     (component : ComponentUIDataT) => {
       setComponents((components) => [...components, component])

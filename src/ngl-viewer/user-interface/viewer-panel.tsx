@@ -7,6 +7,8 @@ import { Vector3 } from "ngl";
 import { ViewSettings } from "../interfaces/interfaces";
 import ViewSettingsInput from "../forms/viewer/view-settings";
 import ViewerContext from "./viewer-context";
+import FileUploader from "../forms/file-reader";
+import FileViewSettings from "../forms/viewer/file-view-settings";
 
 const ViewerPanel = () => {
   const context = useContext(ViewerContext);

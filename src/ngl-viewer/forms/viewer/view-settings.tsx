@@ -1,4 +1,4 @@
-import { ViewSettings } from "../interfaces/interfaces";
+import { ViewSettings } from "../../interfaces/interfaces";
 
 type ViewSettingsInputProps = {
   value: ViewSettings;
