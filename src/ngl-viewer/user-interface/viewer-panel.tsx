@@ -5,10 +5,9 @@ import { ColorPicker } from "../forms/color-picker";
 import Vector3DInput from "../forms/3d-vector";
 import { Vector3 } from "ngl";
 import { ViewSettings } from "../interfaces/interfaces";
-import ViewSettingsInput from "../forms/viewer/view-settings";
 import ViewerContext from "./viewer-context";
-import FileUploader from "ngl-viewer/forms/file-reader";
-import FileViewSettings from "ngl-viewer/forms/viewer/file-view-settings";
+import FileUploader from "../forms/file-reader";
+import FileViewSettings from "../forms/viewer/file-view-settings";
 
 const ViewerPanel = () => {
   const context = useContext(ViewerContext);

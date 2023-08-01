@@ -1,4 +1,4 @@
-import { ViewSettings } from "ngl-viewer/interfaces/interfaces";
+import { ViewSettings } from "../../interfaces/interfaces";
 import { FormP } from "../common";
 import { useState } from "react";
 import FileViewerSelector from "./viewer-selector";

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "baseUrl": "./src",
+    // "baseUrl": "./src",
     "paths" : {
       "text-editor" : [
         "../node_modules/@jowillianto/draftjs-wysiwyg/src/text-editor"
