@@ -2,7 +2,6 @@ import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-run
 import { useContext } from "react";
 import { ColorPicker } from "../forms/color-picker";
 import Vector3DInput from "../forms/3d-vector";
-import ViewSettingsInput from "../forms/viewer/view-settings";
 import ViewerContext from "./viewer-context";
 import FileUploader from "../forms/file-reader";
 import FileViewSettings from "../forms/viewer/file-view-settings";
@@ -46,10 +45,12 @@ var ViewerPanel = function () {
     };
     var handleViewSettingsChange = function (viewSettings) {
         var component = context.components[selectedIndex];
-        var oldProps = component.props;
-        var newProps = Object.assign(oldProps, { viewSettings: viewSettings });
-        var newComponent = Object.assign(component, { props: newProps });
-        context.replaceComponent(newComponent, selectedIndex);
+        if (component.type === 'file') {
+            var oldProps = component.props;
+            var newProps = Object.assign(oldProps, { viewSettings: viewSettings });
+            var newComponent = Object.assign(component, { props: newProps });
+            context.replaceComponent(newComponent, selectedIndex);
+        }
     };
     var component = context.components[selectedIndex];
     return (_jsxs("div", { children: [_jsx("h3", { children: "Photoshop Panel" }), _jsxs("div", { children: [component && "color" in component.props && (_jsx(ColorPicker, { value: component.props.color, onChange: handleColorChange, readOnly: false })), component &&
@@ -64,7 +65,9 @@ var ViewerPanel = function () {
                                     }
                                 }, readOnly: false })] })), component && "position" in component.props && (_jsx(Vector3DInput, { value: component.props.position, onChange: function (position) {
                             handleCoordinateChange(position, undefined, undefined);
-                        }, readOnly: false })), component && "file" in component.props && (_jsx(FileUploader, { onChange: handleFileUp, readOnly: false, value: component.props.file })), component && "viewSettings" in component.props && (_jsx(ViewSettingsInput, { value: component.props.viewSettings, onChange: handleViewSettings })), component && "viewSettings" in component.props && (_jsx(FileViewSettings, { options: [
+                        }, readOnly: false })), component && "file" in component.props && (_jsx(FileUploader, { onChange: handleFileUp, readOnly: false, value: component.props.file })), component &&
+                        "viewSettings" in component.props &&
+                        "file" in component.props && (_jsx(FileViewSettings, { options: [
                             "cartoon",
                             "ribbon",
                             "surface",

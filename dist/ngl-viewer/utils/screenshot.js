@@ -17,12 +17,9 @@ var NGLScreenshot = function (_a) {
     var stage = React.useContext(StageContext).stage;
     var onClick = React.useCallback(function () {
         var image = stage === null || stage === void 0 ? void 0 : stage.makeImage(params);
-        return new Promise(function (res, rej) {
-            if (image)
-                return image;
-            else
-                rej(undefined);
-        });
+        if (image === undefined)
+            throw Error("Stage is undefined");
+        return image;
     }, [stage, params]);
     var Component = render;
     var renderProps = __assign({ onClick: onClick }, props);

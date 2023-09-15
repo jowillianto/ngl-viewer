@@ -1,3 +1,33 @@
+export var view_settings_type = {
+    surface: [
+        {
+            type: "cartoon",
+            params: { colorScheme: "element" },
+        },
+        {
+            type: "surface",
+            params: {
+                sele: "polymer",
+                opacity: "0.5",
+                colorScheme: "electrostatic",
+                colorDomain: [-80, 80],
+                surfaceType: "av",
+            },
+        },
+    ],
+    licorice: [
+        {
+            type: "ball+stick",
+            params: {},
+        },
+    ],
+    cartoon: [
+        {
+            type: "cartoon",
+            params: {},
+        },
+    ],
+};
 export var mockComponentsDataMap = {
     arrow: {
         type: "arrow",
@@ -25,7 +55,7 @@ export var mockComponentsDataMap = {
             shapeParams: {},
             name: "Arrow",
         },
-        config: {}
+        config: {},
     },
     box: {
         type: "box",
@@ -54,7 +84,7 @@ export var mockComponentsDataMap = {
             shapeParams: {},
             name: "Box",
         },
-        config: {}
+        config: {},
     },
     cone: {
         type: "cone",
@@ -82,7 +112,7 @@ export var mockComponentsDataMap = {
             shapeParams: {},
             name: "Cone",
         },
-        config: {}
+        config: {},
     },
     cylinder: {
         type: "cylinder",
@@ -109,7 +139,7 @@ export var mockComponentsDataMap = {
             ],
             name: "Cylinder",
         },
-        config: {}
+        config: {},
     },
     sphere: {
         type: "sphere",
@@ -135,7 +165,7 @@ export var mockComponentsDataMap = {
                 },
             ],
         },
-        config: {}
+        config: {},
     },
     ellipsoid: {
         type: "ellipsoid",
@@ -163,7 +193,7 @@ export var mockComponentsDataMap = {
             ],
             name: "Ellipsoid",
         },
-        config: {}
+        config: {},
     },
     octahedron: {
         type: "octahedron",
@@ -191,7 +221,7 @@ export var mockComponentsDataMap = {
             ],
             name: "Octahedron",
         },
-        config: {}
+        config: {},
     },
     text: {
         type: "text",
@@ -210,7 +240,7 @@ export var mockComponentsDataMap = {
             ],
             name: "Text",
         },
-        config: {}
+        config: {},
     },
     torus: {
         type: "torus",
@@ -238,7 +268,7 @@ export var mockComponentsDataMap = {
             ],
             name: "Torus",
         },
-        config: {}
+        config: {},
     },
     tetrahedron: {
         type: "tetrahedron",
@@ -266,7 +296,7 @@ export var mockComponentsDataMap = {
             ],
             name: "Tetrahedron",
         },
-        config: {}
+        config: {},
     },
     file: {
         type: "file",
@@ -275,25 +305,9 @@ export var mockComponentsDataMap = {
             viewSettings: [
                 {
                     type: "cartoon",
-                    params: {}
+                    params: {},
                 },
             ],
-            surface: [{
-                    repr: 'cartoon', settings: { colorScheme: 'element' }
-                }, {
-                    repr: 'surface', settings: {
-                        sele: 'polymer', opacity: '0.5',
-                        colorScheme: 'electrostatic',
-                        colorDomain: [-80, 80], surfaceType: 'av'
-                    }
-                },
-            ],
-            licorice: [{
-                    repr: 'ball+stick'
-                }],
-            cartoon: [{
-                    repr: 'cartoon'
-                }]
         },
         config: {},
     },
