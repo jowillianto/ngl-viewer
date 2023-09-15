@@ -305,11 +305,7 @@ export var mockComponentsDataMap = {
             viewSettings: [
                 {
                     type: "cartoon",
-<<<<<<< HEAD
-                    params: {}
-=======
                     params: {},
->>>>>>> build
                 },
             ],
             surface: [{
