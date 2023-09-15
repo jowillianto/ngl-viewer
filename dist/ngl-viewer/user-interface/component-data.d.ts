@@ -20,5 +20,34 @@ export type ComponentUIDataT = {
     props: ComponentDataT["props"];
     config: {};
 };
+export declare const view_settings_type: {
+    surface: ({
+        type: string;
+        params: {
+            colorScheme: string;
+            sele?: undefined;
+            opacity?: undefined;
+            colorDomain?: undefined;
+            surfaceType?: undefined;
+        };
+    } | {
+        type: string;
+        params: {
+            sele: string;
+            opacity: string;
+            colorScheme: string;
+            colorDomain: number[];
+            surfaceType: string;
+        };
+    })[];
+    licorice: {
+        type: string;
+        params: {};
+    }[];
+    cartoon: {
+        type: string;
+        params: {};
+    }[];
+};
 export declare const mockComponentsDataMap: Record<ComponentUIDataT["type"], ComponentUIDataT>;
 export declare const componentTypes: ("text" | "file" | "arrow" | "box" | "cone" | "ellipsoid" | "torus" | "sphere" | "cylinder" | "tetrahedron" | "octahedron")[];

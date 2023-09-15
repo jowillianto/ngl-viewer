@@ -1,6 +1,7 @@
 import React from "react";
 import { ComponentUIDataT } from "./component-data";
 export type ViewerContextTypeT = {
+    [x: string]: any;
     components: Array<ComponentUIDataT>;
     addComponent: (component: ComponentUIDataT) => void;
     replaceComponent: (component: ComponentUIDataT, id: number) => void;

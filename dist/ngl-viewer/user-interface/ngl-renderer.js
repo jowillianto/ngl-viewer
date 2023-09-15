@@ -20,12 +20,12 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
-import { jsx as _jsx } from "react/jsx-runtime";
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 import ComponentSwitch from './component-switch';
 import NGLStage from '../stage';
 var NGLRenderer = function (_a) {
-    var components = _a.components, stageProps = __rest(_a, ["components"]);
+    var components = _a.components, _b = _a.children, children = _b === void 0 ? [] : _b, stageProps = __rest(_a, ["components", "children"]);
     var filteredComponents = React.useMemo(function () {
         return components
             .filter(function (entry) { return "props" in entry; })
@@ -36,6 +36,6 @@ var NGLRenderer = function (_a) {
             return _jsx(ComponentSwitch, __assign({}, props));
         });
     }, [components]);
-    return (_jsx(NGLStage, __assign({}, stageProps, { children: filteredComponents })));
+    return (_jsxs(NGLStage, __assign({}, stageProps, { children: [children, filteredComponents] })));
 };
 export default NGLRenderer;
