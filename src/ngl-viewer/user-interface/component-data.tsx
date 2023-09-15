@@ -37,6 +37,39 @@ export type ComponentUIDataT = {
   config: {};
 };
 
+
+export const view_settings_type = {
+  surface: [
+    {
+      type: "cartoon",
+      params: { colorScheme: "element" },
+    },
+    {
+      type: "surface",
+      params: {
+        sele: "polymer",
+        opacity: "0.5",
+        colorScheme: "electrostatic",
+        colorDomain: [-80, 80],
+        surfaceType: "av",
+      },
+    },
+  ],
+  licorice: [
+    {
+      type: "ball+stick",
+      params: {},
+    },
+  ],
+  cartoon: [
+    {
+      type: "cartoon",
+      params: {},
+    },
+  ],
+}
+
+
 export const mockComponentsDataMap: Record<
   ComponentUIDataT["type"],
   ComponentUIDataT
@@ -67,7 +100,7 @@ export const mockComponentsDataMap: Record<
       shapeParams: {},
       name: "Arrow",
     },
-    config: {}
+    config: {},
   },
   box: {
     type: "box",
@@ -96,7 +129,7 @@ export const mockComponentsDataMap: Record<
       shapeParams: {},
       name: "Box",
     },
-    config: {}
+    config: {},
   },
 
   cone: {
@@ -125,7 +158,7 @@ export const mockComponentsDataMap: Record<
       shapeParams: {},
       name: "Cone",
     },
-    config: {}
+    config: {},
   },
 
   cylinder: {
@@ -153,7 +186,7 @@ export const mockComponentsDataMap: Record<
       ],
       name: "Cylinder",
     },
-    config: {}
+    config: {},
   },
 
   sphere: {
@@ -180,7 +213,7 @@ export const mockComponentsDataMap: Record<
         },
       ],
     },
-    config: {}
+    config: {},
   },
 
   ellipsoid: {
@@ -209,7 +242,7 @@ export const mockComponentsDataMap: Record<
       ],
       name: "Ellipsoid",
     },
-    config: {}
+    config: {},
   },
 
   octahedron: {
@@ -238,7 +271,7 @@ export const mockComponentsDataMap: Record<
       ],
       name: "Octahedron",
     },
-    config: {}
+    config: {},
   },
 
   text: {
@@ -258,7 +291,7 @@ export const mockComponentsDataMap: Record<
       ],
       name: "Text",
     },
-    config: {}
+    config: {},
   },
 
   torus: {
@@ -287,7 +320,7 @@ export const mockComponentsDataMap: Record<
       ],
       name: "Torus",
     },
-    config: {}
+    config: {},
   },
 
   tetrahedron: {
@@ -316,7 +349,7 @@ export const mockComponentsDataMap: Record<
       ],
       name: "Tetrahedron",
     },
-    config: {}
+    config: {},
   },
 
   file: {
@@ -326,29 +359,14 @@ export const mockComponentsDataMap: Record<
       viewSettings: [
         {
           type: "cartoon",
-          params: {}
+          params: {},
         },
+        
       ],
-      surface : [{
-        repr : 'cartoon', settings : {colorScheme : 'element'}
-      }, {
-        repr : 'surface', settings : {
-          sele : 'polymer', opacity : '0.5',
-          colorScheme : 'electrostatic',
-          colorDomain : [-80, 80], surfaceType : 'av'
-        }
-      },
-    ],
-    licorice  : [{
-      repr: 'ball+stick'
-    }],
-    cartoon   :[{
-      repr : 'cartoon'
-    }]
-      
     },
     config: {},
   },
 };
-export const componentTypes = Object.keys(mockComponentsDataMap) as
-ComponentDataT["type"][]
+export const componentTypes = Object.keys(
+  mockComponentsDataMap
+) as ComponentDataT["type"][];
