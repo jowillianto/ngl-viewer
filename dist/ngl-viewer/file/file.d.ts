@@ -8,9 +8,6 @@ export type NGLFileProps = React.PropsWithChildren & {
     viewSettings: ViewSettings;
     fileSettings?: Partial<StageLoadFileParams>;
     controls?: Object;
-    surface?: Object;
-    licorice?: Object;
-    cartoon?: Object;
 };
 export type NGLFileState = {
     showRepr: boolean;
