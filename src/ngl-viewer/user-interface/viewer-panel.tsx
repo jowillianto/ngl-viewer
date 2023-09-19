@@ -8,7 +8,11 @@ import { ViewSettings } from "../interfaces/interfaces";
 import ViewerContext from "./viewer-context";
 import FileUploader from "../forms/file-reader";
 import FileViewSettings from "../forms/viewer/file-view-settings";
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEye, faEyeSlash, faPlus, faMinus, faGear} from '@fortawesome/free-solid-svg-icons'
+import { faAlignJustify, faCircleDot, faTrash } from '@fortawesome/free-solid-svg-icons'
+import "./panel.css"
+import Collapsible from "./collapsible";
 const ViewerPanel = () => {
   const context = useContext(ViewerContext);
   const selectedIndex = 0;
@@ -73,10 +77,35 @@ const ViewerPanel = () => {
   
 
   const component = context.components[selectedIndex];
-
   return (
     <div>
-      <h3>Photoshop Panel</h3>
+      <div className="Sticky">
+        {/* <span><FontAwesomeIcon icon={faCoffee}/></span> */}
+        <span><FontAwesomeIcon icon={faPlus} /></span>
+        <span><FontAwesomeIcon icon={faMinus} /></span>
+        <span><FontAwesomeIcon icon={faCircleDot} /></span>
+        <span><FontAwesomeIcon icon={faTrash} /></span>
+        <span><FontAwesomeIcon icon={faGear} /></span>
+      </div>
+      <Collapsible title={<span>sd</span>}>
+        {[
+          <Collapsible title={<span>Cartoon</span>}>
+            {[
+              <p key="1">Child 1</p>,
+            ]}
+          </Collapsible>,
+          <Collapsible title={<span>Base</span>}>
+            {[
+              <p key="1">Child 1</p>,
+            ]}
+          </Collapsible>,
+          <Collapsible title={<span>Bal+Stck</span>}>
+            {[
+              <p key="1">Child 1</p>,
+            ]}
+          </Collapsible>,
+        ]}
+      </Collapsible>
       <div>
         {component && "color" in component.props && (
           <ColorPicker
