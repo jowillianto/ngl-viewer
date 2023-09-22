@@ -7,26 +7,104 @@ export type NGLStageProps = React.PropsWithChildren<{
   viewSettings? : ConstructorParameters<typeof NGL.Stage>[1],
 }>
 
+
 export type NGLStageState = {
-  stage : NGL.Stage | null
+  stage: NGL.Stage | null;
+  isSpinning: boolean; // New state
+  isRocking: boolean;  // New state
+  projectionType: 'perspective' | 'orthographic' | 'stereo'; 
+
 }
 
-export const StageContext  = React.createContext<NGLStageState>({
-  stage : null
-})
+// Modify your existing StageContext
+export const StageContext = React.createContext<NGLStageState & {
+  toggleSpin?: () => void;  
+  toggleRock?: () => void;  
+  setPerspective?: () => void;  
+  setOrthographic?: () => void;  
+  setStereo?: () => void; 
+  centerStructure?: () => void; 
+  toggleFullScreen?: () => void; 
+}>({
+  stage: null,
+  isSpinning: false,
+  isRocking: false,
+  projectionType: 'perspective'  // <-- Default value
+});
+
+
+
 
 export default class NGLStage extends React.Component<
   NGLStageProps, NGLStageState
 >{
   stageRef            : React.RefObject<HTMLDivElement>
   observer            : ResizeObserver | undefined
-  constructor(props : NGLStageProps){
-    super(props)
-    this.state  = {
-      stage : null
+  constructor(props: NGLStageProps) {
+    super(props);
+    this.state = {
+      stage: null,
+      isSpinning: false,
+      isRocking: false,
+      projectionType: 'perspective'  // <-- Default value
+    };
+    this.stageRef = React.createRef();
+}
+
+  // Inside NGLStage class
+  centerStructure = () => {
+    if (this.state.stage) {
+        this.state.stage.autoView();
     }
-    this.stageRef   = React.createRef()
+}
+toggleFullScreen = () => {
+  const currentElement = this.stageRef.current;
+
+  if (currentElement) {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      currentElement.requestFullscreen();
+    }
   }
+}
+  toggleSpin = () => {
+    if (this.state.stage) {
+      const isSpinning = !this.state.isSpinning;
+      this.state.stage.setSpin(isSpinning);
+      this.setState({ isSpinning });
+    }
+}
+
+toggleRock = () => {
+    if (this.state.stage) {
+      const isRocking = !this.state.isRocking;
+      this.state.stage.setRock(isRocking);
+      this.setState({ isRocking });
+    }
+}
+setPerspective = () => {
+  this.state.stage?.setParameters({ cameraType: 'perspective' });
+  this.setState({ projectionType: 'perspective' });
+}
+
+setOrthographic = () => {
+  this.state.stage?.setParameters({ cameraType: 'orthographic' });
+  this.setState({ projectionType: 'orthographic' });
+}
+
+setStereo = () => {
+  this.state.stage?.setParameters({ cameraType: 'stereo' });
+  this.setState({ projectionType: 'stereo' });
+}
+  componentDidUpdate(prevProps: NGLStageProps) {
+    if (this.state.stage && prevProps.viewSettings?.backgroundColor !== this.props.viewSettings?.backgroundColor) {
+      this.state.stage.setParameters({
+        backgroundColor: this.props.viewSettings?.backgroundColor
+      });
+    }
+  }
+  
   componentDidMount(){
     const htmlElm = this.stageRef.current
     if(htmlElm){
@@ -56,7 +134,17 @@ export default class NGLStage extends React.Component<
     const style   = {height : height, width : width}
     return(
       <div className = 'ngl-viewer-stage'>
-        <StageContext.Provider value = {this.state}>
+       <StageContext.Provider value={{
+            ...this.state, 
+            toggleSpin: this.toggleSpin, 
+            toggleRock: this.toggleRock, 
+            setPerspective: this.setPerspective, 
+            setOrthographic: this.setOrthographic, 
+            setStereo: this.setStereo,  
+            centerStructure: this.centerStructure,
+            toggleFullScreen: this.toggleFullScreen  // <-- Add this line
+          }}>
+
           <div className = 'ngl-viewer-tab'>
             {this.props.children}
           </div>
