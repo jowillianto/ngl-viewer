@@ -62,6 +62,7 @@ const App = () => {
   // Set theme to light
   const activateLightTheme = () => {
     setTheme('light');
+    
   };
 
   // Set theme to dark
@@ -72,7 +73,7 @@ const App = () => {
     { type: 'cartoon', params: {} },
     // ... add more representations as needed
 ];
-  return (
+  return ( 
     <ThemeContext.Provider value={{ theme, setTheme }}>
         <ProteinViewer>
           <div className='container1'>
