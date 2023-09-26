@@ -1,6 +1,4 @@
 import React, { useContext, useState } from "react";
-import { ComponentUIDataT } from "./component-data";
-import { mockComponentsDataMap } from "./component-data";
 import { ColorPicker } from "../forms/color-picker";
 import Vector3DInput from "../forms/3d-vector";
 import { Vector3 } from "ngl";
@@ -9,8 +7,8 @@ import ViewerContext from "./viewer-context";
 import FileUploader from "../forms/file-reader";
 import FileViewSettings from "../forms/viewer/file-view-settings";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEye, faEyeSlash, faPlus, faMinus, faGear} from '@fortawesome/free-solid-svg-icons'
-import { faAlignJustify, faCircleDot, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faSquareMinus, faGear, faSquarePlus} from '@fortawesome/free-solid-svg-icons'
+import { faCircleDot, faTrash } from '@fortawesome/free-solid-svg-icons'
 import "./panel.css"
 import Collapsible from "./collapsible";
 const ViewerPanel = () => {
@@ -22,7 +20,6 @@ const ViewerPanel = () => {
     const oldProps = component.props;
     const newProps = Object.assign(oldProps, { color });
     const newComponent = Object.assign(component, { props: newProps });
-    console.log(color);
     context.replaceComponent(newComponent, selectedIndex);
   };
 
@@ -80,32 +77,18 @@ const ViewerPanel = () => {
   return (
     <div>
       <div className="Sticky">
-        {/* <span><FontAwesomeIcon icon={faCoffee}/></span> */}
-        <span><FontAwesomeIcon icon={faPlus} /></span>
-        <span><FontAwesomeIcon icon={faMinus} /></span>
+        <span><FontAwesomeIcon icon={faSquarePlus} /></span>
+        <span><FontAwesomeIcon icon={faSquareMinus} /></span>
         <span><FontAwesomeIcon icon={faCircleDot} /></span>
         <span><FontAwesomeIcon icon={faTrash} /></span>
         <span><FontAwesomeIcon icon={faGear} /></span>
       </div>
-      <Collapsible title={<span>sd</span>}>
-        {[
-          <Collapsible title={<span>Cartoon</span>}>
-            {[
-              <p key="1">Child 1</p>,
-            ]}
-          </Collapsible>,
-          <Collapsible title={<span>Base</span>}>
-            {[
-              <p key="1">Child 1</p>,
-            ]}
-          </Collapsible>,
-          <Collapsible title={<span>Bal+Stck</span>}>
-            {[
-              <p key="1">Child 1</p>,
-            ]}
-          </Collapsible>,
-        ]}
-      </Collapsible>
+      {context.components.map((component, index) => {
+        return(
+          <Collapsible component = {component}> 
+          </Collapsible>
+        )
+      })}
       <div>
         {component && "color" in component.props && (
           <ColorPicker
