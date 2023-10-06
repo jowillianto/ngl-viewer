@@ -12,7 +12,8 @@ export type NGLStageState = {
   stage: NGL.Stage | null;
   isSpinning: boolean; // New state
   isRocking: boolean;  // New state
-  projectionType: 'perspective' | 'orthographic' | 'stereo'; 
+  projectionType: 'perspective' | 'orthographic' | 'stereo';
+  theme: 'light' | 'dark'; 
 
 }
 
@@ -24,12 +25,14 @@ export const StageContext = React.createContext<NGLStageState & {
   setOrthographic?: () => void;  
   setStereo?: () => void; 
   centerStructure?: () => void; 
-  toggleFullScreen?: () => void; 
+  toggleFullScreen?: () => void;
+  setTheme?: (theme: 'light' | 'dark') => void; 
 }>({
   stage: null,
   isSpinning: false,
   isRocking: false,
-  projectionType: 'perspective'  // <-- Default value
+  projectionType: 'perspective',  // <-- Default value
+  theme: 'light',
 });
 
 
@@ -46,7 +49,8 @@ export default class NGLStage extends React.Component<
       stage: null,
       isSpinning: false,
       isRocking: false,
-      projectionType: 'perspective'  // <-- Default value
+      projectionType: 'perspective',  // <-- Default value
+      theme: 'light',
     };
     this.stageRef = React.createRef();
 }
@@ -57,6 +61,48 @@ export default class NGLStage extends React.Component<
         this.state.stage.autoView();
     }
 }
+// only for the stage
+setTheme = (theme: 'light' | 'dark') => {
+  this.setState({ theme });
+  if (theme === 'light') {
+    this.state.stage?.setParameters({ backgroundColor: 'white' });
+  } else {
+    this.state.stage?.setParameters({ backgroundColor: 'black' });
+  }
+  console.log("Setting theme to:", theme);
+}
+// whole page except the header part
+// setTheme = (theme: 'light' | 'dark') => {
+//   this.setState({ theme });
+//   if (theme === 'light') {
+//     document.body.classList.remove('dark-theme');
+//     document.body.classList.add('light-theme');
+
+//     // Add these lines
+//     const navbar = document.querySelector('.bg-light');
+//     if (navbar) {
+//       navbar.classList.remove('navbar-dark-theme');
+//       navbar.classList.add('navbar-light-theme');
+//     }
+    
+//     this.state.stage?.setParameters({ backgroundColor: 'white' });
+//   } else {
+//     document.body.classList.remove('light-theme');
+//     document.body.classList.add('dark-theme');
+
+//     // Add these lines
+//     const navbar = document.querySelector('.bg-light');
+//     if (navbar) {
+//       navbar.classList.remove('navbar-light-theme');
+//       navbar.classList.add('navbar-dark-theme');
+//     }
+    
+//     this.state.stage?.setParameters({ backgroundColor: 'black' });
+//   }
+//   console.log("Setting theme to:", theme); 
+// }
+
+
 toggleFullScreen = () => {
   const currentElement = this.stageRef.current;
 
@@ -142,7 +188,8 @@ setStereo = () => {
             setOrthographic: this.setOrthographic, 
             setStereo: this.setStereo,  
             centerStructure: this.centerStructure,
-            toggleFullScreen: this.toggleFullScreen  // <-- Add this line
+            toggleFullScreen: this.toggleFullScreen,
+            setTheme: this.setTheme  // <-- Add this line
           }}>
 
           <div className = 'ngl-viewer-tab'>

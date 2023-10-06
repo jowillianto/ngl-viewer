@@ -19,15 +19,24 @@
   background-color: white;
   margin-top: 0.2em;
 }
-.viewer.light-theme {
+/* .viewer.light-theme {
   background-color: white;
 }
 
 .viewer.dark-theme {
   background-color: black;
-}
+} */
 
 /* index.css */
 .clickable {
   cursor: pointer;
+}
+body.light-theme {
+  background-color: white;
+  color: black; /* Add any other styles you want for light theme here */
+}
+
+body.dark-theme {
+  background-color: black;
+  color: white; /* Add any other styles you want for dark theme here */
 }
