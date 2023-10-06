@@ -18,6 +18,7 @@ const ProteinViewer = (props : ProteinViewerP) => {
   const [internalComp, setInternalComp] = React.useState(
     props.components ? props.components : initialComponents
   )
+  const nodeRef = React.createRef<HTMLDivElement>()
   const components = React.useMemo(() => {
     return props.components ? props.components : internalComp
   }, [ props.components, internalComp ])
@@ -43,7 +44,7 @@ const ProteinViewer = (props : ProteinViewerP) => {
         props : mockComponentsDataMap[type].props, 
         config : {}
       }
-      addComponent(newComponent)
+      addComponent(newComponent as ComponentUIDataT) //TODO: Fix this
     }, [addComponent]
   )
   const removeComponent = React.useCallback(
@@ -67,7 +68,7 @@ const ProteinViewer = (props : ProteinViewerP) => {
   const context = React.useMemo(() => {
     return {
       components, addComponent, removeComponent, replaceComponent, 
-      addComponentByType,
+      addComponentByType, node : nodeRef
     }
   }, [
     components, 
@@ -75,6 +76,7 @@ const ProteinViewer = (props : ProteinViewerP) => {
     removeComponent, 
     replaceComponent, 
     addComponentByType,
+    nodeRef
   ])
   const stageContext = React.useMemo(() => {
     return {stage, setStage}
@@ -83,7 +85,9 @@ const ProteinViewer = (props : ProteinViewerP) => {
   return (
     <ViewerContext.Provider value = {context} >
       <StageContext.Provider value = {stageContext}>
-        {children}
+        <div className = 'protein-viewer' ref = {nodeRef}>
+          {children}
+        </div>
       </StageContext.Provider>
     </ViewerContext.Provider>
   )

@@ -1,16 +1,18 @@
-.container{
+.container1{
   display : flex;
-  flex-flow : row wrap;
+  flex-flow : column;
   justify-content : space-between;
-}
-.container>div{
-  margin-right : 1em;
 }
 .viewer canvas{
   border-radius : 1em;
 }
 .selector{
-  width : calc(17vw - 18px);
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0;
+}
+div.Sticky{
+  width: 100%;
 }
 .selector .component-selector.add button{
   font-size : 1em;
@@ -18,4 +20,25 @@
   padding : 0.5em 1em;
   background-color: white;
   margin-top: 0.2em;
+}
+/* .viewer.light-theme {
+  background-color: white;
+}
+
+.viewer.dark-theme {
+  background-color: black;
+} */
+
+/* index.css */
+.clickable {
+  cursor: pointer;
+}
+body.light-theme {
+  background-color: white;
+  color: black; /* Add any other styles you want for light theme here */
+}
+
+body.dark-theme {
+  background-color: black;
+  color: white; /* Add any other styles you want for dark theme here */
 }

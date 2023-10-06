@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import './collapsible.css'; // Import your CSS file for styling
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash, faSquareMinus, faSquarePlus } from '@fortawesome/free-solid-svg-icons'
@@ -26,6 +26,7 @@ const Collapsible: React.FC<CollapsibleProps> = ({ component, index }) => {
   const [originalViewSettings, setOriginalViewSettings] = useState<ViewSettings>(component.props.viewSettings);
   const [showAllRepresentations, setShowAllRepresentations] = useState(true);
 
+  const [fileName, setFileName] = useState('');
   const toggleCollapsible = () => {
     setIsOpen(!isOpen);
   };
@@ -83,21 +84,28 @@ const Collapsible: React.FC<CollapsibleProps> = ({ component, index }) => {
   const deleteComponent = () => {
     context.removeComponent(index)
   }
+  useEffect(() => {
+    if(component.type === 'file' && component.props.file !== null){
+      if(component.props.file instanceof File){
+        setFileName(component.props.file.name);
+      }
+    }
+    else{
+      setFileName(component.type);
+    }
+  }, [component])
   return (
     <div className="collapsible">
       <div className="collapsible-header">
         <div className='title'>
           <span className="toggle-icon" onClick={toggleCollapsible}>{isOpen ? <FontAwesomeIcon icon={faSquareMinus} /> : <FontAwesomeIcon icon={faSquarePlus} />}</span>
-          <span>{component.type}</span>
+          <span>{fileName}</span>
         </div>
         <div className="actions">
           <span onClick={changeViewOfComponent}>{showAllRepresentations ? <FontAwesomeIcon icon={faEye} /> : <FontAwesomeIcon icon={faEyeSlash} />}</span>
           <span onClick={centerStructure}><FontAwesomeIcon icon={faCircleDot} /></span>
           <span onClick={deleteComponent}><FontAwesomeIcon icon={faTrash} /></span>
         </div>
-        {/* <div className="see-more">
-          <span><FontAwesomeIcon icon={faAlignJustify} /></span>
-        </div> */}
       </div>
       {
         isOpen && 
@@ -115,9 +123,9 @@ const Collapsible: React.FC<CollapsibleProps> = ({ component, index }) => {
                     </span>
                     <span onClick={()=>deleteRepresentation(item)}>{item === lastClickedItem ? <FontAwesomeIcon icon={faTrash} fade/> : <FontAwesomeIcon icon={faTrash}/>}</span>
                   </div>
-                  <div className="see-more">
+                  {/* <div className="see-more">
                     <span><FontAwesomeIcon icon={faAlignJustify} /></span>
-                  </div>
+                  </div> */}
                 </div>
               )
             }

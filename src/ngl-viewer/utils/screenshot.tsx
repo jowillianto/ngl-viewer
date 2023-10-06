@@ -25,10 +25,9 @@ const NGLScreenshot = <T,>({params, render, props} : NGLScreenshotP<T>) => {
   const { stage } = React.useContext(StageContext)
   const onClick = React.useCallback(() => {
     const image = stage?.makeImage(params)
-    return new Promise<Blob>((res, rej) => {
-      if (image) return image
-      else rej(undefined)
-    })
+    if (image === undefined)
+      throw Error("Stage is undefined")
+    return image
   }, [ stage, params])
   const Component = render
   const renderProps = {

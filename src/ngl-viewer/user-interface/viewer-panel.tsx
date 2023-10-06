@@ -75,7 +75,7 @@ const ViewerPanel = () => {
 
   const component = context.components[selectedIndex];
   return (
-    <div>
+    <div className="panel">
       <div className="Sticky">
         <span><FontAwesomeIcon icon={faSquarePlus} /></span>
         <span><FontAwesomeIcon icon={faSquareMinus} /></span>
@@ -140,13 +140,13 @@ const ViewerPanel = () => {
           />
         )}
 
-        {component && "file" in component.props && (
+        {/* {component && "file" in component.props && (
           <FileUploader
             onChange={handleFileUp}
             readOnly={false}
             value={component.props.file as File}
           />
-        )}
+        )} */}
         {/* 
         {component && "viewSettings" in component.props && (
           <ViewSettingsInput
@@ -155,7 +155,7 @@ const ViewerPanel = () => {
           />
         )} */}
 
-        {component &&
+        {/* {component &&
           "viewSettings" in component.props &&
           "file" in component.props && (
             <FileViewSettings
@@ -170,7 +170,7 @@ const ViewerPanel = () => {
               onChange={handleViewSettingsChange}
               readOnly={false}
             />
-          )}
+          )} */}
       </div>
     </div>
   );
