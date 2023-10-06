@@ -1,5 +1,6 @@
 import React from 'react'
 import * as NGL from 'ngl'
+import StageContext from './stage-context'
 
 export type NGLStageProps = React.PropsWithChildren<{
   height        : string,
@@ -11,29 +12,24 @@ export type NGLStageState = {
   stage : NGL.Stage | null
 }
 
-export const StageContext  = React.createContext<NGLStageState>({
-  stage : null
-})
-
 export default class NGLStage extends React.Component<
   NGLStageProps, NGLStageState
 >{
-  stageRef            : React.RefObject<HTMLDivElement>
-  observer            : ResizeObserver | undefined
+  static contextType = StageContext
+  context !: React.ContextType<typeof StageContext>
+  stageRef : React.RefObject<HTMLDivElement>
+  observer : ResizeObserver | undefined
   constructor(props : NGLStageProps){
     super(props)
-    this.state  = {
-      stage : null
-    }
-    this.stageRef   = React.createRef()
+    this.stageRef = React.createRef()
   }
   componentDidMount(){
     const htmlElm = this.stageRef.current
     if(htmlElm){
-      const stage   = new NGL.Stage(
+      const stage = new NGL.Stage(
         htmlElm, this.props.viewSettings
       )
-      this.setState({stage : stage})
+      this.context.setStage(stage)
       this.addObserver()
     }
   }
@@ -44,10 +40,10 @@ export default class NGLStage extends React.Component<
     }
   }
   resizeStage = () => {
-    this.state.stage?.handleResize()
+    this.context.stage?.handleResize()
   }
   componentWillUnmount(){
-    this.state.stage?.dispose()
+    this.context.stage?.dispose()
     this.observer?.disconnect()
   }
   render(): React.ReactNode {
@@ -56,11 +52,9 @@ export default class NGLStage extends React.Component<
     const style   = {height : height, width : width}
     return(
       <div className = 'ngl-viewer-stage'>
-        <StageContext.Provider value = {this.state}>
-          <div className = 'ngl-viewer-tab'>
-            {this.props.children}
-          </div>
-        </StageContext.Provider>
+        <div className = 'ngl-viewer-tab'>
+          {this.props.children}
+        </div>
         <div 
           className = 'ngl-viewer-canvas' ref = {this.stageRef} style = {style}
         />

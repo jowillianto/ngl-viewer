@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { ComponentUIDataT, mockComponentsDataMap } from "./component-data";
 import ViewerContext from "./viewer-context";
+import StageContext from "../stage-context";
+import * as NGL from 'ngl'
 
 type CompatFunc = (component : ComponentUIDataT[]) => ComponentUIDataT[]
 
@@ -12,6 +14,7 @@ type ProteinViewerP = React.PropsWithChildren<{
 
 const ProteinViewer = (props : ProteinViewerP) => {
   const { initialComponents = [], children } = props
+  const [stage, setStage] = useState<NGL.Stage | null>(null)
   const [internalComp, setInternalComp] = React.useState(
     props.components ? props.components : initialComponents
   )
@@ -47,7 +50,7 @@ const ProteinViewer = (props : ProteinViewerP) => {
     (id : number) => {
       setComponents((components) => {
         const newComponents = components.slice()
-        newComponents.slice(id, 1)
+        newComponents.splice(id, 1)
         return newComponents
       })
     }, [setComponents]
@@ -64,18 +67,24 @@ const ProteinViewer = (props : ProteinViewerP) => {
   const context = React.useMemo(() => {
     return {
       components, addComponent, removeComponent, replaceComponent, 
-      addComponentByType
+      addComponentByType,
     }
   }, [
     components, 
     addComponent, 
     removeComponent, 
     replaceComponent, 
-    addComponentByType
+    addComponentByType,
   ])
+  const stageContext = React.useMemo(() => {
+    return {stage, setStage}
+  }, [stage, setStage])
+  
   return (
     <ViewerContext.Provider value = {context} >
-      {children}
+      <StageContext.Provider value = {stageContext}>
+        {children}
+      </StageContext.Provider>
     </ViewerContext.Provider>
   )
 }

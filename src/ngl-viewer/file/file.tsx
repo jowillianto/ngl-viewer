@@ -1,6 +1,6 @@
 import React from 'react'
 import * as NGL from 'ngl'
-import { StageContext } from '../stage'
+import StageContext from '../stage-context'
 import { StageLoadFileParams } from 'ngl/dist/declarations/stage/stage'
 import { ViewSettings } from '../interfaces/interfaces'
 import StructureComponentContext from '../context/component-context'

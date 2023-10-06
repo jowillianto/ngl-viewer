@@ -85,7 +85,7 @@ const ViewerPanel = () => {
       </div>
       {context.components.map((component, index) => {
         return(
-          <Collapsible component = {component}> 
+          <Collapsible component = {component} index={index}> 
           </Collapsible>
         )
       })}
