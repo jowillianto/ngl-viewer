@@ -11,6 +11,7 @@ export type ViewerContextTypeT = {
   replaceComponent : (component : ComponentUIDataT, id : number) => void
   removeComponent : (id : number) => void
   addComponentByType : (type : ComponentUIDataT["type"]) => void
+  node : React.RefObject<HTMLDivElement>
 }
 
 const ViewerContext = React.createContext<ViewerContextTypeT>({
@@ -19,6 +20,7 @@ const ViewerContext = React.createContext<ViewerContextTypeT>({
   replaceComponent : () => {},
   removeComponent : () => {},
   addComponentByType : () => {},
+  node : React.createRef()
 })
 
 export default ViewerContext

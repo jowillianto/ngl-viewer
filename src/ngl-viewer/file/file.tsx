@@ -1,6 +1,6 @@
 import React from 'react'
 import * as NGL from 'ngl'
-import { StageContext } from '../stage'
+import StageContext from '../stage-context'
 import { StageLoadFileParams } from 'ngl/dist/declarations/stage/stage'
 import { ViewSettings } from '../interfaces/interfaces'
 import StructureComponentContext from '../context/component-context'
@@ -37,7 +37,7 @@ export default class NGLFile extends React.Component<
     if(stage && file && !this.state.update){
       this.removeComponentIfExist()
       stage.loadFile(file, this.props.fileSettings)
-      .then((component) => {
+      .then((component:any) => {
         const viewSettings  = this.props.viewSettings
         if(component){
           viewSettings.forEach((viewSetting) => {
@@ -51,7 +51,7 @@ export default class NGLFile extends React.Component<
           }, () => this.setState({update : false}))
         }
       })
-      .catch((err) => {
+      .catch((err:any) => {
         console.error(err)
       })
     }

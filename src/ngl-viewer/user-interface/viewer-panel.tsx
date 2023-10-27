@@ -1,6 +1,4 @@
 import React, { useContext, useState } from "react";
-import { ComponentUIDataT } from "./component-data";
-import { mockComponentsDataMap } from "./component-data";
 import { ColorPicker } from "../forms/color-picker";
 import Vector3DInput from "../forms/3d-vector";
 import { Vector3 } from "ngl";
@@ -8,7 +6,11 @@ import { ViewSettings } from "../interfaces/interfaces";
 import ViewerContext from "./viewer-context";
 import FileUploader from "../forms/file-reader";
 import FileViewSettings from "../forms/viewer/file-view-settings";
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSquareMinus, faGear, faSquarePlus} from '@fortawesome/free-solid-svg-icons'
+import { faCircleDot, faTrash } from '@fortawesome/free-solid-svg-icons'
+import "./panel.css"
+import Collapsible from "./collapsible";
 const ViewerPanel = () => {
   const context = useContext(ViewerContext);
   const selectedIndex = 0;
@@ -18,7 +20,6 @@ const ViewerPanel = () => {
     const oldProps = component.props;
     const newProps = Object.assign(oldProps, { color });
     const newComponent = Object.assign(component, { props: newProps });
-    console.log(color);
     context.replaceComponent(newComponent, selectedIndex);
   };
 
@@ -73,10 +74,21 @@ const ViewerPanel = () => {
   
 
   const component = context.components[selectedIndex];
-
   return (
-    <div>
-      <h3>Photoshop Panel</h3>
+    <div className="panel">
+      <div className="Sticky">
+        <span><FontAwesomeIcon icon={faSquarePlus} /></span>
+        <span><FontAwesomeIcon icon={faSquareMinus} /></span>
+        <span><FontAwesomeIcon icon={faCircleDot} /></span>
+        <span><FontAwesomeIcon icon={faTrash} /></span>
+        <span><FontAwesomeIcon icon={faGear} /></span>
+      </div>
+      {context.components.map((component, index) => {
+        return(
+          <Collapsible component = {component} index={index}> 
+          </Collapsible>
+        )
+      })}
       <div>
         {component && "color" in component.props && (
           <ColorPicker
@@ -128,13 +140,13 @@ const ViewerPanel = () => {
           />
         )}
 
-        {component && "file" in component.props && (
+        {/* {component && "file" in component.props && (
           <FileUploader
             onChange={handleFileUp}
             readOnly={false}
             value={component.props.file as File}
           />
-        )}
+        )} */}
         {/* 
         {component && "viewSettings" in component.props && (
           <ViewSettingsInput
@@ -143,7 +155,7 @@ const ViewerPanel = () => {
           />
         )} */}
 
-        {component &&
+        {/* {component &&
           "viewSettings" in component.props &&
           "file" in component.props && (
             <FileViewSettings
@@ -158,7 +170,7 @@ const ViewerPanel = () => {
               onChange={handleViewSettingsChange}
               readOnly={false}
             />
-          )}
+          )} */}
       </div>
     </div>
   );
