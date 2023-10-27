@@ -1,0 +1,40 @@
+.collapsible {
+  /* border: 1px solid #ccc; */
+  /* margin-bottom: 2px; */
+}
+
+.collapsible-header {
+  background-color: #f2f2f2;
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+}
+
+.title,
+.see-more {
+  flex: 1;
+}
+.actions{
+  display: flex;
+  align-items: center;
+  gap: 10px
+}
+.title {
+  display: flex;
+  align-items: center;
+}
+
+.see-more {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.toggle-icon {
+  /* font-size: 20px; */
+  margin-right: 10px;
+}
+
+.collapsible-content {
+  padding-left: 20px;
+}

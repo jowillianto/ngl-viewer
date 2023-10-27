@@ -1,10 +1,24 @@
-import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useContext } from "react";
 import { ColorPicker } from "../forms/color-picker";
 import Vector3DInput from "../forms/3d-vector";
 import ViewerContext from "./viewer-context";
-import FileUploader from "../forms/file-reader";
-import FileViewSettings from "../forms/viewer/file-view-settings";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSquareMinus, faGear, faSquarePlus } from '@fortawesome/free-solid-svg-icons';
+import { faCircleDot, faTrash } from '@fortawesome/free-solid-svg-icons';
+import "./panel.css";
+import Collapsible from "./collapsible";
 var ViewerPanel = function () {
     var context = useContext(ViewerContext);
     var selectedIndex = 0;
@@ -13,7 +27,6 @@ var ViewerPanel = function () {
         var oldProps = component.props;
         var newProps = Object.assign(oldProps, { color: color });
         var newComponent = Object.assign(component, { props: newProps });
-        console.log(color);
         context.replaceComponent(newComponent, selectedIndex);
     };
     var handleCoordinateChange = function (position, position1, position2) {
@@ -53,7 +66,9 @@ var ViewerPanel = function () {
         }
     };
     var component = context.components[selectedIndex];
-    return (_jsxs("div", { children: [_jsx("h3", { children: "Photoshop Panel" }), _jsxs("div", { children: [component && "color" in component.props && (_jsx(ColorPicker, { value: component.props.color, onChange: handleColorChange, readOnly: false })), component &&
+    return (_jsxs("div", __assign({ className: "panel" }, { children: [_jsxs("div", __assign({ className: "Sticky" }, { children: [_jsx("span", { children: _jsx(FontAwesomeIcon, { icon: faSquarePlus }) }), _jsx("span", { children: _jsx(FontAwesomeIcon, { icon: faSquareMinus }) }), _jsx("span", { children: _jsx(FontAwesomeIcon, { icon: faCircleDot }) }), _jsx("span", { children: _jsx(FontAwesomeIcon, { icon: faTrash }) }), _jsx("span", { children: _jsx(FontAwesomeIcon, { icon: faGear }) })] })), context.components.map(function (component, index) {
+                return (_jsx(Collapsible, { component: component, index: index }));
+            }), _jsxs("div", { children: [component && "color" in component.props && (_jsx(ColorPicker, { value: component.props.color, onChange: handleColorChange, readOnly: false })), component &&
                         "position1" in component.props &&
                         "position2" in component.props && (_jsxs(_Fragment, { children: [_jsx(Vector3DInput, { value: component.props.position1, onChange: function (position1) {
                                     if ("position2" in component.props) {
@@ -65,14 +80,6 @@ var ViewerPanel = function () {
                                     }
                                 }, readOnly: false })] })), component && "position" in component.props && (_jsx(Vector3DInput, { value: component.props.position, onChange: function (position) {
                             handleCoordinateChange(position, undefined, undefined);
-                        }, readOnly: false })), component && "file" in component.props && (_jsx(FileUploader, { onChange: handleFileUp, readOnly: false, value: component.props.file })), component &&
-                        "viewSettings" in component.props &&
-                        "file" in component.props && (_jsx(FileViewSettings, { options: [
-                            "cartoon",
-                            "ribbon",
-                            "surface",
-                            "licorice",
-                            "ball+stick",
-                        ], value: component.props.viewSettings, onChange: handleViewSettingsChange, readOnly: false }))] })] }));
+                        }, readOnly: false }))] })] })));
 };
 export default ViewerPanel;

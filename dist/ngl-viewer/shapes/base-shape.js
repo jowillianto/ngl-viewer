@@ -16,7 +16,7 @@ var __extends = (this && this.__extends) || (function () {
 import { Fragment as _Fragment, jsx as _jsx } from "react/jsx-runtime";
 import * as NGL from 'ngl';
 import React from 'react';
-import { StageContext } from '../stage';
+import StageContext from '../stage-context';
 var BaseShape = /** @class */ (function (_super) {
     __extends(BaseShape, _super);
     function BaseShape(props) {

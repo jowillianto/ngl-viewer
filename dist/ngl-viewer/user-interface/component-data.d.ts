@@ -14,12 +14,25 @@ export type GenericComponentData<T, P> = {
     type: T;
     props: P;
 };
-export type ComponentDataT = GenericComponentData<"arrow", NGLArrowProps> | GenericComponentData<"box", NGLBoxProps> | GenericComponentData<"cone", NGLConeProps> | GenericComponentData<"ellipsoid", NGLEllipsoidProps> | GenericComponentData<"torus", NGLTorusProps> | GenericComponentData<"sphere", NGLSphereProps> | GenericComponentData<"cylinder", NGLCylinderProps> | GenericComponentData<"tetrahedron", NGLTetrahedronProps> | GenericComponentData<"text", NGLTextProps> | GenericComponentData<"octahedron", NGLOctahedronProps> | GenericComponentData<"file", NGLFileProps>;
+export type ComponentDataTuple = [
+    GenericComponentData<"arrow", NGLArrowProps>,
+    GenericComponentData<"box", NGLBoxProps>,
+    GenericComponentData<"cone", NGLConeProps>,
+    GenericComponentData<"ellipsoid", NGLEllipsoidProps>,
+    GenericComponentData<"torus", NGLTorusProps>,
+    GenericComponentData<"sphere", NGLSphereProps>,
+    GenericComponentData<"cylinder", NGLCylinderProps>,
+    GenericComponentData<"tetrahedron", NGLTetrahedronProps>,
+    GenericComponentData<"text", NGLTextProps>,
+    GenericComponentData<"octahedron", NGLOctahedronProps>,
+    GenericComponentData<"file", NGLFileProps>
+];
+export type ComponentDataT = ComponentDataTuple[number];
 export type ComponentUIDataT = {
-    type: ComponentDataT["type"];
-    props: ComponentDataT["props"];
-    config: {};
-};
+    [K in keyof ComponentDataTuple]: ComponentDataTuple[K] & {
+        config: {};
+    };
+}[number];
 export declare const view_settings_type: {
     surface: ({
         type: string;

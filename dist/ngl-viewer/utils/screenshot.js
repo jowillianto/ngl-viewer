@@ -11,7 +11,7 @@ var __assign = (this && this.__assign) || function () {
 };
 import { jsx as _jsx } from "react/jsx-runtime";
 import React from "react";
-import { StageContext } from "../stage";
+import StageContext from "../stage-context";
 var NGLScreenshot = function (_a) {
     var params = _a.params, render = _a.render, props = _a.props;
     var stage = React.useContext(StageContext).stage;

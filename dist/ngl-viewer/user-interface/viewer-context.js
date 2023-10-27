@@ -6,5 +6,6 @@ var ViewerContext = React.createContext({
     replaceComponent: function () { },
     removeComponent: function () { },
     addComponentByType: function () { },
+    node: React.createRef()
 });
 export default ViewerContext;
