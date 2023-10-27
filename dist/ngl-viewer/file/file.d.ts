@@ -1,6 +1,6 @@
 import React from 'react';
 import * as NGL from 'ngl';
-import { StageContext } from '../stage';
+import StageContext from '../stage-context';
 import { StageLoadFileParams } from 'ngl/dist/declarations/stage/stage';
 import { ViewSettings } from '../interfaces/interfaces';
 export type NGLFileProps = React.PropsWithChildren & {
@@ -15,7 +15,10 @@ export type NGLFileState = {
     update: boolean;
 };
 export default class NGLFile extends React.Component<NGLFileProps, NGLFileState> {
-    static contextType: React.Context<import("../stage").NGLStageState>;
+    static contextType: React.Context<{
+        stage: NGL.Stage | null;
+        setStage: (stage: NGL.Stage) => void;
+    }>;
     context: React.ContextType<typeof StageContext>;
     constructor(props: NGLFileProps);
     loadFileToStage(): void;

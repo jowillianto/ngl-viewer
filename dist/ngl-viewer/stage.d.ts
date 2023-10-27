@@ -1,5 +1,6 @@
 import React from 'react';
 import * as NGL from 'ngl';
+import StageContext from './stage-context';
 export type NGLStageProps = React.PropsWithChildren<{
     height: string;
     width: string;
@@ -7,9 +8,17 @@ export type NGLStageProps = React.PropsWithChildren<{
 }>;
 export type NGLStageState = {
     stage: NGL.Stage | null;
+    isSpinning: boolean;
+    isRocking: boolean;
+    projectionType: 'perspective' | 'orthographic' | 'stereo';
+    theme: 'light' | 'dark';
 };
-export declare const StageContext: React.Context<NGLStageState>;
-export default class NGLStage extends React.Component<NGLStageProps, NGLStageState> {
+export default class NGLStage extends React.Component<NGLStageProps> {
+    static contextType: React.Context<{
+        stage: NGL.Stage | null;
+        setStage: (stage: NGL.Stage) => void;
+    }>;
+    context: React.ContextType<typeof StageContext>;
     stageRef: React.RefObject<HTMLDivElement>;
     observer: ResizeObserver | undefined;
     constructor(props: NGLStageProps);

@@ -1,3 +1,14 @@
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
         if (ar || !(i in from)) {
@@ -8,12 +19,15 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 import { jsx as _jsx } from "react/jsx-runtime";
-import React from "react";
+import React, { useState } from "react";
 import { mockComponentsDataMap } from "./component-data";
 import ViewerContext from "./viewer-context";
+import StageContext from "../stage-context";
 var ProteinViewer = function (props) {
     var _a = props.initialComponents, initialComponents = _a === void 0 ? [] : _a, children = props.children;
-    var _b = React.useState(props.components ? props.components : initialComponents), internalComp = _b[0], setInternalComp = _b[1];
+    var _b = useState(null), stage = _b[0], setStage = _b[1];
+    var _c = React.useState(props.components ? props.components : initialComponents), internalComp = _c[0], setInternalComp = _c[1];
+    var nodeRef = React.createRef();
     var components = React.useMemo(function () {
         return props.components ? props.components : internalComp;
     }, [props.components, internalComp]);
@@ -36,12 +50,12 @@ var ProteinViewer = function (props) {
             props: mockComponentsDataMap[type].props,
             config: {}
         };
-        addComponent(newComponent);
+        addComponent(newComponent); //TODO: Fix this
     }, [addComponent]);
     var removeComponent = React.useCallback(function (id) {
         setComponents(function (components) {
             var newComponents = components.slice();
-            newComponents.slice(id, 1);
+            newComponents.splice(id, 1);
             return newComponents;
         });
     }, [setComponents]);
@@ -58,15 +72,20 @@ var ProteinViewer = function (props) {
             addComponent: addComponent,
             removeComponent: removeComponent,
             replaceComponent: replaceComponent,
-            addComponentByType: addComponentByType
+            addComponentByType: addComponentByType,
+            node: nodeRef
         };
     }, [
         components,
         addComponent,
         removeComponent,
         replaceComponent,
-        addComponentByType
+        addComponentByType,
+        nodeRef
     ]);
-    return (_jsx(ViewerContext.Provider, { value: context, children: children }));
+    var stageContext = React.useMemo(function () {
+        return { stage: stage, setStage: setStage };
+    }, [stage, setStage]);
+    return (_jsx(ViewerContext.Provider, __assign({ value: context }, { children: _jsx(StageContext.Provider, __assign({ value: stageContext }, { children: _jsx("div", __assign({ className: 'protein-viewer', ref: nodeRef }, { children: children })) })) })));
 };
 export default ProteinViewer;
