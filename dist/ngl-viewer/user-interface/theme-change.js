@@ -13,13 +13,15 @@ import { jsx as _jsx } from "react/jsx-runtime";
 import { useContext, useState } from "react";
 import StageContext from "../stage-context";
 var ThemeSwitcher = function (_a) {
-    var render = _a.render;
-    var _b = useState('dark'), currentTheme = _b[0], setCurrentTheme = _b[1];
+    var render = _a.render, _b = _a.lightTheme, lightTheme = _b === void 0 ? 'white' : _b, _c = _a.darkTheme, darkTheme = _c === void 0 ? 'black' : _c;
+    var _d = useState('dark'), currentTheme = _d[0], setCurrentTheme = _d[1];
     var stage = useContext(StageContext).stage;
     var toggleTheme = function () {
         var newTheme = currentTheme === 'light' ? 'dark' : 'light';
         setCurrentTheme(newTheme);
-        newTheme === 'light' ? stage === null || stage === void 0 ? void 0 : stage.setParameters({ backgroundColor: 'white' }) : stage === null || stage === void 0 ? void 0 : stage.setParameters({ backgroundColor: 'black' });
+        newTheme === 'light' ?
+            stage === null || stage === void 0 ? void 0 : stage.setParameters({ backgroundColor: lightTheme }) :
+            stage === null || stage === void 0 ? void 0 : stage.setParameters({ backgroundColor: darkTheme });
     };
     var Component = render;
     var renderProps = {
