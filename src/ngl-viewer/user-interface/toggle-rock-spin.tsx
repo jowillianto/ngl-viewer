@@ -4,9 +4,10 @@ import StageContext from "../stage-context";
 export type ToggleRockProps<T> = {
   render: React.ComponentType<{ onClick: () => void } & T>;
   initialState: "rock" | "spin" | "off";
+  props : T
 };
 
-const ToggleRockSpinOrOff = <T,>({ render, initialState }: ToggleRockProps<T>) => {
+const ToggleRockSpinOrOff = <T,>({ render, initialState, props }: ToggleRockProps<T>) => {
   const [rock, setRock] = React.useState<"rock" | "spin" | "off">("off");
   const {stage} = useContext(StageContext)
   const toggleRock = () => {
@@ -29,7 +30,8 @@ const ToggleRockSpinOrOff = <T,>({ render, initialState }: ToggleRockProps<T>) =
   const Component = render;
   const renderProps = {
     onClick: toggleRock,
-  } as { onClick: () => void } & T;
+    ...props
+  }
 
   return <Component {...renderProps} />;
 };
