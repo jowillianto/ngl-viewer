@@ -7,10 +7,11 @@ export type ThemeSwitcherProps<T> = {
   } & T>;
   lightTheme?: string;
   darkTheme? : string
+  props: T;
 };
 
 const ThemeSwitcher = <T,>({ 
-  render, lightTheme = 'white', darkTheme = 'black'
+  render, lightTheme = 'white', darkTheme = 'black', props
 }: ThemeSwitcherProps<T>) => {
   const [currentTheme, setCurrentTheme] = useState<string>('dark'); 
   const { stage } = useContext(StageContext);
@@ -27,7 +28,8 @@ const ThemeSwitcher = <T,>({
   const renderProps = {
     onClick: toggleTheme,
     currentTheme,
-  } as { onClick: () => void; currentTheme: string } & T;
+    ...props
+  }
 
   return <Component {...renderProps} />;
 };
