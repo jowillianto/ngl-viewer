@@ -1,9 +1,8 @@
 import React from "react";
 export type SetCameraTypeProps<T> = {
     render: React.ComponentType<{
-        onClick: () => void;
+        onClick: (cameraType: "perspective" | "orthographic" | "stereo") => void;
     } & T>;
-    type: "perspective" | "orthographic" | "stereo";
 };
-declare const SetCameraType: <T>({ render, type }: SetCameraTypeProps<T>) => JSX.Element;
+declare const SetCameraType: <T>({ render }: SetCameraTypeProps<T>) => JSX.Element;
 export default SetCameraType;
