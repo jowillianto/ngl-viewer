@@ -3,9 +3,10 @@ import StageContext from "../stage-context";
 
 export type CenterStructureProps<T> = {
   render: React.ComponentType<{ onClick: () => void } & T>;
+  props: T;
 };
 
-const CenterStructure = <T,>({ render }: CenterStructureProps<T>) => {
+const CenterStructure = <T,>({ render, props }: CenterStructureProps<T>) => {
   const { stage } = useContext(StageContext);
 
   const centerStructure = () => {
@@ -15,7 +16,8 @@ const CenterStructure = <T,>({ render }: CenterStructureProps<T>) => {
   const Component = render;
   const renderProps = {
     onClick: centerStructure,
-  } as { onClick: () => void } & T;
+    ...props
+  } 
 
   return <Component {...renderProps} />;
 };
