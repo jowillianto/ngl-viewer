@@ -13,15 +13,13 @@ import { jsx as _jsx } from "react/jsx-runtime";
 import { useContext } from "react";
 import StageContext from "../stage-context";
 var SetCameraType = function (_a) {
-    var render = _a.render;
+    var render = _a.render, props = _a.props;
     var stage = useContext(StageContext).stage;
     var updateCameraType = function (newCameraType) {
         stage === null || stage === void 0 ? void 0 : stage.setParameters({ cameraType: newCameraType });
     };
     var Component = render;
-    var renderProps = {
-        onClick: function (cameraType) { return updateCameraType(cameraType); },
-    };
+    var renderProps = __assign({ onClick: function (cameraType) { return updateCameraType(cameraType); } }, props);
     return _jsx(Component, __assign({}, renderProps));
 };
 export default SetCameraType;

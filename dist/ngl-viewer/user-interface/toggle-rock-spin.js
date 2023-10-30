@@ -13,7 +13,7 @@ import { jsx as _jsx } from "react/jsx-runtime";
 import React, { useContext } from "react";
 import StageContext from "../stage-context";
 var ToggleRockSpinOrOff = function (_a) {
-    var render = _a.render, initialState = _a.initialState;
+    var render = _a.render, initialState = _a.initialState, props = _a.props;
     var _b = React.useState("off"), rock = _b[0], setRock = _b[1];
     var stage = useContext(StageContext).stage;
     var toggleRock = function () {
@@ -33,9 +33,7 @@ var ToggleRockSpinOrOff = function (_a) {
         }
     };
     var Component = render;
-    var renderProps = {
-        onClick: toggleRock,
-    };
+    var renderProps = __assign({ onClick: toggleRock }, props);
     return _jsx(Component, __assign({}, renderProps));
 };
 export default ToggleRockSpinOrOff;
