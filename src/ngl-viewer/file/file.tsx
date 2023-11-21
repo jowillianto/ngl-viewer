@@ -10,7 +10,7 @@ export type NGLFileProps = React.PropsWithChildren & {
   viewSettings  : ViewSettings
   fileSettings? : Partial<StageLoadFileParams>
   controls?     : Object
-  
+  chains?        : string[]
 }
 export type  NGLFileState = {
   showRepr      : boolean,
@@ -37,14 +37,30 @@ export default class NGLFile extends React.Component<
     if(stage && file && !this.state.update){
       this.removeComponentIfExist()
       stage.loadFile(file, this.props.fileSettings)
-      .then((component:any) => {
+      .then((component: NGL.Component | void) => {
+        const comp = component as NGL.StructureComponent
         const viewSettings  = this.props.viewSettings
-        if(component){
+        if(comp){
+          let compChains = [] as [string, string][]
+          comp.structure.eachChain((cp: any) => {
+            let name = cp.chainname
+            let val = `:${name}`
+            compChains.push([cp.chainname, val])
+          }, new NGL.Selection("polymer"))
           viewSettings.forEach((viewSetting) => {
-            component.addRepresentation(
-              viewSetting.type, viewSetting.params
-            )
+            compChains.forEach((chain) => {
+              comp.addRepresentation(
+                "cartoon", {...viewSetting.params, sele: chain[1]}
+              )
+            })
           })
+          if(this.props.chains){
+            comp.eachRepresentation((repr) => {
+              if (!this.props.chains?.includes((repr.parameters as any).sele.slice(1))) {
+                repr.setVisibility(false);
+              }
+            }); 
+          }
           stage.autoView()
           this.setState({
             component : component as NGL.StructureComponent, update : true
