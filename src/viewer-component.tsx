@@ -9,7 +9,6 @@ import ToggleRockSpinOrOff from './ngl-viewer/user-interface/toggle-rock-spin';
 import Select from 'react-select';
 import './viewer.css';
 import ViewLigands from './ngl-viewer/user-interface/view-ligands';
-import NearPocketClip from './ngl-viewer/user-interface/pocker-near-clip';
 const ViewerComponent: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const [pdb, setPdb] = useState('');
@@ -142,9 +141,6 @@ const ViewerComponent: React.FC = () => {
                 </li>
                 <li>
                   <ViewLigands/>
-                </li>
-                <li>
-                  <NearPocketClip/>
                 </li>
               </ul>
             </div>
