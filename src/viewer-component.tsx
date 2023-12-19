@@ -6,7 +6,9 @@ import ThemeSwitcher from './ngl-viewer/user-interface/theme-change';
 import CenterStructure from './ngl-viewer/user-interface/center-structure';
 import SetCameraType from './ngl-viewer/user-interface/view-perspective';
 import ToggleRockSpinOrOff from './ngl-viewer/user-interface/toggle-rock-spin';
+import Select from 'react-select';
 import './viewer.css';
+import ViewLigands from './ngl-viewer/user-interface/view-ligands';
 const ViewerComponent: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const [pdb, setPdb] = useState('');
@@ -15,6 +17,28 @@ const ViewerComponent: React.FC = () => {
   const viewerContext = useContext(ViewerContext);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { stage } = useContext(StageContext);
+
+  type OptionT = {
+    label : React.ReactNode, value : string
+  }
+  type ViewSelectP<T extends OptionT[]> = {
+    onClick : (e: T[number]["value"]) => void
+    options : T
+    defaultValue : OptionT
+  }
+  const ViewSelect = <T extends OptionT[]>({ onClick, options, defaultValue } : ViewSelectP<T>) => {
+    const onChange = React.useCallback((option : OptionT | null) => {
+      if (option === null) return
+      onClick(option.value)
+    }, [onClick])
+    return(
+      <Select
+        options = {options}
+        onChange={onChange}
+        defaultValue = {defaultValue}
+      />
+    )
+  }
 
   const handleFileSelect = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files![0];
@@ -63,52 +87,60 @@ const ViewerComponent: React.FC = () => {
                         {props.currentTheme === "light" ? "Light" : "Dark"}
                       </button>
                     )}
+                    props={{}}
                   />
                 </li>
                 <li>
                   <ToggleRockSpinOrOff 
                     initialState="spin"
                     render={(props) => (<button {...props}>toggle spin</button>)}
+                    props={{}}
                   />
                 </li>
                 <li>
                   <ToggleRockSpinOrOff 
                     initialState="rock"
                     render={(props) => (<button {...props}>toggle rock</button>)}
+                    props={{}}
                   />
                 </li>
                 <li>
                   <SetCameraType
-                    type="perspective"
-                    render={(props) => (
-                      <button onClick={props.onClick}>Perspective</button>
-                    )}
-                  />
-                </li>
-
-                <li>
-                  <SetCameraType
-                    type="orthographic"
-                    render={(props) => (
-                      <button onClick={props.onClick}>orthographic</button>
-                    )}
-                  />
-                </li>
-                <li>
-                  <SetCameraType
-                    type="stereo" 
-                    render={(props) => (
-                      <button onClick={props.onClick}>stereo</button>
-                    )}
+                    render={ViewSelect}
+                    props = {{
+                      options : [{
+                        label : "Perspective",
+                        value : "perspective" as 'perspective'
+                      }, {
+                        label : "Orthographic",
+                        value : "orthographic" as 'orthographic'
+                      }, {
+                        label : "Stereo",
+                        value : "stereo" as 'stereo'
+                      }], 
+                      defaultValue : {
+                        label : "Perspective",
+                        value : "perspective"
+                      },
+                    }}
                   />
                 </li>
                 <li>
-                  <CenterStructure render={(props) => (
-                    <button {...props}>Center Structure</button>
-                  )} />
+                  <CenterStructure 
+                    render={(props) => (
+                      <button {...props}>Center Structure</button>
+                    )}
+                    props={{}}
+                  />
+                </li>
+                <li>
+                  <button onClick={() => console.log(viewerContext.components[0].props)}>asd</button>
                 </li>
                 <li>
                   <a href="#">Help</a>
+                </li>
+                <li>
+                  <ViewLigands/>
                 </li>
               </ul>
             </div>

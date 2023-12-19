@@ -10,7 +10,7 @@ export type NGLFileProps = React.PropsWithChildren & {
   viewSettings  : ViewSettings
   fileSettings? : Partial<StageLoadFileParams>
   controls?     : Object
-  
+  chains?        : string[]
 }
 export type  NGLFileState = {
   showRepr      : boolean,
@@ -37,18 +37,87 @@ export default class NGLFile extends React.Component<
     if(stage && file && !this.state.update){
       this.removeComponentIfExist()
       stage.loadFile(file, this.props.fileSettings)
-      .then((component:any) => {
-        const viewSettings  = this.props.viewSettings
-        if(component){
-          viewSettings.forEach((viewSetting) => {
-            component.addRepresentation(
-              viewSetting.type, viewSetting.params
+      .then((component: NGL.Component | void) => {
+        const comp = component as NGL.StructureComponent
+        if(comp){
+          let compChains = [] as [string, string][]
+          comp.structure.eachChain((cp: any) => {
+            let name = cp.chainname
+            let val = `:${name}`
+            compChains.push([cp.chainname, val])
+          }, new NGL.Selection("polymer"))
+          compChains.forEach((chain) => {
+            comp.addRepresentation(
+              "cartoon", {sele: chain[1]}
             )
+            comp.addRepresentation("backbone", {
+              visible: false,
+              colorValue: new NGL.Color('lightgrey').getHex(),
+              radiusScale: 2
+            })
+            comp.addRepresentation("spacefill", {
+              sele: "( not polymer or not ( protein or nucleic ) ) and not ( water or ACE or NH2 )",
+              visible: false
+            })
+            comp.addRepresentation("ball+stick", {
+              sele: "none",
+              aspectRatio: 1.1,
+              colorValue: new NGL.Color('lightgrey').getHex(),
+              multipleBond: "symmetric"
+            })
+            comp.addRepresentation("ball+stick", {
+              multipleBond: "symmetric",
+              colorValue: new NGL.Color('grey').getHex(),
+              sele: "none",
+              aspectRatio: 1.2,
+              radiusScale: 2.5
+            })
+            comp.addRepresentation("contact", {
+              sele: "none",
+              radiusSize: 0.07,
+              weakHydrogenBond: false,
+              waterHydrogenBond: false,
+              backboneHydrogenBond: true
+            })
+            comp.addRepresentation("surface", {
+              sele: "none",
+              lazy: true,
+              visibility: true,
+              clipNear: 0,
+              opaqueBack: false,
+              opacity: 0.0,
+              color: "hydrophobicity",
+              roughness: 1.0,
+              surfaceType: "av"
+            })
+            comp.addRepresentation("label", {
+              sele: "none",
+              color: "#333333",
+              yOffset: 0.2,
+              zOffset: 2.0,
+              attachment: "bottom-center",
+              showBorder: true,
+              borderColor: new NGL.Color('lightgrey').getHex(),
+              borderWidth: 0.25,
+              disablePicking: true,
+              radiusType: "size",
+              radiusSize: 0.8,
+              labelType: "residue",
+              labelGrouping: "residue"
+            })
           })
+          if(this.props.chains){
+            comp.eachRepresentation((repr) => {
+              if (!this.props.chains?.includes((repr.parameters as any).sele.slice(1))) {
+                repr.setVisibility(false);
+              }
+            }); 
+          }
           stage.autoView()
           this.setState({
             component : component as NGL.StructureComponent, update : true
           }, () => this.setState({update : false}))
+          this.context.updateVersion()
         }
       })
       .catch((err:any) => {
@@ -79,8 +148,10 @@ export default class NGLFile extends React.Component<
     const diffState   = this.compareState(nextState)
     return diffFile || diffSettings || diffStage || diffState
   }
-  componentDidUpdate(): void {
-    this.loadFileToStage()
+  componentDidUpdate(prevProps: NGLFileProps, prevState: NGLFileState): void {
+    if(prevProps.chains !== this.props.chains){
+      this.loadFileToStage()
+    }
   }
   componentWillUnmount(): void {
     this.removeComponentIfExist()
