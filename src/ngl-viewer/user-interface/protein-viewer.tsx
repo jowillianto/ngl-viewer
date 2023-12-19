@@ -15,6 +15,7 @@ type ProteinViewerP = React.PropsWithChildren<{
 const ProteinViewer = (props : ProteinViewerP) => {
   const { initialComponents = [], children } = props
   const [stage, setStage] = useState<NGL.Stage | null>(null)
+  const [version, setVersion] = useState(0)
   const [internalComp, setInternalComp] = React.useState(
     props.components ? props.components : initialComponents
   )
@@ -78,9 +79,16 @@ const ProteinViewer = (props : ProteinViewerP) => {
     addComponentByType,
     nodeRef
   ])
+  const updateStage = React.useCallback((stage : NGL.Stage)=>{
+    setStage(stage)
+    setVersion((version) => version + 1)
+  },[setStage, setVersion])
+  const updateVersion = ()=>{
+    setVersion((version) => version + 1)
+  }
   const stageContext = React.useMemo(() => {
-    return {stage, setStage}
-  }, [stage, setStage])
+    return {stage, version, setStage: updateStage, updateVersion}
+  }, [stage, updateStage, version])
   
   return (
     <ViewerContext.Provider value = {context} >

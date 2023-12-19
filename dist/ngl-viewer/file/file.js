@@ -13,19 +13,9 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 import { jsx as _jsx } from "react/jsx-runtime";
 import React from 'react';
+import * as NGL from 'ngl';
 import StageContext from '../stage-context';
 import StructureComponentContext from '../context/component-context';
 var NGLFile = /** @class */ (function (_super) {
@@ -47,15 +37,85 @@ var NGLFile = /** @class */ (function (_super) {
             this.removeComponentIfExist();
             stage.loadFile(file, this.props.fileSettings)
                 .then(function (component) {
-                var viewSettings = _this.props.viewSettings;
-                if (component) {
-                    viewSettings.forEach(function (viewSetting) {
-                        component.addRepresentation(viewSetting.type, viewSetting.params);
+                var comp = component;
+                if (comp) {
+                    var compChains_1 = [];
+                    comp.structure.eachChain(function (cp) {
+                        var name = cp.chainname;
+                        var val = ":".concat(name);
+                        compChains_1.push([cp.chainname, val]);
+                    }, new NGL.Selection("polymer"));
+                    compChains_1.forEach(function (chain) {
+                        comp.addRepresentation("cartoon", { sele: chain[1] });
+                        comp.addRepresentation("backbone", {
+                            visible: false,
+                            colorValue: new NGL.Color('lightgrey').getHex(),
+                            radiusScale: 2
+                        });
+                        comp.addRepresentation("spacefill", {
+                            sele: "( not polymer or not ( protein or nucleic ) ) and not ( water or ACE or NH2 )",
+                            visible: false
+                        });
+                        comp.addRepresentation("ball+stick", {
+                            sele: "none",
+                            aspectRatio: 1.1,
+                            colorValue: new NGL.Color('lightgrey').getHex(),
+                            multipleBond: "symmetric"
+                        });
+                        comp.addRepresentation("ball+stick", {
+                            multipleBond: "symmetric",
+                            colorValue: new NGL.Color('grey').getHex(),
+                            sele: "none",
+                            aspectRatio: 1.2,
+                            radiusScale: 2.5
+                        });
+                        comp.addRepresentation("contact", {
+                            sele: "none",
+                            radiusSize: 0.07,
+                            weakHydrogenBond: false,
+                            waterHydrogenBond: false,
+                            backboneHydrogenBond: true
+                        });
+                        comp.addRepresentation("surface", {
+                            sele: "none",
+                            lazy: true,
+                            visibility: true,
+                            clipNear: 0,
+                            opaqueBack: false,
+                            opacity: 0.0,
+                            color: "hydrophobicity",
+                            roughness: 1.0,
+                            surfaceType: "av"
+                        });
+                        comp.addRepresentation("label", {
+                            sele: "none",
+                            color: "#333333",
+                            yOffset: 0.2,
+                            zOffset: 2.0,
+                            attachment: "bottom-center",
+                            showBorder: true,
+                            borderColor: new NGL.Color('lightgrey').getHex(),
+                            borderWidth: 0.25,
+                            disablePicking: true,
+                            radiusType: "size",
+                            radiusSize: 0.8,
+                            labelType: "residue",
+                            labelGrouping: "residue"
+                        });
                     });
+                    if (_this.props.chains) {
+                        comp.eachRepresentation(function (repr) {
+                            var _a;
+                            if (!((_a = _this.props.chains) === null || _a === void 0 ? void 0 : _a.includes(repr.parameters.sele.slice(1)))) {
+                                repr.setVisibility(false);
+                            }
+                        });
+                    }
                     stage.autoView();
                     _this.setState({
                         component: component, update: true
                     }, function () { return _this.setState({ update: false }); });
+                    _this.context.updateVersion();
                 }
             })
                 .catch(function (err) {
@@ -82,14 +142,16 @@ var NGLFile = /** @class */ (function (_super) {
         var diffState = this.compareState(nextState);
         return diffFile || diffSettings || diffStage || diffState;
     };
-    NGLFile.prototype.componentDidUpdate = function () {
-        this.loadFileToStage();
+    NGLFile.prototype.componentDidUpdate = function (prevProps, prevState) {
+        if (prevProps.chains !== this.props.chains) {
+            this.loadFileToStage();
+        }
     };
     NGLFile.prototype.componentWillUnmount = function () {
         this.removeComponentIfExist();
     };
     NGLFile.prototype.render = function () {
-        return (_jsx(StructureComponentContext.Provider, __assign({ value: this.state }, { children: _jsx("div", __assign({ className: 'file-controls' }, { children: this.props.children })) })));
+        return (_jsx(StructureComponentContext.Provider, { value: this.state, children: _jsx("div", { className: 'file-controls', children: this.props.children }) }));
     };
     NGLFile.contextType = StageContext;
     return NGLFile;

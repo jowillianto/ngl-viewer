@@ -1,14 +1,3 @@
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
         if (ar || !(i in from)) {
@@ -26,7 +15,8 @@ import StageContext from "../stage-context";
 var ProteinViewer = function (props) {
     var _a = props.initialComponents, initialComponents = _a === void 0 ? [] : _a, children = props.children;
     var _b = useState(null), stage = _b[0], setStage = _b[1];
-    var _c = React.useState(props.components ? props.components : initialComponents), internalComp = _c[0], setInternalComp = _c[1];
+    var _c = useState(0), version = _c[0], setVersion = _c[1];
+    var _d = React.useState(props.components ? props.components : initialComponents), internalComp = _d[0], setInternalComp = _d[1];
     var nodeRef = React.createRef();
     var components = React.useMemo(function () {
         return props.components ? props.components : internalComp;
@@ -83,9 +73,16 @@ var ProteinViewer = function (props) {
         addComponentByType,
         nodeRef
     ]);
+    var updateStage = React.useCallback(function (stage) {
+        setStage(stage);
+        setVersion(function (version) { return version + 1; });
+    }, [setStage, setVersion]);
+    var updateVersion = function () {
+        setVersion(function (version) { return version + 1; });
+    };
     var stageContext = React.useMemo(function () {
-        return { stage: stage, setStage: setStage };
-    }, [stage, setStage]);
-    return (_jsx(ViewerContext.Provider, __assign({ value: context }, { children: _jsx(StageContext.Provider, __assign({ value: stageContext }, { children: _jsx("div", __assign({ className: 'protein-viewer', ref: nodeRef }, { children: children })) })) })));
+        return { stage: stage, version: version, setStage: updateStage, updateVersion: updateVersion };
+    }, [stage, updateStage, version]);
+    return (_jsx(ViewerContext.Provider, { value: context, children: _jsx(StageContext.Provider, { value: stageContext, children: _jsx("div", { className: 'protein-viewer', ref: nodeRef, children: children }) }) }));
 };
 export default ProteinViewer;
