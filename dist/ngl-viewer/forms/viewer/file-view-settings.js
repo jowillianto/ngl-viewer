@@ -24,6 +24,6 @@ var FileViewSettings = function (_a) {
         setViewSettings(newSettings);
         onChange(newSettings);
     };
-    return (_jsxs("div", { children: [_jsx(FileViewerSelector, { value: selectedType, onChange: handleTypeChange, options: options }), _jsx("button", __assign({ onClick: applyViewSettings }, { children: "Apply" }))] }));
+    return (_jsxs("div", { children: [_jsx(FileViewerSelector, { value: selectedType, onChange: handleTypeChange, options: options }), _jsx("button", { onClick: applyViewSettings, children: "Apply" })] }));
 };
 export default FileViewSettings;

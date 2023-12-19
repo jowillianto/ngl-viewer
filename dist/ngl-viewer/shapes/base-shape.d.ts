@@ -20,7 +20,9 @@ export type BaseShapeState = {
 export default class BaseShape extends React.Component<BaseShapeProps, BaseShapeState> {
     static contextType: React.Context<{
         stage: NGL.Stage | null;
+        version: number;
         setStage: (stage: NGL.Stage) => void;
+        updateVersion: () => void;
     }>;
     context: React.ContextType<typeof StageContext>;
     constructor(props: BaseShapeProps);
