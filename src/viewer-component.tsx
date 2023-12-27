@@ -134,13 +134,10 @@ const ViewerComponent: React.FC = () => {
                   />
                 </li>
                 <li>
-                  <button onClick={() => console.log(viewerContext.components[0].props)}>asd</button>
-                </li>
-                <li>
-                  <a href="#">Help</a>
-                </li>
-                <li>
                   <ViewLigands/>
+                </li>
+                <li>
+                  
                 </li>
               </ul>
             </div>

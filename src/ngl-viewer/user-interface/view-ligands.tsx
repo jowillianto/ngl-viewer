@@ -1,7 +1,18 @@
 import React, { useContext, useEffect } from "react";
 import StageContext from "../stage-context";
 import * as NGL from 'ngl'
-
+const interactions: Record<string, string> = {
+  'hydrophobic': 'hydrophobic',
+  'hbond': 'hydrogenBond',
+  'weak hbond': 'weakHydrogenBond',
+  'water-water hbon': 'waterHydrogenBond',
+  'backbone-backbone hbond': 'backboneHydrogenBond',
+  'halogen bond': 'halogenBond',
+  'metal interaction': 'metalComplex',
+  'salt bridge': 'saltBridge',
+  'cation-pi': 'cationPi',
+  'pi-stacking': 'piStacking',
+};
 const ViewLigands = <T,>() => {
   const { stage, version } = useContext(StageContext);
   const [ligands, setLigands] = React.useState([] as string[][])
@@ -10,23 +21,27 @@ const ViewLigands = <T,>() => {
   const [pocketRadius, setPocketRadius] = React.useState<number>(0);
   const [radius, setRadius] = React.useState<number>(100);
   const [near, setNear] = React.useState<number>(0);
+  const [ligandComps, setLigandComps] = React.useState([] as any[])
+  const [ligandStructuresLocal, setLigandStructuresLocal] = React.useState([] as any[])
+  const [concatComp, setConcatComp] = React.useState(null as any);
   useEffect(() => {
     const comp = stage?.compList[0] as NGL.StructureComponent;
     if(!comp) return
     setComponent(comp)
-    let ligandOptions = [["", "select ligand"]]
-    comp.structure.eachResidue(function (rp: any) {
-      if (rp.isWater()) return
-      let sele = ""
-      if (rp.resno !== undefined) sele += rp.resno
-      if (rp.inscode) sele += "^" + rp.inscode
-      if (rp.chain) sele += ":" + rp.chainname
-      let name = (rp.resname ? "[" + rp.resname + "]" : "") + sele
-      if (rp.entity.description) name += " (" + rp.entity.description + ")"
-      ligandOptions.push([sele, name])
-    }, new NGL.Selection("( not polymer or not ( protein or nucleic ) ) and not ( water or ACE or NH2 )"))
-    setLigands(ligandOptions)
-    console.log(ligandOptions)
+    const ligandComponents = stage?.compList.slice(1) as NGL.StructureComponent[];
+    setLigandComps(ligandComponents)
+    // let ligandOptions = [["", "select ligand"]]
+    // comp.structure.eachResidue(function (rp: any) {
+    //   if (rp.isWater()) return
+    //   let sele = ""
+    //   if (rp.resno !== undefined) sele += rp.resno
+    //   if (rp.inscode) sele += "^" + rp.inscode
+    //   if (rp.chain) sele += ":" + rp.chainname
+    //   let name = (rp.resname ? "[" + rp.resname + "]" : "") + sele
+    //   if (rp.entity.description) name += " (" + rp.entity.description + ")"
+    //   ligandOptions.push([sele, name])
+    // }, new NGL.Selection("( not polymer or not ( protein or nucleic ) ) and not ( water or ACE or NH2 )"))
+    // setLigands(ligandOptions)
   }, [stage, version])
 
   const showLigand = (sele: any) => {
@@ -106,9 +121,9 @@ const ViewLigands = <T,>() => {
     if(stage){
       let sceneRadius = stage.viewer.boundingBox.getSize(new NGL.Vector3).length() / 2
 
-      var f = pocketRadius / sceneRadius
-      var v = value / 10000
-      var c = 0.5 - f / 2 + v * f
+      let f = pocketRadius / sceneRadius
+      let v = value / 10000
+      let c = 0.5 - f / 2 + v * f
 
       component.eachRepresentation((repr: any) => {
         if(repr.parameters.name === "surface"){
@@ -117,75 +132,150 @@ const ViewLigands = <T,>() => {
       });
     }
   }
-  const hydroPhobicFunction = (e: any) => {
-    component.eachRepresentation((repr: any) => {
-      if(repr.parameters.name === "contact"){
-        repr.setParameters({ hydrophobic: e.target.checked })
+  const updateInteractionParameter = (parameterName: string, e: React.ChangeEvent<HTMLInputElement>) => {
+    component?.eachRepresentation((repr: any) => {
+      if (repr.parameters.name === 'contact') {
+        const updatedParameters = { [parameterName]: e.target.checked };
+        repr.setParameters(updatedParameters);
       }
     });
+    ligandComps.forEach((ligandComp) => {
+      ligandComp.eachRepresentation((repr: any) => {
+        if (repr.parameters.name === 'contact') {
+          const updatedParameters = { [parameterName]: e.target.checked };
+          repr.setParameters(updatedParameters);
+        }
+      })
+    })
+  };
+  function getRandomColor() {
+    let letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
   }
-  const hydrogenBondFunction = (e: any) => {
-    component.eachRepresentation((repr: any) => {
-      if(repr.parameters.name === "contact"){
-        repr.setParameters({ hydrogenBond: e.target.checked })
-      }
-    });
+  const showLigandWithProtein = () => {
+    let ligandLength = ligandComps.length
+    let proteinComp = component as NGL.StructureComponent
+    let concatStructures = ligandComps.map((ligandComp) => {return ligandComp.structure}) as NGL.Structure[]
+    let ligands = [] as any[]
+    concatStructures.unshift(proteinComp.structure)
+    
+    let newObj = NGL.concatStructures('concat', ...concatStructures)
+    let concatComp = stage?.addComponentFromObject(newObj) as NGL.StructureComponent
+    setConcatComp(concatComp)
+    let comp = stage?.addComponentFromObject(concatComp.structure)
+    if(!comp) return
+
+    stage?.removeComponent(proteinComp)
+    ligandComps.forEach((ligandComp) => {
+      stage?.removeComponent(ligandComp)
+    })
+    comp.removeAllRepresentations();
+    
+    ligandComps.forEach((ligandComp, index) => {
+      let withinSele = concatComp.structure.getAtomSetWithinSelection(new NGL.Selection(`/${index+1}`), 5)
+      let withinGroup = concatComp.structure.getAtomSet(withinSele)
+      let expandedSele = withinGroup.toSeleString()
+      let neighborSele = expandedSele
+      ligands.push([ligandComp.name, `/${index + 1}`, neighborSele])
+    })
+    setLigandStructuresLocal(ligands)
+
+    // let sview = concatComp.structure.getView(new NGL.Selection("/1"))
+    // let pocketRadius = Math.max(sview.boundingBox.getSize(new NGL.Vector3()).length() / 2, 2) + 5
+    // let withinSele2 = concatComp.structure.getAtomSetWithinSelection(new NGL.Selection("/1"), pocketRadius + 2)
+    // let neighborSele2 = "(" + withinSele2.toSeleString() + ") and not (" + "/1" + ") and polymer"
+
+    for(let i = 1; i <= ligandLength; i++){
+      comp.addRepresentation("ball+stick", {
+        multipleBond: "symmetric",
+        colorValue: getRandomColor(),
+        sele: `/${i}`,
+        aspectRatio: 1.5,
+        radiusScale: 1.5
+      })
+
+      let contact = comp.addRepresentation("contact", {
+        masterModelIndex: 0,
+        weakHydrogenBond: true,
+        maxHbondDonPlaneAngle: 35,
+        sele: ligands[i-1][2]
+      })      
+      let neighborRepr = comp.addRepresentation("ball+stick", {
+        sele: ligands[i-1][2],
+        aspectRatio: 1.1,
+        colorValue: "lightgrey",
+        multipleBond: "symmetric"
+      })
+
+      let labelRepr = comp.addRepresentation("label", {
+        sele: ligands[i-1][2] + ` and not /${i}`,
+        color: "#333333",
+        yOffset: 0.2,
+        zOffset: 2.0,
+        attachment: "bottom-center",
+        showBorder: true,
+        borderColor: "lightgrey",
+        borderWidth: 0.25,
+        disablePicking: true,
+        radiusType: "size",
+        radiusSize: 0.8,
+        labelType: "residue",
+        labelGrouping: "residue"
+      })
+    }
+    let backboneRepr = comp.addRepresentation("backbone", {
+      visible: true,
+      colorValue: "lightgrey",
+      radiusScale: 0.5
+    })
+    // let pocketRepr = comp.addRepresentation("surface", {
+    //   sele: "none",
+    //   lazy: true,
+    //   visibility: true,
+    //   clipNear: 0,
+    //   opaqueBack: false,
+    //   opacity: 0.0,
+    //   color: "hydrophobicity",
+    //   roughness: 1.0,
+    //   surfaceType: "av"
+    // })
+    // contact.setSelection(expandedSele)
+    // pocketRepr.setSelection(neighborSele2)
+    // pocketRepr.setParameters({
+    //   clipRadius: pocketRadius * pocketRadiusClipFactor,
+    //   clipCenter: sview.center
+    // })
+    stage?.autoView()
+    setComponent(comp)
   }
-  const weakHydrogenBondFunction = (e: any) => {
-    component.eachRepresentation((repr: any) => {
-      if(repr.parameters.name === "contact"){
-        repr.setParameters({ weakHydrogenBond: e.target.checked })
+  const toggleLigand = (e: React.ChangeEvent<HTMLInputElement>, ligandStructure: any) => {
+    let mycomp = stage?.compList[1] as NGL.StructureComponent
+    if(!mycomp) return
+    console.log(ligandStructure)
+    
+    mycomp?.eachRepresentation((repr: any) => {
+      if(repr.parameters.sele === ligandStructure[1]){
+        repr.setVisibility(e.target.checked)
+        // repr.setSelection(ligandStructure[1])
       }
-    });
+      if(repr.parameters.sele === ligandStructure[2]){
+        repr.setVisibility(e.target.checked)
+        // repr.setSelection(ligandStructure[2])
+      }
+    })
   }
-  const waterHydrogenBondFunction = (e: any) => {
-    component.eachRepresentation((repr: any) => {
-      if(repr.parameters.name === "contact"){
-        repr.setParameters({ waterHydrogenBond: e.target.checked })
+  const proteinReprChange = (e: React.ChangeEvent<HTMLInputElement>, name: string) => {
+    let mycomp = stage?.compList[1] as NGL.StructureComponent
+    if(!mycomp) return
+    mycomp?.eachRepresentation((repr: any) => {
+      if(repr.parameters.name === name){
+        repr.setVisibility(e.target.checked)
       }
-    });
-  }
-  const backboneHydrogenBondFunction = (e: any) => {
-    component.eachRepresentation((repr: any) => {
-      if(repr.parameters.name === "contact"){
-        repr.setParameters({ backboneHydrogenBond: e.target.checked })
-      }
-    });
-  }
-  const halogenBondFunction = (e: any) => {
-    component.eachRepresentation((repr: any) => {
-      if(repr.parameters.name === "contact"){
-        repr.setParameters({ halogenBond: e.target.checked })
-      }
-    });
-  }
-  const metalComplexFunction = (e: any) => {
-    component.eachRepresentation((repr: any) => {
-      if(repr.parameters.name === "contact"){
-        repr.setParameters({ metalComplex: e.target.checked })
-      }
-    });
-  }
-  const saltBridgeFunction = (e: any) => {
-    component.eachRepresentation((repr: any) => {
-      if(repr.parameters.name === "contact"){
-        repr.setParameters({ saltBridge: e.target.checked })
-      }
-    });
-  }
-  const cationPiFunction = (e: any) => {
-    component.eachRepresentation((repr: any) => {
-      if(repr.parameters.name === "contact"){
-        repr.setParameters({ cationPi: e.target.checked })
-      }
-    });
-  }
-  const piStackingFunction = (e: any) => {
-    component.eachRepresentation((repr: any) => {
-      if(repr.parameters.name === "contact"){
-        repr.setParameters({ piStacking: e.target.checked })
-      }
-    });
+    })
   }
   return(
     <div>
@@ -241,7 +331,7 @@ const ViewLigands = <T,>() => {
         </span>
         <input
           type="checkbox"
-          onChange={hydroPhobicFunction}
+          onChange={(e) => updateInteractionParameter(interactions["hydrophobic"], e)}
         />
       </div>
       <div>
@@ -250,8 +340,90 @@ const ViewLigands = <T,>() => {
         </span>
         <input
           type="checkbox"
-          onChange={hydrogenBondFunction}
+          onChange={(e) => updateInteractionParameter(interactions["hydrogen bond"], e)}
         />
+      </div>
+      <div>
+        <span>
+        weak hbond
+        </span>
+        <input
+          type="checkbox"
+          onChange={(e) => updateInteractionParameter(interactions["weak hbond"], e)}
+        />
+      </div>
+      <div>
+        <span>
+        backbone-backbone hbond
+        </span>
+        <input
+          type="checkbox"
+          onChange={(e) => updateInteractionParameter(interactions["backbone-backbone hbond"], e)}
+        />
+      </div>
+      <div>
+        <span>
+        halogen bond
+        </span>
+        <input
+          type="checkbox"
+          onChange={(e) => updateInteractionParameter(interactions["halogen bond"], e)}
+        />
+      </div>
+      <div>
+        <span>
+        metal interaction
+        </span>
+        <input
+          type="checkbox"
+          onChange={(e) => updateInteractionParameter(interactions["metal interaction"], e)}
+        />
+      </div>
+      <div>
+        <span>
+        salt bridge
+        </span>
+        <input
+          type="checkbox"
+          onChange={(e) => updateInteractionParameter(interactions["salt bridge"], e)}
+        />
+      </div>
+      <div>
+        <span>
+        cation-pi
+        </span>
+        <input
+          type="checkbox"
+          onChange={(e) => updateInteractionParameter(interactions["cation-pi"], e)}
+        />
+      </div>
+      <div>
+        <span>
+        pi-stacking
+        </span>
+        <input
+          type="checkbox"
+          onChange={(e) => updateInteractionParameter(interactions["pi-stacking"], e)}
+        />
+      </div>
+      <div>
+        <button onClick={showLigandWithProtein}>show only parts</button>
+      </div>
+      <div>
+        {ligandStructuresLocal.map((ligandStructure) => {
+          return(
+            <div key={ligandStructure[0]}>
+              <label>{ligandStructure[0]}</label>
+              <input type="checkbox" onChange={(e)=>toggleLigand(e, ligandStructure)}/>
+            </div>
+          )
+        })}
+      </div>
+      <div>
+        <div>
+          <label>backbone</label>
+          <input type="checkbox" onChange={(e)=>proteinReprChange(e, "backbone")}/>
+        </div>
       </div>
     </div> 
   );

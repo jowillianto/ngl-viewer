@@ -6,7 +6,7 @@ import { ViewSettings } from '../interfaces/interfaces'
 import StructureComponentContext from '../context/component-context'
 
 export type NGLFileProps = React.PropsWithChildren & {
-  file          : Blob | string | null,
+  file          : File | string | null,
   viewSettings  : ViewSettings
   fileSettings? : Partial<StageLoadFileParams>
   controls?     : Object
@@ -35,83 +35,100 @@ export default class NGLFile extends React.Component<
     const stage     = this.context.stage
     const file      = this.props.file
     if(stage && file && !this.state.update){
+      const fileExtension = file instanceof File ? file.name.split('.').pop() : ''
       this.removeComponentIfExist()
       stage.loadFile(file, this.props.fileSettings)
       .then((component: NGL.Component | void) => {
         const comp = component as NGL.StructureComponent
         if(comp){
-          let compChains = [] as [string, string][]
-          comp.structure.eachChain((cp: any) => {
-            let name = cp.chainname
-            let val = `:${name}`
-            compChains.push([cp.chainname, val])
-          }, new NGL.Selection("polymer"))
-          compChains.forEach((chain) => {
-            comp.addRepresentation(
-              "cartoon", {sele: chain[1]}
-            )
+          if(fileExtension === 'pdb'){
+            // let compChains = [] as [string, string][]
+            // comp.structure.eachChain((cp: any) => {
+            //   le`t name = cp.chainname
+            //   let val = `:${name}`
+            //   compChains.push([cp.chainname, val])
+            // }, new NGL.Selection("polymer"))
+            comp.addRepresentation("cartoon", {
+              visible: false,
+              colorScheme: "atomindex",
+            })
             comp.addRepresentation("backbone", {
               visible: false,
-              colorValue: new NGL.Color('lightgrey').getHex(),
-              radiusScale: 2
+              colorScheme: "atomindex",
+              radiusScale: 1.2
             })
             comp.addRepresentation("spacefill", {
-              sele: "( not polymer or not ( protein or nucleic ) ) and not ( water or ACE or NH2 )",
-              visible: false
+              visible: false,
+              colorScheme: "atomindex",
             })
-            comp.addRepresentation("ball+stick", {
-              sele: "none",
-              aspectRatio: 1.1,
-              colorValue: new NGL.Color('lightgrey').getHex(),
-              multipleBond: "symmetric"
+            comp.addRepresentation("licorice", {
+              visible: false,
+              colorScheme: "atomindex",
+              radiusScale: 1
             })
-            comp.addRepresentation("ball+stick", {
+            comp.addRepresentation("line", {
+              visible: false,
+              colorScheme: "atomindex",
               multipleBond: "symmetric",
-              colorValue: new NGL.Color('grey').getHex(),
-              sele: "none",
-              aspectRatio: 1.2,
-              radiusScale: 2.5
+            })
+            comp.addRepresentation("ball+stick", {
+              visible: true,
+              colorScheme: "atomindex",
+              multipleBond: "symmetric",
+            })
+            comp.addRepresentation("surface", {
+              colorScheme: "electrostatic",
+              sele : 'polymer', 
+              opacity : 0.5,
+              colorDomain : [-80, 80], 
+              surfaceType : 'av',
+              visible : false
             })
             comp.addRepresentation("contact", {
-              sele: "none",
               radiusSize: 0.07,
               weakHydrogenBond: false,
               waterHydrogenBond: false,
-              backboneHydrogenBond: true
+              backboneHydrogenBond: false,
+              hydrogenBond: false,
+              ionicInteraction: false,
+              metalCoordination: false,
+              piStacking: false,
+              cationPi: false,
+              weakHalogenBond: false,
             })
-            comp.addRepresentation("surface", {
-              sele: "none",
-              lazy: true,
-              visibility: true,
-              clipNear: 0,
-              opaqueBack: false,
-              opacity: 0.0,
-              color: "hydrophobicity",
-              roughness: 1.0,
-              surfaceType: "av"
+            if(this.props.chains){
+              comp.eachRepresentation((repr) => {
+                if (!this.props.chains?.includes((repr.parameters as any).sele.slice(1))) {
+                  repr.setVisibility(false);
+                }
+              }); 
+            }
+          }
+          else if(fileExtension === 'pdbqt'){
+            comp.addRepresentation("ball+stick", {
+              multipleBond: "symmetric",
+              colorValue: new NGL.Color('grey').getHex(),
+              sele: "(not polymer or not (protein or nucleic)) and chain L",
+              radiusScale: 1.3,
+              visible: true
             })
-            comp.addRepresentation("label", {
-              sele: "none",
-              color: "#333333",
-              yOffset: 0.2,
-              zOffset: 2.0,
-              attachment: "bottom-center",
-              showBorder: true,
-              borderColor: new NGL.Color('lightgrey').getHex(),
-              borderWidth: 0.25,
-              disablePicking: true,
-              radiusType: "size",
-              radiusSize: 0.8,
-              labelType: "residue",
-              labelGrouping: "residue"
+            comp.addRepresentation("contact", {
+              contactType: "residue",
+              atomRadius: 5,
+              scale: 1,
+              masterModel: 0,
+              sele: "(not polymer or not (protein or nucleic)) and chain L",
+              radiusSize: 0.07,
+              weakHydrogenBond: false,
+              waterHydrogenBond: false,
+              backboneHydrogenBond: false,
+              hydrogenBond: false,
+              ionicInteraction: false,
+              metalCoordination: false,
+              piStacking: false,
+              cationPi: false,
+              weakHalogenBond: false,
             })
-          })
-          if(this.props.chains){
-            comp.eachRepresentation((repr) => {
-              if (!this.props.chains?.includes((repr.parameters as any).sele.slice(1))) {
-                repr.setVisibility(false);
-              }
-            }); 
           }
           stage.autoView()
           this.setState({
