@@ -13,111 +13,53 @@ const interactions: Record<string, string> = {
   'cation-pi': 'cationPi',
   'pi-stacking': 'piStacking',
 };
+type ligandParamsT = {
+  visibility: boolean,
+  sele: string,
+  neighborSele: string,
+  name: string,
+  contactSele: string,
+  pocketSele: string
+}
 const ViewLigands = <T,>() => {
   const { stage, version } = useContext(StageContext);
-  const [ligands, setLigands] = React.useState([] as string[][])
+
   const [component, setComponent] = React.useState(null as any)
   const [opacity, setOpacity] = React.useState<number>(0);
   const [pocketRadius, setPocketRadius] = React.useState<number>(0);
   const [radius, setRadius] = React.useState<number>(100);
   const [near, setNear] = React.useState<number>(0);
+
   const [ligandComps, setLigandComps] = React.useState([] as any[])
-  const [ligandStructuresLocal, setLigandStructuresLocal] = React.useState([] as any[])
   const [concatComp, setConcatComp] = React.useState(null as any);
+  const [ligandsParams, setLigandsParams] = React.useState<Record<string, ligandParamsT>>({});
+
   useEffect(() => {
     const comp = stage?.compList[0] as NGL.StructureComponent;
     if(!comp) return
     setComponent(comp)
     const ligandComponents = stage?.compList.slice(1) as NGL.StructureComponent[];
     setLigandComps(ligandComponents)
-    // let ligandOptions = [["", "select ligand"]]
-    // comp.structure.eachResidue(function (rp: any) {
-    //   if (rp.isWater()) return
-    //   let sele = ""
-    //   if (rp.resno !== undefined) sele += rp.resno
-    //   if (rp.inscode) sele += "^" + rp.inscode
-    //   if (rp.chain) sele += ":" + rp.chainname
-    //   let name = (rp.resname ? "[" + rp.resname + "]" : "") + sele
-    //   if (rp.entity.description) name += " (" + rp.entity.description + ")"
-    //   ligandOptions.push([sele, name])
-    // }, new NGL.Selection("( not polymer or not ( protein or nucleic ) ) and not ( water or ACE or NH2 )"))
-    // setLigands(ligandOptions)
   }, [stage, version])
 
-  const showLigand = (sele: any) => {
-    let s = component.structure
-  
-    let withinSele = s.getAtomSetWithinSelection(new NGL.Selection(sele), 5)
-    let withinGroup = s.getAtomSetWithinGroup(withinSele)
-    let expandedSele = withinGroup.toSeleString()
-    let neighborSele = expandedSele
-  
-    let sview = s.getView(new NGL.Selection(sele))
-    let pocketRadius1 = Math.max(sview.boundingBox.getSize().length() / 2, 2) + 5
-    setPocketRadius(pocketRadius1)
-    let withinSele2 = s.getAtomSetWithinSelection(new NGL.Selection(sele), pocketRadius + 2)
-    let neighborSele2 = "(" + withinSele2.toSeleString() + ") and not (" + sele + ") and polymer"
-    
-    component.eachRepresentation((repr: any) => {
-      if(repr.parameters.name === "ball+stick"){
-        repr.setParameters({ radiusScale: 0.8 })
-        repr.setVisibility(true)
-      }
-      if(repr.parameters.name === "spacefill"){
-        repr.setVisibility(false)
-      }
-      if(repr.parameters.name === "backbone"){
-        repr.setParameters({ radiusScale: 0.8 })
-        repr.setVisibility(true)
-      }
-      if(repr.parameters.name === "ball+stick" && repr.parameters.aspectRatio === 1.2){
-        repr.setVisibility(true)
-        repr.setSelection(sele)
-      }
-      if(repr.parameters.name === "ball+stick" && repr.parameters.aspectRatio === 1.1){
-        repr.setVisibility(true)
-        repr.setSelection(
-          "(" + neighborSele + ") and (sidechainAttached or not polymer)"
-        )
-      }
-      if(repr.parameters.name === "contact"){
-        repr.setVisibility(true)
-        repr.setSelection(expandedSele)
-      }
-      if(repr.parameters.name === "surface"){
-        repr.setVisibility(true)
-        repr.setSelection(neighborSele2)
-        repr.setParameters({
-          clipRadius: pocketRadius * 1,
-          clipCenter: sview.center
-        })
-      }
-      if(repr.parameters.name === "label"){
-        repr.setVisibility(true)
-      }
-      repr.setSelection("(" + neighborSele + ") and not (water or ion)")
-    }); 
-    component.autoView(expandedSele, 2000)
-  }
   const setOpacityFunction = (value: number) => {
     setOpacity(value)
     component.eachRepresentation((repr: any) => {
-      if(repr.parameters.name === "surface"){
+      if(repr.parameters.name === "surface" && repr.parameters.sele !== "polymer"){
         repr.setParameters({ opacity: value / 100 })
       }
     });
   }
   const setRadiusFunction = (value: number) => {
     let pocketRadiusClipFactor = value / 100
-    setRadius(value)
     component.eachRepresentation((repr: any) => {
-      if(repr.parameters.name === "surface"){
+      if(repr.parameters.name === "surface" && repr.parameters.sele !== "polymer"){
         repr.setParameters({ clipRadius: pocketRadius * pocketRadiusClipFactor })
       }
     });
+    setRadius(value)
   }
   const setNearFunction = (value: number) => {
-    setNear(value)
     if(stage){
       let sceneRadius = stage.viewer.boundingBox.getSize(new NGL.Vector3).length() / 2
 
@@ -126,10 +68,12 @@ const ViewLigands = <T,>() => {
       let c = 0.5 - f / 2 + v * f
 
       component.eachRepresentation((repr: any) => {
-        if(repr.parameters.name === "surface"){
+        if(repr.parameters.name === "surface" && repr.parameters.sele !== "polymer"){
           repr.setParameters({ clipNear: c * 100 })
         }
       });
+      
+      setNear(value)
     }
   }
   const updateInteractionParameter = (parameterName: string, e: React.ChangeEvent<HTMLInputElement>) => {
@@ -151,16 +95,21 @@ const ViewLigands = <T,>() => {
   function getRandomColor() {
     let letters = '0123456789ABCDEF';
     let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
+    const excludedColors = ['#FF0000', '#00FF00', '#0000FF', '#FFFFFF', '#808080'];
+
+    do {
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+    } while (excludedColors.includes(color));
+
     return color;
   }
   const showLigandWithProtein = () => {
     let ligandLength = ligandComps.length
     let proteinComp = component as NGL.StructureComponent
+
     let concatStructures = ligandComps.map((ligandComp) => {return ligandComp.structure}) as NGL.Structure[]
-    let ligands = [] as any[]
     concatStructures.unshift(proteinComp.structure)
     
     let newObj = NGL.concatStructures('concat', ...concatStructures)
@@ -175,44 +124,64 @@ const ViewLigands = <T,>() => {
     })
     comp.removeAllRepresentations();
     
+    let ligandsParamsTemp = {} as Record<string, ligandParamsT>
     ligandComps.forEach((ligandComp, index) => {
-      let withinSele = concatComp.structure.getAtomSetWithinSelection(new NGL.Selection(`/${index+1}`), 5)
-      let withinGroup = concatComp.structure.getAtomSet(withinSele)
-      let expandedSele = withinGroup.toSeleString()
-      let neighborSele = expandedSele
-      ligands.push([ligandComp.name, `/${index + 1}`, neighborSele])
-    })
-    setLigandStructuresLocal(ligands)
 
-    // let sview = concatComp.structure.getView(new NGL.Selection("/1"))
-    // let pocketRadius = Math.max(sview.boundingBox.getSize(new NGL.Vector3()).length() / 2, 2) + 5
-    // let withinSele2 = concatComp.structure.getAtomSetWithinSelection(new NGL.Selection("/1"), pocketRadius + 2)
-    // let neighborSele2 = "(" + withinSele2.toSeleString() + ") and not (" + "/1" + ") and polymer"
+      let sview = concatComp.structure.getView(new NGL.Selection(`/${index+1}`))
+      let pocketRadius = 5
+      let withinPocketSele = concatComp.structure.getAtomSetWithinSelection(new NGL.Selection(`/${index+1}`), pocketRadius + 2)
+      let pocketSele = `(${withinPocketSele.toSeleString()}) and not (${index+1}) and polymer)`
+
+      // get all the atoms within 5 angstroms of the ligand together with the ligand
+      let withinSele = concatComp.structure.getAtomSetWithinSelection(new NGL.Selection(`/${index+1}`), 5)
+      // get all the atoms within 5 angstroms of the ligand without ligands
+      let filteredWithinSele = withinSele
+      ligandComps.forEach((ligandComp2, index2) => {
+        // filter out the ligand atoms
+        let onlySele = concatComp.structure.getAtomSetWithinSelection(new NGL.Selection(`/${index2+1}`), 0)
+        filteredWithinSele = filteredWithinSele.difference(onlySele)
+      })
+      // get the atom set within 5 angstroms of the ligand without the ligand atoms
+      let withinGroup = concatComp.structure.getAtomSet(filteredWithinSele)
+      let contactGroup = concatComp.structure.getAtomSet(withinSele)
+      // get the sele strings
+      let neighborSele = withinGroup.toSeleString()
+      let contactSele = contactGroup.toSeleString()
+      let ligandParam = {
+        visibility: true,
+        sele: `/${index + 1}`,
+        neighborSele: neighborSele,
+        name: ligandComp.name,
+        contactSele: contactSele,
+        pocketSele: pocketSele
+      }
+      ligandsParamsTemp[`/${index + 1}`] = ligandParam
+    })
 
     for(let i = 1; i <= ligandLength; i++){
-      comp.addRepresentation("ball+stick", {
+      let sview = concatComp.structure.getView(new NGL.Selection(`/${i}`))
+
+      let ligandRepr = comp.addRepresentation("ball+stick", {
         multipleBond: "symmetric",
         colorValue: getRandomColor(),
         sele: `/${i}`,
         aspectRatio: 1.5,
         radiusScale: 1.5
       })
-
-      let contact = comp.addRepresentation("contact", {
+      let contactRepr = comp.addRepresentation("contact", {
         masterModelIndex: 0,
         weakHydrogenBond: true,
         maxHbondDonPlaneAngle: 35,
-        sele: ligands[i-1][2]
-      })      
+        sele: ligandsParamsTemp[`/${i}`].contactSele,
+      })
       let neighborRepr = comp.addRepresentation("ball+stick", {
-        sele: ligands[i-1][2],
+        sele: ligandsParamsTemp[`/${i}`].neighborSele,
         aspectRatio: 1.1,
         colorValue: "lightgrey",
         multipleBond: "symmetric"
       })
-
       let labelRepr = comp.addRepresentation("label", {
-        sele: ligands[i-1][2] + ` and not /${i}`,
+        sele: ligandsParamsTemp[`/${i}`].neighborSele,
         color: "#333333",
         yOffset: 0.2,
         zOffset: 2.0,
@@ -226,66 +195,82 @@ const ViewLigands = <T,>() => {
         labelType: "residue",
         labelGrouping: "residue"
       })
+      let pocketRepr = comp.addRepresentation("surface", {
+        sele: ligandsParamsTemp[`/${i}`].pocketSele,
+        lazy: true,
+        visibility: true,
+        clipNear: 0,
+        opaqueBack: false,
+        opacity: 0.5,
+        color: "hydrophobicity",
+        roughness: 1.0,
+        surfaceType: "av",
+        clipRadius: pocketRadius * 0.5,
+        clipCenter: sview.center,
+      })
     }
+    setLigandsParams(ligandsParamsTemp);
+
     let backboneRepr = comp.addRepresentation("backbone", {
       visible: true,
       colorValue: "lightgrey",
       radiusScale: 0.5
     })
-    // let pocketRepr = comp.addRepresentation("surface", {
-    //   sele: "none",
-    //   lazy: true,
-    //   visibility: true,
-    //   clipNear: 0,
-    //   opaqueBack: false,
-    //   opacity: 0.0,
-    //   color: "hydrophobicity",
-    //   roughness: 1.0,
-    //   surfaceType: "av"
-    // })
-    // contact.setSelection(expandedSele)
-    // pocketRepr.setSelection(neighborSele2)
-    // pocketRepr.setParameters({
-    //   clipRadius: pocketRadius * pocketRadiusClipFactor,
-    //   clipCenter: sview.center
-    // })
+    let surfaceRepr = comp.addRepresentation("surface", {
+      colorScheme: "electrostatic",
+      sele : 'polymer', 
+      opacity : 0.5,
+      colorDomain : [-80, 80], 
+      surfaceType : 'av',
+      visible : false
+    })
+    let cartoonRepr = comp.addRepresentation("cartoon", {
+      visible: true,
+    })
     stage?.autoView()
     setComponent(comp)
   }
-  const toggleLigand = (e: React.ChangeEvent<HTMLInputElement>, ligandStructure: any) => {
-    let mycomp = stage?.compList[1] as NGL.StructureComponent
-    if(!mycomp) return
-    console.log(ligandStructure)
+  const toggleLigand = (e: React.ChangeEvent<HTMLInputElement>, ligandStructure: ligandParamsT) => {
+    const ligandsParamsTemp = {
+      ...ligandsParams,
+      [ligandStructure.sele]: {
+        ...ligandsParams[ligandStructure.sele],
+        visibility: !ligandsParams[ligandStructure.sele].visibility,
+      },
+    } as Record<string, ligandParamsT>;
+    setLigandsParams(ligandsParamsTemp);
+
+    let proteinAndLigandsComp = stage?.compList[1] as NGL.StructureComponent
+    if(!proteinAndLigandsComp) return
     
-    mycomp?.eachRepresentation((repr: any) => {
-      if(repr.parameters.sele === ligandStructure[1]){
+    proteinAndLigandsComp?.eachRepresentation((repr: any) => {
+      if(repr.parameters.sele === ligandStructure.sele){
         repr.setVisibility(e.target.checked)
-        // repr.setSelection(ligandStructure[1])
       }
-      if(repr.parameters.sele === ligandStructure[2]){
+      if(repr.parameters.sele === ligandStructure.neighborSele){
         repr.setVisibility(e.target.checked)
-        // repr.setSelection(ligandStructure[2])
       }
     })
   }
-  const proteinReprChange = (e: React.ChangeEvent<HTMLInputElement>, name: string) => {
+
+  const proteinReprChange = (e: React.ChangeEvent<HTMLInputElement>, name: string, sele?: string) => {
     let mycomp = stage?.compList[1] as NGL.StructureComponent
     if(!mycomp) return
     mycomp?.eachRepresentation((repr: any) => {
-      if(repr.parameters.name === name){
-        repr.setVisibility(e.target.checked)
+      if(sele){
+        if(repr.parameters.name === name && repr.parameters.sele === sele){
+          repr.setVisibility(e.target.checked)
+        }
+      }
+      else{
+        if(repr.parameters.name === name){
+          repr.setVisibility(e.target.checked)
+        }
       }
     })
   }
   return(
     <div>
-      <select onChange={(e)=>showLigand(e.target.value)}>
-        {ligands.map((ligand) => {
-          return(
-            <option key={ligand[0]} value={ligand[0]}>{ligand[1]}</option>
-          )
-        })}
-      </select>
       <div>
         <span>
           pocket opacity
@@ -410,11 +395,11 @@ const ViewLigands = <T,>() => {
         <button onClick={showLigandWithProtein}>show only parts</button>
       </div>
       <div>
-        {ligandStructuresLocal.map((ligandStructure) => {
+        {Object.values(ligandsParams).map((ligandParam) => {
           return(
-            <div key={ligandStructure[0]}>
-              <label>{ligandStructure[0]}</label>
-              <input type="checkbox" onChange={(e)=>toggleLigand(e, ligandStructure)}/>
+            <div key={ligandParam.name}>
+              <label>{ligandParam.name}</label>
+              <input type="checkbox" checked={ligandParam.visibility} onChange={(e)=>toggleLigand(e, ligandParam)}/>
             </div>
           )
         })}
@@ -423,6 +408,14 @@ const ViewLigands = <T,>() => {
         <div>
           <label>backbone</label>
           <input type="checkbox" onChange={(e)=>proteinReprChange(e, "backbone")}/>
+        </div>
+        <div>
+          <label>cartoon</label>
+          <input type="checkbox" onChange={(e)=>proteinReprChange(e, "cartoon")}/>
+        </div>
+        <div>
+          <label>surface</label>
+          <input type="checkbox" onChange={(e)=>proteinReprChange(e, "surface", "polymer")}/>
         </div>
       </div>
     </div> 
