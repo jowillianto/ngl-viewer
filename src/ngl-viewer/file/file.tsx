@@ -153,7 +153,7 @@ const NGLFile: React.FC<NGLFileProps> = ({
 
   useEffect(() => {
     loadFileToStage();
-  }, [ file, viewSettings, fileSettings, controls, chains ]);
+  }, [ file, viewSettings, fileSettings, controls, chains, stage ]);
 
   useEffect(() => {
     if (state.update) {
