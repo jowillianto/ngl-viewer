@@ -6,7 +6,7 @@ import { ViewSettings } from '../interfaces/interfaces'
 import StructureComponentContext from '../context/component-context'
 
 export type NGLFileProps = React.PropsWithChildren & {
-  file          : File | string | null,
+  file          : File | string | Blob | null,
   viewSettings  : ViewSettings
   fileSettings? : Partial<StageLoadFileParams>
   controls?     : Object
@@ -35,7 +35,9 @@ export default class NGLFile extends React.Component<
     const stage     = this.context.stage
     const file      = this.props.file
     if(stage && file && !this.state.update){
-      const fileExtension = file instanceof File ? file.name.split('.').pop() : ''
+      const fileExtension = this.props.fileSettings?.ext ? 
+        this.props.fileSettings.ext : 
+        file instanceof File ? file.name.split('.').pop() : ''
       this.removeComponentIfExist()
       stage.loadFile(file, this.props.fileSettings)
       .then((component: NGL.Component | void) => {
