@@ -43,13 +43,26 @@ const ViewerComponent: React.FC = () => {
   const handleFileSelect = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files![0];
     if (file) {
-      viewerContext.addComponent({
-        type: 'file',
-        props: {
-          file: file,
-          viewSettings: defaultViewSettings,
-        },
-        config: { fileName: file.name },
+      const reader = new FileReader();
+      const readAsArrayBuffer = (): Promise<ArrayBuffer> =>
+      new Promise((resolve, reject) => {
+        reader.onload = () => resolve(reader.result as ArrayBuffer);
+        reader.onerror = reject;
+        reader.readAsArrayBuffer(file);
+      });
+
+      readAsArrayBuffer().then((arrayBuffer) => {
+        const blob = new Blob([arrayBuffer], { type: file.type });
+
+        viewerContext.addComponent({
+          type: 'file',
+          props: {
+            file: blob,
+            viewSettings: defaultViewSettings,
+            fileSettings: { ext: file.name.split('.').pop() },
+          },
+          config: { fileName: file.name },
+        });
       });
     }
   };
