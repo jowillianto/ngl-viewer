@@ -18,7 +18,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquareMinus, faGear, faSquarePlus } from '@fortawesome/free-solid-svg-icons';
 import { faCircleDot, faTrash } from '@fortawesome/free-solid-svg-icons';
 import "./panel.css";
-import Collapsible from "./collapsible";
 var ViewerPanel = function () {
     var context = useContext(ViewerContext);
     var selectedIndex = 0;
@@ -66,9 +65,7 @@ var ViewerPanel = function () {
         }
     };
     var component = context.components[selectedIndex];
-    return (_jsxs("div", __assign({ className: "panel" }, { children: [_jsxs("div", __assign({ className: "Sticky" }, { children: [_jsx("span", { children: _jsx(FontAwesomeIcon, { icon: faSquarePlus }) }), _jsx("span", { children: _jsx(FontAwesomeIcon, { icon: faSquareMinus }) }), _jsx("span", { children: _jsx(FontAwesomeIcon, { icon: faCircleDot }) }), _jsx("span", { children: _jsx(FontAwesomeIcon, { icon: faTrash }) }), _jsx("span", { children: _jsx(FontAwesomeIcon, { icon: faGear }) })] })), context.components.map(function (component, index) {
-                return (_jsx(Collapsible, { component: component, index: index }));
-            }), _jsxs("div", { children: [component && "color" in component.props && (_jsx(ColorPicker, { value: component.props.color, onChange: handleColorChange, readOnly: false })), component &&
+    return (_jsxs("div", __assign({ className: "panel" }, { children: [_jsxs("div", __assign({ className: "Sticky" }, { children: [_jsx("span", { children: _jsx(FontAwesomeIcon, { icon: faSquarePlus }) }), _jsx("span", { children: _jsx(FontAwesomeIcon, { icon: faSquareMinus }) }), _jsx("span", { children: _jsx(FontAwesomeIcon, { icon: faCircleDot }) }), _jsx("span", { children: _jsx(FontAwesomeIcon, { icon: faTrash }) }), _jsx("span", { children: _jsx(FontAwesomeIcon, { icon: faGear }) })] })), _jsxs("div", { children: [component && "color" in component.props && (_jsx(ColorPicker, { value: component.props.color, onChange: handleColorChange, readOnly: false })), component &&
                         "position1" in component.props &&
                         "position2" in component.props && (_jsxs(_Fragment, { children: [_jsx(Vector3DInput, { value: component.props.position1, onChange: function (position1) {
                                     if ("position2" in component.props) {

@@ -16,7 +16,9 @@ export type NGLStageState = {
 export default class NGLStage extends React.Component<NGLStageProps> {
     static contextType: React.Context<{
         stage: NGL.Stage | null;
+        version: number;
         setStage: (stage: NGL.Stage) => void;
+        updateVersion: () => void;
     }>;
     context: React.ContextType<typeof StageContext>;
     stageRef: React.RefObject<HTMLDivElement>;

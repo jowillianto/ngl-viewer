@@ -26,6 +26,7 @@ var __assign = (this && this.__assign) || function () {
 };
 import { jsx as _jsx } from "react/jsx-runtime";
 import React from 'react';
+import * as NGL from 'ngl';
 import StageContext from '../stage-context';
 import StructureComponentContext from '../context/component-context';
 var NGLFile = /** @class */ (function (_super) {
@@ -41,21 +42,113 @@ var NGLFile = /** @class */ (function (_super) {
     }
     NGLFile.prototype.loadFileToStage = function () {
         var _this = this;
+        var _a;
         var stage = this.context.stage;
         var file = this.props.file;
         if (stage && file && !this.state.update) {
+            var fileExtension_1 = ((_a = this.props.fileSettings) === null || _a === void 0 ? void 0 : _a.ext) ?
+                this.props.fileSettings.ext :
+                file instanceof File ? file.name.split('.').pop() : '';
             this.removeComponentIfExist();
             stage.loadFile(file, this.props.fileSettings)
                 .then(function (component) {
-                var viewSettings = _this.props.viewSettings;
-                if (component) {
-                    viewSettings.forEach(function (viewSetting) {
-                        component.addRepresentation(viewSetting.type, viewSetting.params);
-                    });
+                var comp = component;
+                if (comp) {
+                    if (fileExtension_1 === 'pdb') {
+                        // let compChains = [] as [string, string][]
+                        // comp.structure.eachChain((cp: any) => {
+                        //   le`t name = cp.chainname
+                        //   let val = `:${name}`
+                        //   compChains.push([cp.chainname, val])
+                        // }, new NGL.Selection("polymer"))
+                        comp.addRepresentation("cartoon", {
+                            visible: false,
+                            colorScheme: "atomindex",
+                        });
+                        comp.addRepresentation("backbone", {
+                            visible: false,
+                            colorScheme: "atomindex",
+                            radiusScale: 1.2
+                        });
+                        comp.addRepresentation("spacefill", {
+                            visible: false,
+                            colorScheme: "atomindex",
+                        });
+                        comp.addRepresentation("licorice", {
+                            visible: false,
+                            colorScheme: "atomindex",
+                            radiusScale: 1
+                        });
+                        comp.addRepresentation("line", {
+                            visible: false,
+                            colorScheme: "atomindex",
+                            multipleBond: "symmetric",
+                        });
+                        comp.addRepresentation("ball+stick", {
+                            visible: true,
+                            colorScheme: "atomindex",
+                            multipleBond: "symmetric",
+                        });
+                        comp.addRepresentation("surface", {
+                            colorScheme: "electrostatic",
+                            sele: 'polymer',
+                            opacity: 0.5,
+                            colorDomain: [-80, 80],
+                            surfaceType: 'av',
+                            visible: false
+                        });
+                        comp.addRepresentation("contact", {
+                            radiusSize: 0.07,
+                            weakHydrogenBond: false,
+                            waterHydrogenBond: false,
+                            backboneHydrogenBond: false,
+                            hydrogenBond: false,
+                            ionicInteraction: false,
+                            metalCoordination: false,
+                            piStacking: false,
+                            cationPi: false,
+                            weakHalogenBond: false,
+                        });
+                        if (_this.props.chains) {
+                            comp.eachRepresentation(function (repr) {
+                                var _a;
+                                if (!((_a = _this.props.chains) === null || _a === void 0 ? void 0 : _a.includes(repr.parameters.sele.slice(1)))) {
+                                    repr.setVisibility(false);
+                                }
+                            });
+                        }
+                    }
+                    else if (fileExtension_1 === 'pdbqt') {
+                        comp.addRepresentation("ball+stick", {
+                            multipleBond: "symmetric",
+                            colorValue: new NGL.Color('grey').getHex(),
+                            sele: "(not polymer or not (protein or nucleic)) and chain L",
+                            radiusScale: 1.3,
+                            visible: true
+                        });
+                        comp.addRepresentation("contact", {
+                            contactType: "residue",
+                            atomRadius: 5,
+                            scale: 1,
+                            masterModel: 0,
+                            sele: "(not polymer or not (protein or nucleic)) and chain L",
+                            radiusSize: 0.07,
+                            weakHydrogenBond: false,
+                            waterHydrogenBond: false,
+                            backboneHydrogenBond: false,
+                            hydrogenBond: false,
+                            ionicInteraction: false,
+                            metalCoordination: false,
+                            piStacking: false,
+                            cationPi: false,
+                            weakHalogenBond: false,
+                        });
+                    }
                     stage.autoView();
                     _this.setState({
                         component: component, update: true
                     }, function () { return _this.setState({ update: false }); });
+                    _this.context.updateVersion();
                 }
             })
                 .catch(function (err) {
@@ -82,8 +175,10 @@ var NGLFile = /** @class */ (function (_super) {
         var diffState = this.compareState(nextState);
         return diffFile || diffSettings || diffStage || diffState;
     };
-    NGLFile.prototype.componentDidUpdate = function () {
-        this.loadFileToStage();
+    NGLFile.prototype.componentDidUpdate = function (prevProps, prevState) {
+        if (prevProps.chains !== this.props.chains) {
+            this.loadFileToStage();
+        }
     };
     NGLFile.prototype.componentWillUnmount = function () {
         this.removeComponentIfExist();

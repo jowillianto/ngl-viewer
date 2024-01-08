@@ -1,6 +1,7 @@
 .collapsible {
   /* border: 1px solid #ccc; */
   /* margin-bottom: 2px; */
+  width:100%;
 }
 
 .collapsible-header {
@@ -36,5 +37,5 @@
 }
 
 .collapsible-content {
-  padding-left: 20px;
+  /* padding-left: 20px; */
 }
