@@ -2,7 +2,7 @@ export type ViewSetting<T, P> = {
     type: T;
     params: P;
 };
-export type ViewSettings = Array<ViewSetting<string, Record<string, number>>>;
+export type ViewSettings = Array<ViewSetting<string, Record<string, any>>>;
 type Molecular_BallPlusStickT = ViewSetting<'ball+stick', {
     aspectRatio: number;
     radiusSegments: number;

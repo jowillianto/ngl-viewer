@@ -56,7 +56,7 @@ var ViewerComponent = function () {
                     props: {
                         file: blob,
                         viewSettings: defaultViewSettings,
-                        fileSettings: { ext: file.name.split('.').pop() },
+                        fileSettings: { ext: 'pdb' },
                     },
                     config: { fileName: file.name },
                 });
