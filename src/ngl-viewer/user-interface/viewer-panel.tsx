@@ -1,15 +1,12 @@
-import React, { useContext, useState } from "react";
+import { useContext } from "react";
 import { ColorPicker } from "../forms/color-picker";
 import Vector3DInput from "../forms/3d-vector";
 import { Vector3 } from "ngl";
 import { ViewSettings } from "../interfaces/interfaces";
 import ViewerContext from "./viewer-context";
-import FileUploader from "../forms/file-reader";
-import FileViewSettings from "../forms/viewer/file-view-settings";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSquareMinus, faGear, faSquarePlus} from '@fortawesome/free-solid-svg-icons'
 import { faCircleDot, faTrash } from '@fortawesome/free-solid-svg-icons'
-import Collapsible from "./collapsible";
 const ViewerPanel = () => {
   const context = useContext(ViewerContext);
   const selectedIndex = 0;
