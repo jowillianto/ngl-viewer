@@ -18,7 +18,9 @@ export type  NGLFileState = {
   update        : boolean
 }
 
-const NGLFile: React.FC<NGLFileProps> = (props) => {
+const NGLFile: React.FC<NGLFileProps> = ({
+  file, viewSettings, fileSettings, controls, chains, children
+}) => {
   const stageContext = useContext(StageContext);
   const [state, setState] = useState<NGLFileState>({
     showRepr: true,
@@ -28,14 +30,14 @@ const NGLFile: React.FC<NGLFileProps> = (props) => {
 
   const loadFileToStage = () => {
     const stage     = stageContext.stage
-    if (stage && props.file && !state.update) {
-      const fileExtension = props.fileSettings?.ext
-        ? props.fileSettings.ext
-        : props.file instanceof File
-        ? props.file.name.split('.').pop()
+    if (stage && file && !state.update) {
+      const fileExtension = fileSettings?.ext
+        ? fileSettings.ext
+        : file instanceof File
+        ? file.name.split('.').pop()
         : '';
       removeComponentIfExist();
-      stage.loadFile(props.file, props.fileSettings)
+      stage.loadFile(file, fileSettings)
       .then((component: NGL.Component | void) => {
         const comp = component as NGL.StructureComponent;
         if (comp) {
@@ -94,9 +96,9 @@ const NGLFile: React.FC<NGLFileProps> = (props) => {
               cationPi: false,
               weakHalogenBond: false,
             })
-            // if(props.chains){
+            // if(chains){
             //   comp.eachRepresentation((repr) => {
-            //     if (props.chains?.includes((repr.parameters as any).sele.slice(1))) {
+            //     if (chains?.includes((repr.parameters as any).sele.slice(1))) {
             //       repr.setVisibility(false);
             //     }
             //   }); 
@@ -151,7 +153,7 @@ const NGLFile: React.FC<NGLFileProps> = (props) => {
 
   useEffect(() => {
     loadFileToStage();
-  }, [props]);
+  }, [ file, viewSettings, fileSettings, controls, chains ]);
 
   useEffect(() => {
     if (state.update) {
@@ -167,7 +169,7 @@ const NGLFile: React.FC<NGLFileProps> = (props) => {
 
   return (
     <StructureComponentContext.Provider value={state}>
-      <div className="file-controls">{props.children}</div>
+      <div className="file-controls">{ children}</div>
     </StructureComponentContext.Provider>
   );
 };
@@ -188,7 +190,7 @@ export default NGLFile;
 //   }
 //   loadFileToStage(){
 //     const stage     = this.context.stage
-//     const file      = this.props.file
+//     const file      = this. file
 //     if(stage && file && !this.state.update){
 //       const fileExtension = this.props.fileSettings?.ext ? 
 //         this.props.fileSettings.ext : 
