@@ -17,7 +17,6 @@ import ViewerContext from "./viewer-context";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquareMinus, faGear, faSquarePlus } from '@fortawesome/free-solid-svg-icons';
 import { faCircleDot, faTrash } from '@fortawesome/free-solid-svg-icons';
-import "./panel.css";
 var ViewerPanel = function () {
     var context = useContext(ViewerContext);
     var selectedIndex = 0;
