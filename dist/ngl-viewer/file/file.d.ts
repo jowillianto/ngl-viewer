@@ -4,7 +4,7 @@ import StageContext from '../stage-context';
 import { StageLoadFileParams } from 'ngl/dist/declarations/stage/stage';
 import { ViewSettings } from '../interfaces/interfaces';
 export type NGLFileProps = React.PropsWithChildren & {
-    file: Blob | string | null;
+    file: File | string | Blob | null;
     viewSettings: ViewSettings;
     fileSettings?: Partial<StageLoadFileParams>;
     controls?: Object;
