@@ -45,7 +45,7 @@ const ViewLigands = <T,>() => {
   const setOpacityFunction = (value: number) => {
     setOpacity(value)
     component.eachRepresentation((repr: any) => {
-      if(repr.parameters.name === "surface" && repr.parameters.sele !== "polymer"){
+      if(repr.parameters.name === "surface"){
         repr.setParameters({ opacity: value / 100 })
       }
     });
@@ -53,7 +53,7 @@ const ViewLigands = <T,>() => {
   const setRadiusFunction = (value: number) => {
     let pocketRadiusClipFactor = value / 100
     component.eachRepresentation((repr: any) => {
-      if(repr.parameters.name === "surface" && repr.parameters.sele !== "polymer"){
+      if(repr.parameters.name === "surface"){
         repr.setParameters({ clipRadius: pocketRadius * pocketRadiusClipFactor })
       }
     });
@@ -68,7 +68,7 @@ const ViewLigands = <T,>() => {
       let c = 0.5 - f / 2 + v * f
 
       component.eachRepresentation((repr: any) => {
-        if(repr.parameters.name === "surface" && repr.parameters.sele !== "polymer"){
+        if(repr.parameters.name === "surface"){
           repr.setParameters({ clipNear: c * 100 })
         }
       });
@@ -127,7 +127,6 @@ const ViewLigands = <T,>() => {
     let ligandsParamsTemp = {} as Record<string, ligandParamsT>
     ligandComps.forEach((ligandComp, index) => {
 
-      let sview = concatComp.structure.getView(new NGL.Selection(`/${index+1}`))
       let pocketRadius = 5
       let withinPocketSele = concatComp.structure.getAtomSetWithinSelection(new NGL.Selection(`/${index+1}`), pocketRadius + 2)
       let pocketSele = `(${withinPocketSele.toSeleString()}) and not (${index+1}) and polymer)`
@@ -171,8 +170,18 @@ const ViewLigands = <T,>() => {
       let contactRepr = comp.addRepresentation("contact", {
         masterModelIndex: 0,
         weakHydrogenBond: true,
+        hydrogenBond: true,
+        hydrophobic: true,
+        backboneHydrogenBond: true,
+        metalComplex: true,
+        piStacking: true,
+        halogenBond: true,
+        saltBridge: true,
+        cationPi: true,
+        waterHydrogenBond: true,
         maxHbondDonPlaneAngle: 35,
         sele: ligandsParamsTemp[`/${i}`].contactSele,
+        
       })
       let neighborRepr = comp.addRepresentation("ball+stick", {
         sele: ligandsParamsTemp[`/${i}`].neighborSele,
@@ -195,19 +204,19 @@ const ViewLigands = <T,>() => {
         labelType: "residue",
         labelGrouping: "residue"
       })
-      let pocketRepr = comp.addRepresentation("surface", {
-        sele: ligandsParamsTemp[`/${i}`].pocketSele,
-        lazy: true,
-        visibility: true,
-        clipNear: 0,
-        opaqueBack: false,
-        opacity: 0.5,
-        color: "hydrophobicity",
-        roughness: 1.0,
-        surfaceType: "av",
-        clipRadius: pocketRadius * 0.5,
-        clipCenter: sview.center,
-      })
+      // let pocketRepr = comp.addRepresentation("surface", {
+      //   sele: ligandsParamsTemp[`/${i}`].pocketSele,
+      //   lazy: true,
+      //   visibility: true,
+      //   clipNear: 0,
+      //   opaqueBack: false,
+      //   opacity: 0.5,
+      //   color: "hydrophobicity",
+      //   roughness: 1.0,
+      //   surfaceType: "av",
+      //   clipRadius: pocketRadius * 0.5,
+      //   clipCenter: sview.center,
+      // })
     }
     setLigandsParams(ligandsParamsTemp);
 
@@ -217,12 +226,17 @@ const ViewLigands = <T,>() => {
       radiusScale: 0.5
     })
     let surfaceRepr = comp.addRepresentation("surface", {
+      lazy: true,
+      visibility: true,
+      clipNear: 0,
+      opaqueBack: false,
+      opacity: 0.5,
+      roughness: 1.0,
+      surfaceType: "av",
+      clipRadius: pocketRadius * 0.5,
       colorScheme: "electrostatic",
       sele : 'polymer', 
-      opacity : 0.5,
       colorDomain : [-80, 80], 
-      surfaceType : 'av',
-      visible : false
     })
     let cartoonRepr = comp.addRepresentation("cartoon", {
       visible: true,
@@ -392,7 +406,7 @@ const ViewLigands = <T,>() => {
         />
       </div>
       <div>
-        <button onClick={showLigandWithProtein}>show only parts</button>
+        <button onClick={showLigandWithProtein}>show interaction</button>
       </div>
       <div>
         {Object.values(ligandsParams).map((ligandParam) => {
