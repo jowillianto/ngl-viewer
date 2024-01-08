@@ -63,4 +63,4 @@ export declare const view_settings_type: {
     }[];
 };
 export declare const mockComponentsDataMap: Record<ComponentUIDataT["type"], ComponentUIDataT>;
-export declare const componentTypes: ("text" | "file" | "sphere" | "arrow" | "box" | "cone" | "ellipsoid" | "torus" | "cylinder" | "tetrahedron" | "octahedron")[];
+export declare const componentTypes: ("text" | "sphere" | "arrow" | "box" | "cone" | "ellipsoid" | "torus" | "cylinder" | "tetrahedron" | "octahedron" | "file")[];

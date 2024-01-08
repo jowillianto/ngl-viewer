@@ -1,18 +1,3 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -25,37 +10,33 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 import { jsx as _jsx } from "react/jsx-runtime";
-import React from 'react';
+import { useContext, useEffect, useState } from 'react';
 import * as NGL from 'ngl';
 import StageContext from '../stage-context';
 import StructureComponentContext from '../context/component-context';
-var NGLFile = /** @class */ (function (_super) {
-    __extends(NGLFile, _super);
-    function NGLFile(props) {
-        var _this = _super.call(this, props) || this;
-        _this.state = {
-            showRepr: true,
-            component: null,
-            update: false
-        };
-        return _this;
-    }
-    NGLFile.prototype.loadFileToStage = function () {
-        var _this = this;
+var NGLFile = function (props) {
+    var stageContext = useContext(StageContext);
+    var _a = useState({
+        showRepr: true,
+        component: null,
+        update: false,
+    }), state = _a[0], setState = _a[1];
+    var loadFileToStage = function () {
         var _a;
-        var stage = this.context.stage;
-        var file = this.props.file;
-        if (stage && file && !this.state.update) {
-            var fileExtension_1 = ((_a = this.props.fileSettings) === null || _a === void 0 ? void 0 : _a.ext) ?
-                this.props.fileSettings.ext :
-                file instanceof File ? file.name.split('.').pop() : '';
-            this.removeComponentIfExist();
-            stage.loadFile(file, this.props.fileSettings)
+        var stage = stageContext.stage;
+        if (stage && props.file && !state.update) {
+            var fileExtension_1 = ((_a = props.fileSettings) === null || _a === void 0 ? void 0 : _a.ext)
+                ? props.fileSettings.ext
+                : props.file instanceof File
+                    ? props.file.name.split('.').pop()
+                    : '';
+            removeComponentIfExist();
+            stage.loadFile(props.file, props.fileSettings)
                 .then(function (component) {
                 var comp = component;
                 if (comp) {
                     if (fileExtension_1 === 'pdb') {
-                        // let compChains = [] as [string, string][]
+                        // let compChains  = [] as [string, string][]
                         // comp.structure.eachChain((cp: any) => {
                         //   le`t name = cp.chainname
                         //   let val = `:${name}`
@@ -109,10 +90,10 @@ var NGLFile = /** @class */ (function (_super) {
                             cationPi: false,
                             weakHalogenBond: false,
                         });
-                        if (_this.props.chains) {
+                        if (props.chains) {
                             comp.eachRepresentation(function (repr) {
                                 var _a;
-                                if (!((_a = _this.props.chains) === null || _a === void 0 ? void 0 : _a.includes(repr.parameters.sele.slice(1)))) {
+                                if ((_a = props.chains) === null || _a === void 0 ? void 0 : _a.includes(repr.parameters.sele.slice(1))) {
                                     repr.setVisibility(false);
                                 }
                             });
@@ -145,10 +126,8 @@ var NGLFile = /** @class */ (function (_super) {
                         });
                     }
                     stage.autoView();
-                    _this.setState({
-                        component: component, update: true
-                    }, function () { return _this.setState({ update: false }); });
-                    _this.context.updateVersion();
+                    setState(function (prev) { return (__assign(__assign({}, prev), { component: comp, update: true })); });
+                    stageContext.updateVersion();
                 }
             })
                 .catch(function (err) {
@@ -156,37 +135,25 @@ var NGLFile = /** @class */ (function (_super) {
             });
         }
     };
-    NGLFile.prototype.compareState = function (nextState) {
-        return nextState.update;
-    };
-    NGLFile.prototype.removeComponentIfExist = function () {
-        var stage = this.context.stage;
-        var component = this.state.component;
+    var removeComponentIfExist = function () {
+        var component = state.component;
+        var stage = stageContext.stage;
         if (stage && component)
             stage.removeComponent(component);
     };
-    NGLFile.prototype.componentDidMount = function () {
-        this.loadFileToStage();
-    };
-    NGLFile.prototype.shouldComponentUpdate = function (nextProps, nextState, nextContext) {
-        var diffFile = this.props.file !== nextProps.file;
-        var diffSettings = this.props.viewSettings !== nextProps.viewSettings;
-        var diffStage = this.context.stage !== nextContext.stage;
-        var diffState = this.compareState(nextState);
-        return diffFile || diffSettings || diffStage || diffState;
-    };
-    NGLFile.prototype.componentDidUpdate = function (prevProps, prevState) {
-        if (prevProps.chains !== this.props.chains) {
-            this.loadFileToStage();
+    useEffect(function () {
+        loadFileToStage();
+    }, [props]);
+    useEffect(function () {
+        if (state.update) {
+            setState(function (prevState) { return (__assign(__assign({}, prevState), { update: false })); });
         }
-    };
-    NGLFile.prototype.componentWillUnmount = function () {
-        this.removeComponentIfExist();
-    };
-    NGLFile.prototype.render = function () {
-        return (_jsx(StructureComponentContext.Provider, __assign({ value: this.state }, { children: _jsx("div", __assign({ className: 'file-controls' }, { children: this.props.children })) })));
-    };
-    NGLFile.contextType = StageContext;
-    return NGLFile;
-}(React.Component));
+    }, [state.update]);
+    useEffect(function () {
+        return function () {
+            removeComponentIfExist();
+        };
+    }, []);
+    return (_jsx(StructureComponentContext.Provider, __assign({ value: state }, { children: _jsx("div", __assign({ className: "file-controls" }, { children: props.children })) })));
+};
 export default NGLFile;
