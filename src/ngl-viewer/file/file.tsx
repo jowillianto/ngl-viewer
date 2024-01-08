@@ -94,13 +94,13 @@ const NGLFile: React.FC<NGLFileProps> = (props) => {
               cationPi: false,
               weakHalogenBond: false,
             })
-            if(props.chains){
-              comp.eachRepresentation((repr) => {
-                if (props.chains?.includes((repr.parameters as any).sele.slice(1))) {
-                  repr.setVisibility(false);
-                }
-              }); 
-            }
+            // if(props.chains){
+            //   comp.eachRepresentation((repr) => {
+            //     if (props.chains?.includes((repr.parameters as any).sele.slice(1))) {
+            //       repr.setVisibility(false);
+            //     }
+            //   }); 
+            // }
           }
           else if(fileExtension === 'pdbqt'){
             comp.addRepresentation("ball+stick", {
