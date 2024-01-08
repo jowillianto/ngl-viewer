@@ -13,7 +13,7 @@ const App = () => {
             <ViewerComponent />
             <div className='selector'>
               {/* <ViewerSelector/> */}
-              <ViewerStage width="80vw" height = "92vh"/>
+              <ViewerStage width="70vw" height = "92vh"/>
               <ViewerPanel />
             </div>
           </div>

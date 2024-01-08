@@ -83,12 +83,13 @@ const ViewerPanel = () => {
         <span><FontAwesomeIcon icon={faTrash} /></span>
         <span><FontAwesomeIcon icon={faGear} /></span>
       </div>
-      {context.components.map((component, index) => {
+      
+      {/* {context.components.map((component, index) => {
         return(
           <Collapsible component = {component} index={index}> 
           </Collapsible>
         )
-      })}
+      })} */}
       <div>
         {component && "color" in component.props && (
           <ColorPicker
