@@ -90,14 +90,13 @@ var NGLFile = function (props) {
                             cationPi: false,
                             weakHalogenBond: false,
                         });
-                        if (props.chains) {
-                            comp.eachRepresentation(function (repr) {
-                                var _a;
-                                if ((_a = props.chains) === null || _a === void 0 ? void 0 : _a.includes(repr.parameters.sele.slice(1))) {
-                                    repr.setVisibility(false);
-                                }
-                            });
-                        }
+                        // if(props.chains){
+                        //   comp.eachRepresentation((repr) => {
+                        //     if (props.chains?.includes((repr.parameters as any).sele.slice(1))) {
+                        //       repr.setVisibility(false);
+                        //     }
+                        //   }); 
+                        // }
                     }
                     else if (fileExtension_1 === 'pdbqt') {
                         comp.addRepresentation("ball+stick", {
