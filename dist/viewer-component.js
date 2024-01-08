@@ -41,13 +41,25 @@ var ViewerComponent = function () {
     var handleFileSelect = function (event) {
         var file = event.target.files[0];
         if (file) {
-            viewerContext.addComponent({
-                type: 'file',
-                props: {
-                    file: file,
-                    viewSettings: defaultViewSettings,
-                },
-                config: { fileName: file.name },
+            var reader_1 = new FileReader();
+            var readAsArrayBuffer = function () {
+                return new Promise(function (resolve, reject) {
+                    reader_1.onload = function () { return resolve(reader_1.result); };
+                    reader_1.onerror = reject;
+                    reader_1.readAsArrayBuffer(file);
+                });
+            };
+            readAsArrayBuffer().then(function (arrayBuffer) {
+                var blob = new Blob([arrayBuffer], { type: file.type });
+                viewerContext.addComponent({
+                    type: 'file',
+                    props: {
+                        file: blob,
+                        viewSettings: defaultViewSettings,
+                        fileSettings: { ext: file.name.split('.').pop() },
+                    },
+                    config: { fileName: file.name },
+                });
             });
         }
     };
