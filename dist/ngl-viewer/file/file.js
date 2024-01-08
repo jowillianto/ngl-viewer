@@ -142,7 +142,7 @@ var NGLFile = function (_a) {
     };
     useEffect(function () {
         loadFileToStage();
-    }, [file, viewSettings, fileSettings, controls, chains]);
+    }, [file, viewSettings, fileSettings, controls, chains, stageContext.version]);
     useEffect(function () {
         if (state.update) {
             setState(function (prevState) { return (__assign(__assign({}, prevState), { update: false })); });
