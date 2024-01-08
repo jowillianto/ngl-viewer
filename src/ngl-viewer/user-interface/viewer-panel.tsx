@@ -9,7 +9,6 @@ import FileViewSettings from "../forms/viewer/file-view-settings";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSquareMinus, faGear, faSquarePlus} from '@fortawesome/free-solid-svg-icons'
 import { faCircleDot, faTrash } from '@fortawesome/free-solid-svg-icons'
-import "./panel.css"
 import Collapsible from "./collapsible";
 const ViewerPanel = () => {
   const context = useContext(ViewerContext);
