@@ -149,6 +149,7 @@ var NGLFile = function (_a) {
         }
     }, [state.update]);
     useEffect(function () {
+        loadFileToStage();
         return function () {
             removeComponentIfExist();
         };

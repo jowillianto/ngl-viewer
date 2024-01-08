@@ -162,6 +162,7 @@ const NGLFile: React.FC<NGLFileProps> = ({
   }, [state.update]);
 
   useEffect(() => {
+    loadFileToStage()
     return () => {
       removeComponentIfExist();
     };
