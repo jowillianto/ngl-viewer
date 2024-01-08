@@ -14,24 +14,24 @@ import { useContext, useEffect, useState } from 'react';
 import * as NGL from 'ngl';
 import StageContext from '../stage-context';
 import StructureComponentContext from '../context/component-context';
-var NGLFile = function (props) {
+var NGLFile = function (_a) {
+    var file = _a.file, viewSettings = _a.viewSettings, fileSettings = _a.fileSettings, controls = _a.controls, chains = _a.chains, children = _a.children;
     var stageContext = useContext(StageContext);
-    var _a = useState({
+    var _b = useState({
         showRepr: true,
         component: null,
         update: false,
-    }), state = _a[0], setState = _a[1];
+    }), state = _b[0], setState = _b[1];
     var loadFileToStage = function () {
-        var _a;
         var stage = stageContext.stage;
-        if (stage && props.file && !state.update) {
-            var fileExtension_1 = ((_a = props.fileSettings) === null || _a === void 0 ? void 0 : _a.ext)
-                ? props.fileSettings.ext
-                : props.file instanceof File
-                    ? props.file.name.split('.').pop()
+        if (stage && file && !state.update) {
+            var fileExtension_1 = (fileSettings === null || fileSettings === void 0 ? void 0 : fileSettings.ext)
+                ? fileSettings.ext
+                : file instanceof File
+                    ? file.name.split('.').pop()
                     : '';
             removeComponentIfExist();
-            stage.loadFile(props.file, props.fileSettings)
+            stage.loadFile(file, fileSettings)
                 .then(function (component) {
                 var comp = component;
                 if (comp) {
@@ -90,9 +90,9 @@ var NGLFile = function (props) {
                             cationPi: false,
                             weakHalogenBond: false,
                         });
-                        // if(props.chains){
+                        // if(chains){
                         //   comp.eachRepresentation((repr) => {
-                        //     if (props.chains?.includes((repr.parameters as any).sele.slice(1))) {
+                        //     if (chains?.includes((repr.parameters as any).sele.slice(1))) {
                         //       repr.setVisibility(false);
                         //     }
                         //   }); 
@@ -142,7 +142,7 @@ var NGLFile = function (props) {
     };
     useEffect(function () {
         loadFileToStage();
-    }, [props]);
+    }, [file, viewSettings, fileSettings, controls, chains]);
     useEffect(function () {
         if (state.update) {
             setState(function (prevState) { return (__assign(__assign({}, prevState), { update: false })); });
@@ -153,6 +153,6 @@ var NGLFile = function (props) {
             removeComponentIfExist();
         };
     }, []);
-    return (_jsx(StructureComponentContext.Provider, __assign({ value: state }, { children: _jsx("div", __assign({ className: "file-controls" }, { children: props.children })) })));
+    return (_jsx(StructureComponentContext.Provider, __assign({ value: state }, { children: _jsx("div", __assign({ className: "file-controls" }, { children: children })) })));
 };
 export default NGLFile;
