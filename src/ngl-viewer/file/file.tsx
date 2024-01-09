@@ -29,8 +29,8 @@ const NGLFile: React.FC<NGLFileProps> = ({
   });
 
   const loadFileToStage = () => {
-    const stage     = stageContext.stage
-    if (stage && file) {
+    const stage = stageContext.stage
+    if (stage && file && !state.update) {
       const fileExtension = fileSettings?.ext
         ? fileSettings.ext
         : file instanceof File
