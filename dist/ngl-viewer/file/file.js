@@ -24,7 +24,7 @@ var NGLFile = function (_a) {
     }), state = _b[0], setState = _b[1];
     var loadFileToStage = function () {
         var stage = stageContext.stage;
-        if (stage && file) {
+        if (stage && file && !state.update) {
             var fileExtension_1 = (fileSettings === null || fileSettings === void 0 ? void 0 : fileSettings.ext)
                 ? fileSettings.ext
                 : file instanceof File
