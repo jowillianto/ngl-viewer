@@ -1,8 +1,9 @@
+import * as NGL from 'ngl';
 export type ViewSetting<T, P> = {
     type: T;
     params: P;
 };
-export type ViewSettings = Array<ViewSetting<string, Record<string, any>>>;
+export type ViewSettings = Array<ViewSetting<NGL.StructureRepresentationType, Record<string, number>>>;
 type Molecular_BallPlusStickT = ViewSetting<'ball+stick', {
     aspectRatio: number;
     radiusSegments: number;
