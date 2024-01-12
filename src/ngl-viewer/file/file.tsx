@@ -43,7 +43,7 @@ const NGLFile: React.FC<NGLFileProps> = ({
         if (comp) {
           viewSettings?.forEach((viewSetting) => {
             comp.addRepresentation(
-              viewSetting.type, viewSetting.params
+              viewSetting.type as NGL.StructureRepresentationType, viewSetting.params
             )
           })
           stage.autoView();
