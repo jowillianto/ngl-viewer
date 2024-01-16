@@ -6,87 +6,67 @@ import { ViewSettings } from '../interfaces/interfaces'
 import StructureComponentContext from '../context/component-context'
 
 export type NGLFileProps = React.PropsWithChildren & {
-  file          : File | string | Blob | null,
-  viewSettings  : ViewSettings,
+  file : File | string | Blob | null,
+  viewSettings : ViewSettings,
   fileSettings? : Partial<StageLoadFileParams>
-  controls?     : Object
-  chains?        : string[]
-}
-export type  NGLFileState = {
-  showRepr      : boolean,
-  component     : NGL.StructureComponent | null,
-  update        : boolean
+  chains? : string[]
 }
 
 const NGLFile: React.FC<NGLFileProps> = ({
-  file, viewSettings, fileSettings, controls, chains, children
+  file, viewSettings, fileSettings, chains, children
 }) => {
-  const stageContext = useContext(StageContext);
-  const [state, setState] = useState<NGLFileState>({
-    showRepr: true,
-    component: null,
-    update: false,
-  });
-
-  const loadFileToStage = () => {
-    const stage = stageContext.stage
-    if (stage && file && !state.update) {
-      const fileExtension = fileSettings?.ext
-        ? fileSettings.ext
-        : file instanceof File
-        ? file.name.split('.').pop()
-        : '';
-      removeComponentIfExist();
-      stage.loadFile(file, fileSettings)
-      .then((component: NGL.Component | void) => {
-        const comp = component as NGL.StructureComponent;
-        if (comp) {
-          viewSettings?.forEach((viewSetting) => {
-            comp.addRepresentation(
-              viewSetting.type as NGL.StructureRepresentationType, viewSetting.params
-            )
-          })
-          stage.autoView();
-          setState((prev) => ({
-            ...prev,
-            component: comp,
-            update: true,
-          }));
-          stageContext.updateVersion();
-        }
+  const { stage } = useContext(StageContext);
+  const [component, setComponent] = useState< 
+    NGL.StructureComponent | null
+  >(null);
+  const removeComponent = React.useCallback(() => {
+    if (component === null) return
+    else if (stage === null) return
+    stage.removeComponent(component)
+  }, [ component, stage ])
+  const fileExt = React.useMemo(() => {
+    if (fileSettings?.ext) return fileSettings.ext
+    else if (file instanceof File) return file.name.split('.').slice(-1)[0]
+    else {
+      console.warn("No ext given and file prop is not a file. Using empty")
+      return ''
+    }
+  }, [ fileSettings, file ])
+  const loadFile = React.useCallback(() => {
+    if (stage === null) return
+    else if (file === null) return
+    removeComponent()
+    stage.loadFile(file, {ext : fileExt, ...fileSettings})
+    .then((comp) => {
+      if (!comp) return;
+      viewSettings.forEach((viewSetting) => {
+        comp.addRepresentation( viewSetting.type, viewSetting.params )
       })
-      .catch((err: any) => {
-        console.error(err);
-      });
-    }
-  };
-
-  const removeComponentIfExist = () => {
-    const component = state.component;
-    const stage = stageContext.stage;
-    if (stage && component) stage.removeComponent(component);
-  };
+      setComponent(comp as NGL.StructureComponent)
+      stage.autoView()
+    })
+  }, [ stage, file, setComponent, viewSettings, fileSettings, fileExt ])
 
   useEffect(() => {
-    loadFileToStage();
-  }, [ file, viewSettings, fileSettings, controls, chains, stageContext.version ]);
-
+    loadFile()
+  }, [
+    file, 
+    stage, 
+    viewSettings, 
+    fileSettings, 
+    chains
+  ])
+  
   useEffect(() => {
-    if (state.update) {
-      setState(prevState => ({ ...prevState, update: false }));
-    }
-  }, [state.update]);
-
-  useEffect(() => {
-    loadFileToStage()
-    return () => {
-      removeComponentIfExist();
-    };
-  }, []);
+    loadFile()
+    return () => removeComponent()
+  }, [])
 
   return (
-    <StructureComponentContext.Provider value={state}>
-      <div className="file-controls">{ children}</div>
+    <StructureComponentContext.Provider 
+      value={{ component }}
+    >
+      <div className="file-controls">{children}</div>
     </StructureComponentContext.Provider>
   );
 };
