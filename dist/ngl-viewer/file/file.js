@@ -10,63 +10,60 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 import { jsx as _jsx } from "react/jsx-runtime";
-import { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import StageContext from '../stage-context';
 import StructureComponentContext from '../context/component-context';
 var NGLFile = function (_a) {
-    var file = _a.file, viewSettings = _a.viewSettings, fileSettings = _a.fileSettings, controls = _a.controls, chains = _a.chains, children = _a.children;
-    var stageContext = useContext(StageContext);
-    var _b = useState({
-        showRepr: true,
-        component: null,
-        update: false,
-    }), state = _b[0], setState = _b[1];
-    var loadFileToStage = function () {
-        var stage = stageContext.stage;
-        if (stage && file && !state.update) {
-            var fileExtension = (fileSettings === null || fileSettings === void 0 ? void 0 : fileSettings.ext)
-                ? fileSettings.ext
-                : file instanceof File
-                    ? file.name.split('.').pop()
-                    : '';
-            removeComponentIfExist();
-            stage.loadFile(file, fileSettings)
-                .then(function (component) {
-                var comp = component;
-                if (comp) {
-                    viewSettings === null || viewSettings === void 0 ? void 0 : viewSettings.forEach(function (viewSetting) {
-                        comp.addRepresentation(viewSetting.type, viewSetting.params);
-                    });
-                    stage.autoView();
-                    setState(function (prev) { return (__assign(__assign({}, prev), { component: comp, update: true })); });
-                    stageContext.updateVersion();
-                }
-            })
-                .catch(function (err) {
-                console.error(err);
+    var file = _a.file, viewSettings = _a.viewSettings, fileSettings = _a.fileSettings, chains = _a.chains, children = _a.children;
+    var stage = useContext(StageContext).stage;
+    var _b = useState(null), component = _b[0], setComponent = _b[1];
+    var removeComponent = React.useCallback(function () {
+        if (component === null)
+            return;
+        else if (stage === null)
+            return;
+        stage.removeComponent(component);
+    }, [component, stage]);
+    var fileExt = React.useMemo(function () {
+        if (fileSettings === null || fileSettings === void 0 ? void 0 : fileSettings.ext)
+            return fileSettings.ext;
+        else if (file instanceof File)
+            return file.name.split('.').slice(-1)[0];
+        else {
+            console.warn("No ext given and file prop is not a file. Using empty");
+            return '';
+        }
+    }, [fileSettings, file]);
+    var loadFile = React.useCallback(function () {
+        if (stage === null)
+            return;
+        else if (file === null)
+            return;
+        removeComponent();
+        stage.loadFile(file, __assign({ ext: fileExt }, fileSettings))
+            .then(function (comp) {
+            if (!comp)
+                return;
+            viewSettings.forEach(function (viewSetting) {
+                comp.addRepresentation(viewSetting.type, viewSetting.params);
             });
-        }
-    };
-    var removeComponentIfExist = function () {
-        var component = state.component;
-        var stage = stageContext.stage;
-        if (stage && component)
-            stage.removeComponent(component);
-    };
+            setComponent(comp);
+            stage.autoView();
+        });
+    }, [stage, file, setComponent, viewSettings, fileSettings, fileExt]);
     useEffect(function () {
-        loadFileToStage();
-    }, [file, viewSettings, fileSettings, controls, chains, stageContext.version]);
+        loadFile();
+    }, [
+        file,
+        stage,
+        viewSettings,
+        fileSettings,
+        chains
+    ]);
     useEffect(function () {
-        if (state.update) {
-            setState(function (prevState) { return (__assign(__assign({}, prevState), { update: false })); });
-        }
-    }, [state.update]);
-    useEffect(function () {
-        loadFileToStage();
-        return function () {
-            removeComponentIfExist();
-        };
+        loadFile();
+        return function () { return removeComponent(); };
     }, []);
-    return (_jsx(StructureComponentContext.Provider, __assign({ value: state }, { children: _jsx("div", __assign({ className: "file-controls" }, { children: children })) })));
+    return (_jsx(StructureComponentContext.Provider, __assign({ value: { component: component } }, { children: _jsx("div", __assign({ className: "file-controls" }, { children: children })) })));
 };
 export default NGLFile;
