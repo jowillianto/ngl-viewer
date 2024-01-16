@@ -15,7 +15,7 @@ export type NGLFileProps = React.PropsWithChildren & {
 const NGLFile: React.FC<NGLFileProps> = ({
   file, viewSettings, fileSettings, chains, children
 }) => {
-  const { stage } = useContext(StageContext);
+  const { stage, updateVersion } = useContext(StageContext);
   const [component, setComponent] = useState< 
     NGL.StructureComponent | null
   >(null);
@@ -44,6 +44,7 @@ const NGLFile: React.FC<NGLFileProps> = ({
       })
       setComponent(comp as NGL.StructureComponent)
       stage.autoView()
+      updateVersion()
     })
   }, [ stage, file, setComponent, viewSettings, fileSettings, fileExt ])
 
