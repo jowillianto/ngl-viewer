@@ -24,5 +24,3 @@ const ViewerContext = React.createContext<ViewerContextTypeT>({
 })
 
 export default ViewerContext
-
- 
