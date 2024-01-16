@@ -15,8 +15,8 @@ import StageContext from '../stage-context';
 import StructureComponentContext from '../context/component-context';
 var NGLFile = function (_a) {
     var file = _a.file, viewSettings = _a.viewSettings, fileSettings = _a.fileSettings, chains = _a.chains, children = _a.children;
-    var stage = useContext(StageContext).stage;
-    var _b = useState(null), component = _b[0], setComponent = _b[1];
+    var _b = useContext(StageContext), stage = _b.stage, updateVersion = _b.updateVersion;
+    var _c = useState(null), component = _c[0], setComponent = _c[1];
     var removeComponent = React.useCallback(function () {
         if (component === null)
             return;
@@ -49,6 +49,7 @@ var NGLFile = function (_a) {
             });
             setComponent(comp);
             stage.autoView();
+            updateVersion();
         });
     }, [stage, file, setComponent, viewSettings, fileSettings, fileExt]);
     useEffect(function () {
