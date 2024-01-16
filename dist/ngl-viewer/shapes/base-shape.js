@@ -51,6 +51,7 @@ var BaseShape = /** @class */ (function (_super) {
                     component_1.addRepresentation(viewSetting.type, viewSetting.params);
                 });
                 stage.autoView();
+                this.context.updateVersion();
                 this.setState({ component: component_1 });
             }
         }
