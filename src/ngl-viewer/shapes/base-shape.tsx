@@ -35,7 +35,7 @@ export default class BaseShape extends React.Component<
     this.addShapeFromProps()
   }
   componentDidUpdate(prevProps : BaseShapeProps, prevState : BaseShapeState){
-    if(this.props.hash !== prevProps.hash || this.context.stage !== this.context.stage){
+    if(this.props.hash !== prevProps.hash){
       this.addShapeFromProps()
     }
   }
