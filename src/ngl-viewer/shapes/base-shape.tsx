@@ -34,8 +34,10 @@ export default class BaseShape extends React.Component<
   componentDidMount(): void {
     this.addShapeFromProps()
   }
-  componentDidUpdate(){
-    this.addShapeFromProps()
+  componentDidUpdate(prevProps : BaseShapeProps, prevState : BaseShapeState){
+    if(this.props.hash !== prevProps.hash || this.context.stage !== this.context.stage){
+      this.addShapeFromProps()
+    }
   }
   shouldComponentUpdate(
     nextProps: Readonly<BaseShapeProps>,
