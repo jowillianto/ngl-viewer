@@ -50,7 +50,6 @@ const NGLFile: React.FC<NGLFileProps> = ({
 
   useEffect(() => {
     loadFile()
-    return () => removeComponent()
   }, [
     file, 
     stage, 
@@ -59,10 +58,10 @@ const NGLFile: React.FC<NGLFileProps> = ({
     chains
   ])
   
-  // useEffect(() => {
-  //   loadFile()
-  //   return () => removeComponent()
-  // }, [])
+  useEffect(() => {
+    loadFile()
+    return () => removeComponent()
+  }, [])
 
   return (
     <StructureComponentContext.Provider 
