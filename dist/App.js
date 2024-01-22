@@ -20,7 +20,7 @@ var App = function () {
         type: "box",
         props: {
             position: [1, 1, 1],
-            color: [0, 255, 0],
+            color: [255, 255, 0],
             size: 1,
             heightAxis: [0, 1, 0],
             depthAxis: [1, 0, 0],
@@ -28,7 +28,7 @@ var App = function () {
                 {
                     type: "buffer",
                     params: {
-                        opacity: 0.5,
+                        opacity: 1,
                     },
                 }
             ],

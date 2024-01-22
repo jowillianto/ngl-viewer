@@ -30,7 +30,7 @@ var BaseShape = /** @class */ (function (_super) {
         this.addShapeFromProps();
     };
     BaseShape.prototype.componentDidUpdate = function (prevProps, prevState) {
-        if (this.props.hash !== prevProps.hash || this.context.stage !== this.context.stage) {
+        if (this.props.hash !== prevProps.hash) {
             this.addShapeFromProps();
         }
     };
