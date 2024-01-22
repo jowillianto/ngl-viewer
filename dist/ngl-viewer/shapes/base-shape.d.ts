@@ -1,8 +1,7 @@
-import * as NGL from 'ngl';
-import { ShapeParameters } from 'ngl/dist/declarations/geometry/shape';
 import React from 'react';
+import { ShapeParameters } from 'ngl/dist/declarations/geometry/shape';
+import * as NGL from 'ngl';
 import { ViewSettings } from '../interfaces/interfaces';
-import StageContext from '../stage-context';
 export type BasicShapeProps<T = {}> = {
     viewSettings: ViewSettings;
     shapeParams?: Partial<ShapeParameters>;
@@ -17,21 +16,5 @@ export type BaseShapeProps = BasicShapeProps<{
 export type BaseShapeState = {
     component: NGL.Component | null;
 };
-export default class BaseShape extends React.Component<BaseShapeProps, BaseShapeState> {
-    static contextType: React.Context<{
-        stage: NGL.Stage | null;
-        version: number;
-        setStage: (stage: NGL.Stage) => void;
-        updateVersion: () => void;
-    }>;
-    context: React.ContextType<typeof StageContext>;
-    constructor(props: BaseShapeProps);
-    componentDidMount(): void;
-    componentDidUpdate(prevProps: BaseShapeProps, prevState: BaseShapeState): void;
-    shouldComponentUpdate(nextProps: Readonly<BaseShapeProps>, nextState: Readonly<BaseShapeState>, nextContext: React.ContextType<typeof StageContext>): boolean;
-    addShapeFromProps(): void;
-    removeComponentIfExist(): void;
-    removeShape(): void;
-    componentWillUnmount(): void;
-    render(): React.ReactNode;
-}
+declare const BaseShape: React.FC<BaseShapeProps>;
+export default BaseShape;
