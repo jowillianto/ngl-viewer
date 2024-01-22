@@ -29,8 +29,10 @@ var BaseShape = /** @class */ (function (_super) {
     BaseShape.prototype.componentDidMount = function () {
         this.addShapeFromProps();
     };
-    BaseShape.prototype.componentDidUpdate = function () {
-        this.addShapeFromProps();
+    BaseShape.prototype.componentDidUpdate = function (prevProps, prevState) {
+        if (this.props.hash !== prevProps.hash || this.context.stage !== this.context.stage) {
+            this.addShapeFromProps();
+        }
     };
     BaseShape.prototype.shouldComponentUpdate = function (nextProps, nextState, nextContext) {
         var sameStage = nextContext.stage === this.context.stage;

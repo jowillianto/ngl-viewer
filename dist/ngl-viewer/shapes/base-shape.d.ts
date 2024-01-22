@@ -27,7 +27,7 @@ export default class BaseShape extends React.Component<BaseShapeProps, BaseShape
     context: React.ContextType<typeof StageContext>;
     constructor(props: BaseShapeProps);
     componentDidMount(): void;
-    componentDidUpdate(): void;
+    componentDidUpdate(prevProps: BaseShapeProps, prevState: BaseShapeState): void;
     shouldComponentUpdate(nextProps: Readonly<BaseShapeProps>, nextState: Readonly<BaseShapeState>, nextContext: React.ContextType<typeof StageContext>): boolean;
     addShapeFromProps(): void;
     removeComponentIfExist(): void;
