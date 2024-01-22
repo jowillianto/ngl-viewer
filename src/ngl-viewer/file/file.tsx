@@ -8,7 +8,7 @@ import StructureComponentContext from '../context/component-context'
 export type NGLFileProps = React.PropsWithChildren & {
   file : File | string | Blob | null,
   viewSettings : ViewSettings,
-  fileSettings? : Partial<StageLoadFileParams>
+  fileSettings? : Partial<StageLoadFileParams>,
   chains? : string[]
 }
 
@@ -50,6 +50,7 @@ const NGLFile: React.FC<NGLFileProps> = ({
 
   useEffect(() => {
     loadFile()
+    return () => removeComponent()
   }, [
     file, 
     stage, 
@@ -58,10 +59,10 @@ const NGLFile: React.FC<NGLFileProps> = ({
     chains
   ])
   
-  useEffect(() => {
-    loadFile()
-    return () => removeComponent()
-  }, [])
+  // useEffect(() => {
+  //   loadFile()
+  //   return () => removeComponent()
+  // }, [])
 
   return (
     <StructureComponentContext.Provider 
