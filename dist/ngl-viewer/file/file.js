@@ -54,7 +54,6 @@ var NGLFile = function (_a) {
     }, [stage, file, setComponent, viewSettings, fileSettings, fileExt]);
     useEffect(function () {
         loadFile();
-        return function () { return removeComponent(); };
     }, [
         file,
         stage,
@@ -62,10 +61,10 @@ var NGLFile = function (_a) {
         fileSettings,
         chains
     ]);
-    // useEffect(() => {
-    //   loadFile()
-    //   return () => removeComponent()
-    // }, [])
+    useEffect(function () {
+        loadFile();
+        return function () { return removeComponent(); };
+    }, []);
     return (_jsx(StructureComponentContext.Provider, __assign({ value: { component: component } }, { children: _jsx("div", __assign({ className: "file-controls" }, { children: children })) })));
 };
 export default NGLFile;
