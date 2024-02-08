@@ -1,14 +1,3 @@
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useContext } from "react";
 import { ColorPicker } from "../forms/color-picker";
@@ -64,7 +53,7 @@ var ViewerPanel = function () {
         }
     };
     var component = context.components[selectedIndex];
-    return (_jsxs("div", __assign({ className: "panel" }, { children: [_jsxs("div", __assign({ className: "Sticky" }, { children: [_jsx("span", { children: _jsx(FontAwesomeIcon, { icon: faSquarePlus }) }), _jsx("span", { children: _jsx(FontAwesomeIcon, { icon: faSquareMinus }) }), _jsx("span", { children: _jsx(FontAwesomeIcon, { icon: faCircleDot }) }), _jsx("span", { children: _jsx(FontAwesomeIcon, { icon: faTrash }) }), _jsx("span", { children: _jsx(FontAwesomeIcon, { icon: faGear }) })] })), _jsxs("div", { children: [component && "color" in component.props && (_jsx(ColorPicker, { value: component.props.color, onChange: handleColorChange, readOnly: false })), component &&
+    return (_jsxs("div", { className: "panel", children: [_jsxs("div", { className: "Sticky", children: [_jsx("span", { children: _jsx(FontAwesomeIcon, { icon: faSquarePlus }) }), _jsx("span", { children: _jsx(FontAwesomeIcon, { icon: faSquareMinus }) }), _jsx("span", { children: _jsx(FontAwesomeIcon, { icon: faCircleDot }) }), _jsx("span", { children: _jsx(FontAwesomeIcon, { icon: faTrash }) }), _jsx("span", { children: _jsx(FontAwesomeIcon, { icon: faGear }) })] }), _jsxs("div", { children: [component && "color" in component.props && (_jsx(ColorPicker, { value: component.props.color, onChange: handleColorChange, readOnly: false })), component &&
                         "position1" in component.props &&
                         "position2" in component.props && (_jsxs(_Fragment, { children: [_jsx(Vector3DInput, { value: component.props.position1, onChange: function (position1) {
                                     if ("position2" in component.props) {
@@ -76,6 +65,6 @@ var ViewerPanel = function () {
                                     }
                                 }, readOnly: false })] })), component && "position" in component.props && (_jsx(Vector3DInput, { value: component.props.position, onChange: function (position) {
                             handleCoordinateChange(position, undefined, undefined);
-                        }, readOnly: false }))] })] })));
+                        }, readOnly: false }))] })] }));
 };
 export default ViewerPanel;

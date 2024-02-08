@@ -24,6 +24,8 @@ var NGLFile = function (_a) {
             return;
         stage.removeComponent(component);
     }, [component, stage]);
+    var serializedViewSettings = React.useMemo(function () { return JSON.stringify(viewSettings); }, [viewSettings]);
+    var serializedFileSettings = React.useMemo(function () { return JSON.stringify(fileSettings); }, [fileSettings]);
     var fileExt = React.useMemo(function () {
         if (fileSettings === null || fileSettings === void 0 ? void 0 : fileSettings.ext)
             return fileSettings.ext;
@@ -51,20 +53,20 @@ var NGLFile = function (_a) {
             stage.autoView();
             updateVersion();
         });
-    }, [stage, file, setComponent, viewSettings, fileSettings, fileExt]);
+    }, [stage, file, serializedViewSettings, serializedFileSettings, fileExt]);
     useEffect(function () {
         loadFile();
     }, [
         file,
         stage,
-        viewSettings,
-        fileSettings,
-        chains
+        serializedViewSettings,
+        serializedFileSettings,
+        JSON.stringify(chains)
     ]);
     useEffect(function () {
         loadFile();
         return function () { return removeComponent(); };
     }, []);
-    return (_jsx(StructureComponentContext.Provider, __assign({ value: { component: component } }, { children: _jsx("div", __assign({ className: "file-controls" }, { children: children })) })));
+    return (_jsx(StructureComponentContext.Provider, { value: { component: component }, children: _jsx("div", { className: "file-controls", children: children }) }));
 };
 export default NGLFile;

@@ -24,6 +24,8 @@ const NGLFile: React.FC<NGLFileProps> = ({
     else if (stage === null) return
     stage.removeComponent(component)
   }, [ component, stage ])
+  const serializedViewSettings = React.useMemo(() => JSON.stringify(viewSettings), [viewSettings])
+  const serializedFileSettings = React.useMemo(() => JSON.stringify(fileSettings), [fileSettings])
   const fileExt = React.useMemo(() => {
     if (fileSettings?.ext) return fileSettings.ext
     else if (file instanceof File) return file.name.split('.').slice(-1)[0]
@@ -46,16 +48,16 @@ const NGLFile: React.FC<NGLFileProps> = ({
       stage.autoView()
       updateVersion()
     })
-  }, [ stage, file, setComponent, viewSettings, fileSettings, fileExt ])
+  }, [ stage, file, serializedViewSettings, serializedFileSettings, fileExt ])
 
   useEffect(() => {
     loadFile()
   }, [
     file, 
     stage, 
-    viewSettings, 
-    fileSettings, 
-    chains
+    serializedViewSettings, 
+    serializedFileSettings,
+    JSON.stringify(chains)
   ])
   
   useEffect(() => {
