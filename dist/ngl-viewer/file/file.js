@@ -24,6 +24,8 @@ var NGLFile = function (_a) {
             return;
         stage.removeComponent(component);
     }, [component, stage]);
+    var serializedViewSettings = React.useMemo(function () { return JSON.stringify(viewSettings); }, [viewSettings]);
+    var serializedFileSettings = React.useMemo(function () { return JSON.stringify(fileSettings); }, [fileSettings]);
     var fileExt = React.useMemo(function () {
         if (fileSettings === null || fileSettings === void 0 ? void 0 : fileSettings.ext)
             return fileSettings.ext;
@@ -51,14 +53,14 @@ var NGLFile = function (_a) {
             stage.autoView();
             updateVersion();
         });
-    }, [stage, file, setComponent, viewSettings, fileSettings, fileExt]);
+    }, [stage, file, serializedViewSettings, serializedFileSettings, fileExt]);
     useEffect(function () {
         loadFile();
     }, [
         file,
         stage,
-        JSON.stringify(viewSettings),
-        JSON.stringify(fileSettings),
+        serializedViewSettings,
+        serializedFileSettings,
         JSON.stringify(chains)
     ]);
     useEffect(function () {
