@@ -53,9 +53,9 @@ const NGLFile: React.FC<NGLFileProps> = ({
   }, [
     file, 
     stage, 
-    viewSettings, 
-    fileSettings, 
-    chains
+    JSON.stringify(viewSettings), 
+    JSON.stringify(fileSettings), 
+    JSON.stringify(chains)
   ])
   
   useEffect(() => {
