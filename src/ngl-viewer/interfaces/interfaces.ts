@@ -5,7 +5,7 @@ export type ViewSetting<T, P> = {
 };
 
 export type ViewSettingType = NGL.StructureRepresentationType | string;
-export type ViewSettings = Array<ViewSetting<ViewSettingType, Record<string, number>>>;
+export type ViewSettings = Array<ViewSetting<ViewSettingType, Record<string, any>>>;
 
 type Molecular_BallPlusStickT = ViewSetting<'ball+stick', {
   aspectRatio: number;
