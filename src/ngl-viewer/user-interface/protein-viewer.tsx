@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { ComponentUIDataT, mockComponentsDataMap } from "./component-data";
 import ViewerContext from "./viewer-context";
 import StageContext from "../stage-context";
@@ -13,7 +13,7 @@ type ProteinViewerP = React.PropsWithChildren<{
 }>
 
 const ProteinViewer = (props : ProteinViewerP) => {
-  const { initialComponents = [], children } = props
+  const { initialComponents = [], children, onComponentsChange } = props
   const [stage, setStage] = useState<NGL.Stage | null>(null)
   const [version, setVersion] = useState(0)
   const [internalComp, setInternalComp] = React.useState(
@@ -27,10 +27,10 @@ const ProteinViewer = (props : ProteinViewerP) => {
     (comp : CompatFunc) => {
       setInternalComp((components) => {
         const newComponents = comp(components)
-        if (props.onComponentsChange) props.onComponentsChange(newComponents)
+        if (onComponentsChange) onComponentsChange(components)
         return newComponents
       })
-    }, [props.onComponentsChange, setInternalComp]
+    }, [onComponentsChange, setInternalComp]
   )
   const addComponent = React.useCallback(
     (component : ComponentUIDataT) => {
@@ -82,13 +82,13 @@ const ProteinViewer = (props : ProteinViewerP) => {
   const updateStage = React.useCallback((stage : NGL.Stage)=>{
     setStage(stage)
     setVersion((version) => version + 1)
-  },[setStage, setVersion])
-  const updateVersion = ()=>{
+  }, [ ])
+  const updateVersion = React.useCallback(() => {
     setVersion((version) => version + 1)
-  }
+  }, [ ])
   const stageContext = React.useMemo(() => {
     return {stage, version, setStage: updateStage, updateVersion}
-  }, [stage, updateStage, version])
+  }, [stage, updateStage, version, updateVersion])
   
   return (
     <ViewerContext.Provider value = {context} >

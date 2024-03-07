@@ -24,10 +24,13 @@ const NGLFile: React.FC<NGLFileProps> = ({
     null
   );
   const removeComponent = React.useCallback(() => {
-    if (component === null) return;
-    else if (stage === null) return;
-    stage.removeComponent(component);
-  }, [component, stage]);
+    setComponent((prevComponent) => {
+      if (prevComponent === null) return null;
+      else if (stage === null) return null;
+      stage.removeComponent(prevComponent);
+      return null
+    })
+  }, [ stage ]);
   const fileExt = React.useMemo(() => {
     if (fileSettings?.ext) return fileSettings.ext;
     else if (file instanceof File) return file.name.split(".").slice(-1)[0];
@@ -58,10 +61,6 @@ const NGLFile: React.FC<NGLFileProps> = ({
     removeComponent,
     updateVersion,
   ]);
-
-  useEffect(() => {
-    loadFile();
-  }, [ loadFile ]);
 
   useEffect(() => {
     loadFile();
