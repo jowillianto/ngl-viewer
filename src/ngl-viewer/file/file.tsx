@@ -1,74 +1,75 @@
-import React, { useContext, useEffect, useState } from 'react'
-import * as NGL from 'ngl'
-import StageContext from '../stage-context'
-import { StageLoadFileParams } from 'ngl/dist/declarations/stage/stage'
-import { ViewSettings } from '../interfaces/interfaces'
-import StructureComponentContext from '../context/component-context'
+import React, { useContext, useEffect, useState } from "react";
+import * as NGL from "ngl";
+import StageContext from "../stage-context";
+import { StageLoadFileParams } from "ngl/dist/declarations/stage/stage";
+import { ViewSettings } from "../interfaces/interfaces";
+import StructureComponentContext from "../context/component-context";
 
 export type NGLFileProps = React.PropsWithChildren & {
-  file : File | string | Blob | null,
-  viewSettings : ViewSettings,
-  fileSettings? : Partial<StageLoadFileParams>,
-  chains? : string[]
-}
+  file: File | string | Blob | null;
+  viewSettings: ViewSettings;
+  fileSettings?: Partial<StageLoadFileParams>;
+  chains?: string[];
+};
 
 const NGLFile: React.FC<NGLFileProps> = ({
-  file, viewSettings, fileSettings, chains, children
+  file,
+  viewSettings,
+  fileSettings,
+  chains,
+  children,
 }) => {
   const { stage, updateVersion } = useContext(StageContext);
-  const [component, setComponent] = useState< 
-    NGL.StructureComponent | null
-  >(null);
+  const [component, setComponent] = useState<NGL.StructureComponent | null>(
+    null
+  );
   const removeComponent = React.useCallback(() => {
-    if (component === null) return
-    else if (stage === null) return
-    stage.removeComponent(component)
-  }, [ component, stage ])
-  const serializedViewSettings = React.useMemo(() => JSON.stringify(viewSettings), [viewSettings])
-  const serializedFileSettings = React.useMemo(() => JSON.stringify(fileSettings), [fileSettings])
+    if (component === null) return;
+    else if (stage === null) return;
+    stage.removeComponent(component);
+  }, [component, stage]);
   const fileExt = React.useMemo(() => {
-    if (fileSettings?.ext) return fileSettings.ext
-    else if (file instanceof File) return file.name.split('.').slice(-1)[0]
+    if (fileSettings?.ext) return fileSettings.ext;
+    else if (file instanceof File) return file.name.split(".").slice(-1)[0];
     else {
-      console.warn("No ext given and file prop is not a file. Using empty")
-      return ''
+      console.warn("No ext given and file prop is not a file. Using empty");
+      return "";
     }
-  }, [ fileSettings, file ])
+  }, [fileSettings, file]);
   const loadFile = React.useCallback(() => {
-    if (stage === null) return
-    else if (file === null) return
-    removeComponent()
-    stage.loadFile(file, {ext : fileExt, ...fileSettings})
-    .then((comp) => {
+    if (stage === null) return;
+    else if (file === null) return;
+    removeComponent();
+    stage.loadFile(file, { ext: fileExt, ...fileSettings }).then((comp) => {
       if (!comp) return;
       viewSettings.forEach((viewSetting) => {
-        comp.addRepresentation( viewSetting.type, viewSetting.params )
-      })
-      setComponent(comp as NGL.StructureComponent)
-      stage.autoView()
-      updateVersion()
-    })
-  }, [ stage, file, serializedViewSettings, serializedFileSettings, fileExt ])
+        comp.addRepresentation(viewSetting.type, viewSetting.params);
+      });
+      setComponent(comp as NGL.StructureComponent);
+      stage.autoView();
+      updateVersion();
+    });
+  }, [
+    stage,
+    file,
+    viewSettings,
+    fileSettings,
+    fileExt,
+    removeComponent,
+    updateVersion,
+  ]);
 
   useEffect(() => {
-    loadFile()
-  }, [
-    file, 
-    stage, 
-    serializedViewSettings, 
-    serializedFileSettings,
-    JSON.stringify(chains)
-  ])
-  
+    loadFile();
+  }, [ loadFile ]);
+
   useEffect(() => {
-    loadFile()
-    return () => removeComponent()
-  }, [])
+    loadFile();
+    return () => removeComponent();
+  }, [ loadFile, removeComponent]);
 
   return (
-    <StructureComponentContext.Provider 
-      value={{ component }}
-    >
+    <StructureComponentContext.Provider value={{ component }}>
       <div className="file-controls">{children}</div>
     </StructureComponentContext.Provider>
   );
