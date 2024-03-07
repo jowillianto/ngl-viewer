@@ -13,7 +13,7 @@ import { mockComponentsDataMap } from "./component-data";
 import ViewerContext from "./viewer-context";
 import StageContext from "../stage-context";
 var ProteinViewer = function (props) {
-    var _a = props.initialComponents, initialComponents = _a === void 0 ? [] : _a, children = props.children;
+    var _a = props.initialComponents, initialComponents = _a === void 0 ? [] : _a, children = props.children, onComponentsChange = props.onComponentsChange;
     var _b = useState(null), stage = _b[0], setStage = _b[1];
     var _c = useState(0), version = _c[0], setVersion = _c[1];
     var _d = React.useState(props.components ? props.components : initialComponents), internalComp = _d[0], setInternalComp = _d[1];
@@ -24,11 +24,11 @@ var ProteinViewer = function (props) {
     var setComponents = React.useCallback(function (comp) {
         setInternalComp(function (components) {
             var newComponents = comp(components);
-            if (props.onComponentsChange)
-                props.onComponentsChange(newComponents);
+            if (onComponentsChange)
+                onComponentsChange(components);
             return newComponents;
         });
-    }, [props.onComponentsChange, setInternalComp]);
+    }, [onComponentsChange, setInternalComp]);
     var addComponent = React.useCallback(function (component) {
         setComponents(function (components) { return __spreadArray(__spreadArray([], components, true), [component], false); });
     }, [setComponents]);
@@ -76,13 +76,13 @@ var ProteinViewer = function (props) {
     var updateStage = React.useCallback(function (stage) {
         setStage(stage);
         setVersion(function (version) { return version + 1; });
-    }, [setStage, setVersion]);
-    var updateVersion = function () {
+    }, []);
+    var updateVersion = React.useCallback(function () {
         setVersion(function (version) { return version + 1; });
-    };
+    }, []);
     var stageContext = React.useMemo(function () {
         return { stage: stage, version: version, setStage: updateStage, updateVersion: updateVersion };
-    }, [stage, updateStage, version]);
+    }, [stage, updateStage, version, updateVersion]);
     return (_jsx(ViewerContext.Provider, { value: context, children: _jsx(StageContext.Provider, { value: stageContext, children: _jsx("div", { className: 'protein-viewer', ref: nodeRef, children: children }) }) }));
 };
 export default ProteinViewer;
