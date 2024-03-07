@@ -10,9 +10,9 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 import { jsx as _jsx } from "react/jsx-runtime";
-import React, { useContext, useEffect, useState } from 'react';
-import StageContext from '../stage-context';
-import StructureComponentContext from '../context/component-context';
+import React, { useContext, useEffect, useState } from "react";
+import StageContext from "../stage-context";
+import StructureComponentContext from "../context/component-context";
 var NGLFile = function (_a) {
     var file = _a.file, viewSettings = _a.viewSettings, fileSettings = _a.fileSettings, chains = _a.chains, children = _a.children;
     var _b = useContext(StageContext), stage = _b.stage, updateVersion = _b.updateVersion;
@@ -24,16 +24,14 @@ var NGLFile = function (_a) {
             return;
         stage.removeComponent(component);
     }, [component, stage]);
-    var serializedViewSettings = React.useMemo(function () { return JSON.stringify(viewSettings); }, [viewSettings]);
-    var serializedFileSettings = React.useMemo(function () { return JSON.stringify(fileSettings); }, [fileSettings]);
     var fileExt = React.useMemo(function () {
         if (fileSettings === null || fileSettings === void 0 ? void 0 : fileSettings.ext)
             return fileSettings.ext;
         else if (file instanceof File)
-            return file.name.split('.').slice(-1)[0];
+            return file.name.split(".").slice(-1)[0];
         else {
             console.warn("No ext given and file prop is not a file. Using empty");
-            return '';
+            return "";
         }
     }, [fileSettings, file]);
     var loadFile = React.useCallback(function () {
@@ -42,8 +40,7 @@ var NGLFile = function (_a) {
         else if (file === null)
             return;
         removeComponent();
-        stage.loadFile(file, __assign({ ext: fileExt }, fileSettings))
-            .then(function (comp) {
+        stage.loadFile(file, __assign({ ext: fileExt }, fileSettings)).then(function (comp) {
             if (!comp)
                 return;
             viewSettings.forEach(function (viewSetting) {
@@ -53,20 +50,22 @@ var NGLFile = function (_a) {
             stage.autoView();
             updateVersion();
         });
-    }, [stage, file, serializedViewSettings, serializedFileSettings, fileExt]);
-    useEffect(function () {
-        loadFile();
     }, [
-        file,
         stage,
-        serializedViewSettings,
-        serializedFileSettings,
-        JSON.stringify(chains)
+        file,
+        viewSettings,
+        fileSettings,
+        fileExt,
+        removeComponent,
+        updateVersion,
     ]);
     useEffect(function () {
         loadFile();
+    }, [loadFile]);
+    useEffect(function () {
+        loadFile();
         return function () { return removeComponent(); };
-    }, []);
+    }, [loadFile, removeComponent]);
     return (_jsx(StructureComponentContext.Provider, { value: { component: component }, children: _jsx("div", { className: "file-controls", children: children }) }));
 };
 export default NGLFile;
