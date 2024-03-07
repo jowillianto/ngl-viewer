@@ -18,12 +18,15 @@ var NGLFile = function (_a) {
     var _b = useContext(StageContext), stage = _b.stage, updateVersion = _b.updateVersion;
     var _c = useState(null), component = _c[0], setComponent = _c[1];
     var removeComponent = React.useCallback(function () {
-        if (component === null)
-            return;
-        else if (stage === null)
-            return;
-        stage.removeComponent(component);
-    }, [component, stage]);
+        setComponent(function (prevComponent) {
+            if (prevComponent === null)
+                return null;
+            else if (stage === null)
+                return null;
+            stage.removeComponent(prevComponent);
+            return null;
+        });
+    }, [stage]);
     var fileExt = React.useMemo(function () {
         if (fileSettings === null || fileSettings === void 0 ? void 0 : fileSettings.ext)
             return fileSettings.ext;
@@ -59,9 +62,6 @@ var NGLFile = function (_a) {
         removeComponent,
         updateVersion,
     ]);
-    useEffect(function () {
-        loadFile();
-    }, [loadFile]);
     useEffect(function () {
         loadFile();
         return function () { return removeComponent(); };
