@@ -15,22 +15,18 @@ export default function Stage(_a) {
         if (ref.current === null)
             return;
         var stage = new NGL.Stage(ref.current, viewSettings);
-        setStage(stage);
-        return function () {
-            setStage(function (stage) {
-                stage === null || stage === void 0 ? void 0 : stage.dispose();
-                return null;
-            });
-        };
+        setStage(function (prevStage) {
+            if (prevStage === null)
+                return stage;
+            return prevStage;
+        });
     }, [setStage, viewSettings]);
     React.useEffect(function () {
         if (stage === null || ref.current === null)
             return;
         var observer = new ResizeObserver(function () { return stage.handleResize(); });
         observer.observe(ref.current);
-        return function () {
-            observer.disconnect();
-        };
+        return function () { return observer.disconnect(); };
     }, [stage]);
     return (_jsx("div", { className: "ngl-viewer-canvas ".concat(className), ref: ref, style: containerStyle, children: children }));
 }

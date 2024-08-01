@@ -26,21 +26,17 @@ export default function Stage({
   React.useEffect(() => {
     if (ref.current === null) return;
     const stage = new NGL.Stage(ref.current, viewSettings);
-    setStage(stage);
-    return () => {
-      setStage((stage) => {
-        stage?.dispose()
-        return null
-      })
-    };
+    setStage((prevStage) => {
+      if (prevStage === null)
+        return stage
+      return prevStage
+    })
   }, [setStage, viewSettings]);
   React.useEffect(() => {
     if (stage === null || ref.current === null) return;
     const observer = new ResizeObserver(() => stage.handleResize());
     observer.observe(ref.current);
-    return () => {
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, [stage]);
 
   return (
