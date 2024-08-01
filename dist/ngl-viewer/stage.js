@@ -1,4 +1,4 @@
-import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
+import { jsx as _jsx } from "react/jsx-runtime";
 import React from "react";
 import * as NGL from "ngl";
 import StageContext from "./stage-context";
@@ -12,7 +12,7 @@ export default function Stage(_a) {
         return { height: height, width: width };
     }, [height, width]);
     React.useEffect(function () {
-        if (!ref.current)
+        if (ref.current === null)
             return;
         var stage = new NGL.Stage(ref.current, viewSettings);
         setStage(stage);
@@ -29,5 +29,5 @@ export default function Stage(_a) {
             observer.disconnect();
         };
     }, [stage]);
-    return (_jsxs(_Fragment, { children: [_jsx("div", { className: "ngl-viewer-canvas ".concat(className), ref: ref, style: containerStyle }), children] }));
+    return (_jsx("div", { className: "ngl-viewer-canvas ".concat(className), ref: ref, style: containerStyle, children: children }));
 }
