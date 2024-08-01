@@ -10,6 +10,7 @@ type ProteinViewerP = React.PropsWithChildren<{
   initialComponents? : Array<ComponentUIDataT>
   components? : Array<ComponentUIDataT>
   onComponentsChange? : (arr : Array<ComponentUIDataT>) => void
+  className? : string
 }>
 
 const ProteinViewer = (props : ProteinViewerP) => {
@@ -89,11 +90,11 @@ const ProteinViewer = (props : ProteinViewerP) => {
   const stageContext = React.useMemo(() => {
     return {stage, version, setStage: updateStage, updateVersion}
   }, [stage, updateStage, version, updateVersion])
-  
+  const {className} = props
   return (
     <ViewerContext.Provider value = {context} >
       <StageContext.Provider value = {stageContext}>
-        <div className = 'protein-viewer' ref = {nodeRef}>
+        <div className = {`protein-viewer ${className}`} ref = {nodeRef}>
           {children}
         </div>
       </StageContext.Provider>
