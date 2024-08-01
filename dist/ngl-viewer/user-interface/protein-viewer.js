@@ -74,7 +74,12 @@ var ProteinViewer = function (props) {
         nodeRef
     ]);
     var updateStage = React.useCallback(function (stage) {
-        setStage(stage);
+        setStage(function (prevStage) {
+            if (typeof stage === 'function')
+                return stage(prevStage);
+            else
+                return stage;
+        });
         setVersion(function (version) { return version + 1; });
     }, []);
     var updateVersion = React.useCallback(function () {
@@ -83,6 +88,7 @@ var ProteinViewer = function (props) {
     var stageContext = React.useMemo(function () {
         return { stage: stage, version: version, setStage: updateStage, updateVersion: updateVersion };
     }, [stage, updateStage, version, updateVersion]);
-    return (_jsx(ViewerContext.Provider, { value: context, children: _jsx(StageContext.Provider, { value: stageContext, children: _jsx("div", { className: 'protein-viewer', ref: nodeRef, children: children }) }) }));
+    var className = props.className;
+    return (_jsx(ViewerContext.Provider, { value: context, children: _jsx(StageContext.Provider, { value: stageContext, children: _jsx("div", { className: "protein-viewer ".concat(className), ref: nodeRef, children: children }) }) }));
 };
 export default ProteinViewer;

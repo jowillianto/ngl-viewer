@@ -13,10 +13,10 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import React from 'react';
-import * as NGL from 'ngl';
-import StageContext from './stage-context';
+import { jsx as _jsx } from "react/jsx-runtime";
+import React from "react";
+import * as NGL from "ngl";
+import StageContext from "./stage-context";
 var NGLStage = /** @class */ (function (_super) {
     __extends(NGLStage, _super);
     function NGLStage(props) {
@@ -28,39 +28,6 @@ var NGLStage = /** @class */ (function (_super) {
         _this.stageRef = React.createRef();
         return _this;
     }
-    //   toggleSpin = () => {
-    //     if (this.state.stage) {
-    //       const isSpinning = !this.state.isSpinning;
-    //       this.state.stage.setSpin(isSpinning);
-    //       this.setState({ isSpinning });
-    //     }
-    // }
-    // toggleRock = () => {
-    //     if (this.state.stage) {
-    //       const isRocking = !this.state.isRocking;
-    //       this.state.stage.setRock(isRocking);
-    //       this.setState({ isRocking });
-    //     }
-    // }
-    // setPerspective = () => {
-    //   this.state.stage?.setParameters({ cameraType: 'perspective' });
-    //   this.setState({ projectionType: 'perspective' });
-    // }
-    // setOrthographic = () => {
-    //   this.state.stage?.setParameters({ cameraType: 'orthographic' });
-    //   this.setState({ projectionType: 'orthographic' });
-    // }
-    // setStereo = () => {
-    //   this.state.stage?.setParameters({ cameraType: 'stereo' });
-    //   this.setState({ projectionType: 'stereo' });
-    // // }
-    //   componentDidUpdate(prevProps: NGLStageProps) {
-    //     if (this.state.stage && prevProps.viewSettings?.backgroundColor !== this.props.viewSettings?.backgroundColor) {
-    //       this.state.stage.setParameters({
-    //         backgroundColor: this.props.viewSettings?.backgroundColor
-    //       });
-    //     }
-    //   }
     NGLStage.prototype.componentDidMount = function () {
         var htmlElm = this.stageRef.current;
         if (htmlElm) {
@@ -81,10 +48,9 @@ var NGLStage = /** @class */ (function (_super) {
         (_b = this.observer) === null || _b === void 0 ? void 0 : _b.disconnect();
     };
     NGLStage.prototype.render = function () {
-        var height = this.props.height;
-        var width = this.props.width;
+        var _a = this.props, height = _a.height, width = _a.width, _b = _a.className, className = _b === void 0 ? "" : _b;
         var style = { height: height, width: width };
-        return (_jsxs("div", { className: 'ngl-viewer-stage', children: [_jsx("div", { className: 'ngl-viewer-tab', children: this.props.children }), _jsx("div", { className: 'ngl-viewer-canvas', ref: this.stageRef, style: style })] }));
+        return (_jsx("div", { className: "ngl-viewer-canvas ".concat(className), ref: this.stageRef, style: style }));
     };
     NGLStage.contextType = StageContext;
     return NGLStage;
