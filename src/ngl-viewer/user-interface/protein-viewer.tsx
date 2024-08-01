@@ -80,8 +80,13 @@ const ProteinViewer = (props : ProteinViewerP) => {
     addComponentByType,
     nodeRef
   ])
-  const updateStage = React.useCallback((stage : NGL.Stage)=>{
-    setStage(stage)
+  const updateStage = React.useCallback((stage : React.SetStateAction<NGL.Stage | null>)=>{
+    setStage((prevStage) => {
+      if (typeof stage === 'function')
+        return stage(prevStage)
+      else
+        return stage
+    })
     setVersion((version) => version + 1)
   }, [ ])
   const updateVersion = React.useCallback(() => {
