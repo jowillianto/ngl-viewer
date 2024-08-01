@@ -1,10 +1,11 @@
-import "./index.css"
-import ProteinViewer from "./ngl-viewer/user-interface/protein-viewer"
-import ViewerSelector from "./ngl-viewer/user-interface/component-selector"
-import ViewerStage from "./ngl-viewer/user-interface/viewer-stage"
-import ViewerPanel from "./ngl-viewer/user-interface/viewer-panel"
-import ViewerComponent from "./viewer-component"
-import { ComponentUIDataT } from "./ngl-viewer/user-interface/component-data"
+import "./index.css";
+import React from 'react'
+import ProteinViewer from "./ngl-viewer/user-interface/protein-viewer";
+import ViewerSelector from "./ngl-viewer/user-interface/component-selector";
+import ViewerStage from "./ngl-viewer/user-interface/viewer-stage";
+import ViewerPanel from "./ngl-viewer/user-interface/viewer-panel";
+import ViewerComponent from "./viewer-component";
+import { ComponentUIDataT } from "./ngl-viewer/user-interface/component-data";
 
 const exampleComponentUIData: ComponentUIDataT = {
   type: "box",
@@ -20,40 +21,44 @@ const exampleComponentUIData: ComponentUIDataT = {
         params: {
           opacity: 1,
         },
-      }
+      },
     ],
   },
   config: {},
 };
 const initialComponents: Array<ComponentUIDataT> = [
-  exampleComponentUIData, 
+  exampleComponentUIData,
   {
-    type: 'file',
-    props : {
-      file : 'https://files.rcsb.org/download/1FBL.pdb',
-      fileSettings : {ext : 'pdb'},
-      viewSettings : [{
-        type : 'cartoon', 
-        params : {}
-      }],
+    type: "file",
+    props: {
+      file: "https://files.rcsb.org/download/1FBL.pdb",
+      fileSettings: { ext: "pdb" },
+      viewSettings: [
+        {
+          type: "cartoon",
+          params: {},
+        },
+      ],
     },
-    config: {}
-  }
+    config: {},
+  },
 ];
 
 const App = () => {
-  return ( 
-    <ProteinViewer initialComponents = {initialComponents}>
-      <div className='container1'>
-        <ViewerComponent />
-        <div className='selector'>
-          {/* <ViewerSelector/> */}
-          <ViewerStage width="100%" height = "92vh"/>
-          <ViewerPanel />
+  return (
+    <React.StrictMode>
+      <ProteinViewer initialComponents={initialComponents}>
+        <div className="container1">
+          <ViewerComponent />
+          <div className="selector">
+            {/* <ViewerSelector/> */}
+            <ViewerStage width="100%" height="92vh" />
+            <ViewerPanel />
+          </div>
         </div>
-      </div>
-    </ProteinViewer>
-  )
-}
+      </ProteinViewer>
+    </React.StrictMode>
+  );
+};
 
 export default App;
