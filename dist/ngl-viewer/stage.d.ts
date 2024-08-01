@@ -1,33 +1,9 @@
 import React from "react";
 import * as NGL from "ngl";
-import StageContext from "./stage-context";
 export type NGLStageProps = React.PropsWithChildren<{
-    height: string;
-    width: string;
+    height?: string;
+    width?: string;
     className?: string;
     viewSettings?: ConstructorParameters<typeof NGL.Stage>[1];
 }>;
-export type NGLStageState = {
-    stage: NGL.Stage | null;
-    isSpinning: boolean;
-    isRocking: boolean;
-    projectionType: "perspective" | "orthographic" | "stereo";
-    theme: "light" | "dark";
-};
-export default class NGLStage extends React.Component<NGLStageProps> {
-    static contextType: React.Context<{
-        stage: NGL.Stage | null;
-        version: number;
-        setStage: React.Dispatch<React.SetStateAction<NGL.Stage | null>>;
-        updateVersion: () => void;
-    }>;
-    context: React.ContextType<typeof StageContext>;
-    stageRef: React.RefObject<HTMLDivElement>;
-    observer: ResizeObserver | undefined;
-    constructor(props: NGLStageProps);
-    componentDidMount(): void;
-    addObserver(): void;
-    resizeStage: () => void;
-    componentWillUnmount(): void;
-    render(): React.ReactNode;
-}
+export default function Stage({ height, width, className, viewSettings, }: NGLStageProps): JSX.Element;
