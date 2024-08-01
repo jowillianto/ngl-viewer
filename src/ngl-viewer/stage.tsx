@@ -24,7 +24,7 @@ export default function Stage({
   }, [height, width]);
 
   React.useEffect(() => {
-    if (!ref.current) return;
+    if (ref.current === null) return;
     const stage = new NGL.Stage(ref.current, viewSettings);
     setStage(stage);
     return () => {
@@ -41,13 +41,12 @@ export default function Stage({
   }, [stage]);
 
   return (
-    <>
-      <div
-        className={`ngl-viewer-canvas ${className}`}
-        ref={ref}
-        style={containerStyle}
-      />
+    <div
+      className={`ngl-viewer-canvas ${className}`}
+      ref={ref}
+      style={containerStyle}
+    >
       {children}
-    </>
+    </div>
   );
 }
