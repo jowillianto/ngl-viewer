@@ -77,8 +77,7 @@ var ProteinViewer = function (props) {
         setStage(function (prevStage) {
             if (typeof stage === 'function')
                 return stage(prevStage);
-            else
-                return stage;
+            return stage;
         });
         setVersion(function (version) { return version + 1; });
     }, []);
