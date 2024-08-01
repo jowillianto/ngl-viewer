@@ -65,7 +65,7 @@ var NGLFile = function (_a) {
     useEffect(function () {
         loadFile();
         return function () { return removeComponent(); };
-    }, [loadFile, removeComponent]);
+    }, [loadFile, removeComponent, stage]);
     return (_jsx(StructureComponentContext.Provider, { value: { component: component }, children: _jsx("div", { className: "file-controls", children: children }) }));
 };
 export default NGLFile;

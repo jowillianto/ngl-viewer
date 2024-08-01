@@ -84,8 +84,7 @@ const ProteinViewer = (props : ProteinViewerP) => {
     setStage((prevStage) => {
       if (typeof stage === 'function')
         return stage(prevStage)
-      else
-        return stage
+      return stage
     })
     setVersion((version) => version + 1)
   }, [ ])

@@ -6,4 +6,4 @@ export type NGLStageProps = React.PropsWithChildren<{
     className?: string;
     viewSettings?: ConstructorParameters<typeof NGL.Stage>[1];
 }>;
-export default function Stage({ height, width, className, viewSettings, }: NGLStageProps): JSX.Element;
+export default function Stage({ height, width, className, viewSettings, children, }: NGLStageProps): JSX.Element;
