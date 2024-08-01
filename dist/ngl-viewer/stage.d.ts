@@ -1,23 +1,24 @@
-import React from 'react';
-import * as NGL from 'ngl';
-import StageContext from './stage-context';
+import React from "react";
+import * as NGL from "ngl";
+import StageContext from "./stage-context";
 export type NGLStageProps = React.PropsWithChildren<{
     height: string;
     width: string;
+    className?: string;
     viewSettings?: ConstructorParameters<typeof NGL.Stage>[1];
 }>;
 export type NGLStageState = {
     stage: NGL.Stage | null;
     isSpinning: boolean;
     isRocking: boolean;
-    projectionType: 'perspective' | 'orthographic' | 'stereo';
-    theme: 'light' | 'dark';
+    projectionType: "perspective" | "orthographic" | "stereo";
+    theme: "light" | "dark";
 };
 export default class NGLStage extends React.Component<NGLStageProps> {
     static contextType: React.Context<{
         stage: NGL.Stage | null;
         version: number;
-        setStage: (stage: NGL.Stage) => void;
+        setStage: React.Dispatch<React.SetStateAction<NGL.Stage | null>>;
         updateVersion: () => void;
     }>;
     context: React.ContextType<typeof StageContext>;
