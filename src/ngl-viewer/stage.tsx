@@ -28,7 +28,10 @@ export default function Stage({
     const stage = new NGL.Stage(ref.current, viewSettings);
     setStage(stage);
     return () => {
-      stage.dispose();
+      setStage((stage) => {
+        stage?.dispose()
+        return null
+      })
     };
   }, [setStage, viewSettings]);
   React.useEffect(() => {
