@@ -13,6 +13,7 @@ export default function Stage({
   width,
   className = '',
   viewSettings,
+  children
 }: NGLStageProps) {
   const { setStage, stage } = React.useContext(StageContext);
   const ref = React.useRef<HTMLDivElement>(null);
@@ -45,6 +46,8 @@ export default function Stage({
       className={`ngl-viewer-canvas ${className}`}
       ref={ref}
       style = {containerStyle}
-    />
+    >
+      {children}
+    </div>
   );
 }

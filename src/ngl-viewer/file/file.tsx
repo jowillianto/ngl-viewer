@@ -65,7 +65,7 @@ const NGLFile: React.FC<NGLFileProps> = ({
   useEffect(() => {
     loadFile();
     return () => removeComponent();
-  }, [ loadFile, removeComponent]);
+  }, [ loadFile, removeComponent, stage]);
 
   return (
     <StructureComponentContext.Provider value={{ component }}>
