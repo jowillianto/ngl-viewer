@@ -34,7 +34,7 @@ export default class NGLEllipsoid extends React.Component<NGLEllipsoidProps>{
         addShape      = {this.addEllipsoid}
         viewSettings  = {this.props.viewSettings}
         shapeParams   = {this.props.shapeParams}
-        hash          = {this.hashProps()}
+        
       />
     )
   }

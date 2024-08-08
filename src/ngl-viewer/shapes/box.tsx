@@ -31,7 +31,6 @@ export default class NGLBox extends React.Component<NGLBoxProps>{
         addShape      = {this.addBox}
         viewSettings  = {this.props.viewSettings}
         shapeParams   = {this.props.shapeParams}
-        hash          = {this.hashProps()}
       />
     )
   }

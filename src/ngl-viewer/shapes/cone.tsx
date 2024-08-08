@@ -33,7 +33,7 @@ export default class NGLCone extends React.Component<NGLConeProps>{
         addShape      = {this.addSphere}
         viewSettings  = {this.props.viewSettings}
         shapeParams   = {this.props.shapeParams}
-        hash          = {this.hashProps()}
+        
       />
     )
   }

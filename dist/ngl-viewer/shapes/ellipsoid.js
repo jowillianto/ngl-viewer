@@ -34,7 +34,7 @@ var NGLEllipsoid = /** @class */ (function (_super) {
         return JSON.stringify(this.props);
     };
     NGLEllipsoid.prototype.render = function () {
-        return (_jsx(BaseShape, { addShape: this.addEllipsoid, viewSettings: this.props.viewSettings, shapeParams: this.props.shapeParams, hash: this.hashProps() }));
+        return (_jsx(BaseShape, { addShape: this.addEllipsoid, viewSettings: this.props.viewSettings, shapeParams: this.props.shapeParams }));
     };
     return NGLEllipsoid;
 }(React.Component));

@@ -17,16 +17,6 @@ var NGLFile = function (_a) {
     var file = _a.file, viewSettings = _a.viewSettings, fileSettings = _a.fileSettings, chains = _a.chains, children = _a.children;
     var _b = useContext(StageContext), stage = _b.stage, updateVersion = _b.updateVersion;
     var _c = useState(null), component = _c[0], setComponent = _c[1];
-    var removeComponent = React.useCallback(function () {
-        setComponent(function (prevComponent) {
-            if (prevComponent === null)
-                return null;
-            else if (stage === null)
-                return null;
-            stage.removeComponent(prevComponent);
-            return null;
-        });
-    }, [stage]);
     var fileExt = React.useMemo(function () {
         if (fileSettings === null || fileSettings === void 0 ? void 0 : fileSettings.ext)
             return fileSettings.ext;
@@ -42,7 +32,6 @@ var NGLFile = function (_a) {
             return;
         else if (file === null)
             return;
-        removeComponent();
         stage.loadFile(file, __assign({ ext: fileExt }, fileSettings)).then(function (comp) {
             if (!comp)
                 return;
@@ -53,19 +42,20 @@ var NGLFile = function (_a) {
             stage.autoView();
             updateVersion();
         });
-    }, [
-        stage,
-        file,
-        viewSettings,
-        fileSettings,
-        fileExt,
-        removeComponent,
-        updateVersion,
-    ]);
+    }, [stage, file, viewSettings, fileSettings, fileExt, updateVersion]);
     useEffect(function () {
         loadFile();
-        return function () { return removeComponent(); };
-    }, [loadFile, removeComponent]);
+        return function () {
+            return setComponent(function (prevComponent) {
+                if (prevComponent === null)
+                    return null;
+                else if (stage === null)
+                    return null;
+                stage.removeComponent(prevComponent);
+                return null;
+            });
+        };
+    }, [loadFile, stage]);
     return (_jsx(StructureComponentContext.Provider, { value: { component: component }, children: _jsx("div", { className: "file-controls", children: children }) }));
 };
 export default NGLFile;

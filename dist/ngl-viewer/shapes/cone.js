@@ -34,7 +34,7 @@ var NGLCone = /** @class */ (function (_super) {
         return JSON.stringify(this.props);
     };
     NGLCone.prototype.render = function () {
-        return (_jsx(BaseShape, { addShape: this.addSphere, viewSettings: this.props.viewSettings, shapeParams: this.props.shapeParams, hash: this.hashProps() }));
+        return (_jsx(BaseShape, { addShape: this.addSphere, viewSettings: this.props.viewSettings, shapeParams: this.props.shapeParams }));
     };
     return NGLCone;
 }(React.Component));

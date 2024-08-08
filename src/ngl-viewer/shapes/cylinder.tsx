@@ -31,7 +31,7 @@ export default class NGLCylinder extends React.Component<NGLCylinderProps>{
         addShape      = {this.addCylinder}
         viewSettings  = {this.props.viewSettings}
         shapeParams   = {this.props.shapeParams}
-        hash          = {this.hashProps()}
+        
       />
     )
   }

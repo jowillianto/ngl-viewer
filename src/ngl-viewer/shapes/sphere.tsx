@@ -32,7 +32,7 @@ export default class NGLSphere extends React.Component<NGLSphereProps>{
         addShape      = {this.addSphere}
         viewSettings  = {this.props.viewSettings}
         shapeParams   = {this.props.shapeParams}
-        hash          = {this.hashProps()}
+        
       />
     )
   }

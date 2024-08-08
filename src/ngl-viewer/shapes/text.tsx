@@ -24,7 +24,7 @@ export default class NGLText extends React.Component<NGLTextProps>{
         addShape      = {this.addText}
         viewSettings  = {this.props.viewSettings}
         shapeParams   = {this.props.shapeParams}
-        hash          = {this.hashProps()}
+        
       />
     )
   }

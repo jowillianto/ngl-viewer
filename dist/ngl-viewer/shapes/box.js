@@ -33,7 +33,7 @@ var NGLBox = /** @class */ (function (_super) {
         return JSON.stringify(this.props);
     };
     NGLBox.prototype.render = function () {
-        return (_jsx(BaseShape, { addShape: this.addBox, viewSettings: this.props.viewSettings, shapeParams: this.props.shapeParams, hash: this.hashProps() }));
+        return (_jsx(BaseShape, { addShape: this.addBox, viewSettings: this.props.viewSettings, shapeParams: this.props.shapeParams }));
     };
     return NGLBox;
 }(React.Component));

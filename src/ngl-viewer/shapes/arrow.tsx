@@ -33,7 +33,7 @@ export default class NGLArrow extends React.Component<NGLArrowProps>{
         addShape      = {this.addArrow}
         viewSettings  = {this.props.viewSettings}
         shapeParams   = {this.props.shapeParams}
-        hash          = {this.hashProps()}
+        
       />
     )
   }
