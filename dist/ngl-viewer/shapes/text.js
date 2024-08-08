@@ -31,7 +31,7 @@ var NGLText = /** @class */ (function (_super) {
         return JSON.stringify(this.props);
     };
     NGLText.prototype.render = function () {
-        return (_jsx(BaseShape, { addShape: this.addText, viewSettings: this.props.viewSettings, shapeParams: this.props.shapeParams, hash: this.hashProps() }));
+        return (_jsx(BaseShape, { addShape: this.addText, viewSettings: this.props.viewSettings, shapeParams: this.props.shapeParams }));
     };
     return NGLText;
 }(React.Component));

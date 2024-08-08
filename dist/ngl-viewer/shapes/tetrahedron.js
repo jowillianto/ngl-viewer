@@ -34,7 +34,7 @@ var NGLTetrahedron = /** @class */ (function (_super) {
         return JSON.stringify(this.props);
     };
     NGLTetrahedron.prototype.render = function () {
-        return (_jsx(BaseShape, { addShape: this.addTetrahedron, viewSettings: this.props.viewSettings, shapeParams: this.props.shapeParams, hash: this.hashProps() }));
+        return (_jsx(BaseShape, { addShape: this.addTetrahedron, viewSettings: this.props.viewSettings, shapeParams: this.props.shapeParams }));
     };
     return NGLTetrahedron;
 }(React.Component));

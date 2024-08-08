@@ -1,47 +1,38 @@
 import { Fragment as _Fragment, jsx as _jsx } from "react/jsx-runtime";
-import { useEffect, useContext, useState } from 'react';
-import StageContext from '../stage-context';
-import * as NGL from 'ngl';
-var BaseShape = function (props) {
-    var context = useContext(StageContext);
-    var _a = useState(null), component = _a[0], setComponent = _a[1];
+import React, { useEffect, useContext, useState } from "react";
+import StageContext from "../stage-context";
+import * as NGL from "ngl";
+var BaseShape = function (_a) {
+    var addShape = _a.addShape, shapeParams = _a.shapeParams, viewSettings = _a.viewSettings;
+    var _b = useContext(StageContext), stage = _b.stage, updateVersion = _b.updateVersion;
+    var _c = useState(null), component = _c[0], setComponent = _c[1];
+    var addShapeFromProps = React.useCallback(function () {
+        var shape = new NGL.Shape("shape", shapeParams);
+        var modShape = addShape(shape);
+        if (stage === null)
+            return;
+        var newComponent = stage.addComponentFromObject(modShape);
+        if (!newComponent)
+            return;
+        viewSettings.forEach(function (viewSetting) {
+            newComponent.addRepresentation(viewSetting.type, viewSetting.params);
+        });
+        stage.autoView();
+        updateVersion();
+        setComponent(newComponent);
+    }, [addShape, shapeParams, viewSettings, stage, updateVersion]);
     useEffect(function () {
         addShapeFromProps();
         return function () {
-            removeComponentIfExist();
+            setComponent(function (prevComponent) {
+                if (stage === null)
+                    return null;
+                if (prevComponent !== null)
+                    stage.removeComponent(prevComponent);
+                return null;
+            });
         };
-    }, [props.hash, context.stage]);
-    var addShapeFromProps = function () {
-        removeComponentIfExist();
-        var shapeParams = props.shapeParams;
-        var shape = new NGL.Shape('shape', shapeParams);
-        var modShape = props.addShape(shape);
-        var stage = context.stage;
-        if (stage) {
-            var newComponent_1 = stage.addComponentFromObject(modShape);
-            if (newComponent_1) {
-                var viewSettings = props.viewSettings;
-                viewSettings.forEach(function (viewSetting) {
-                    newComponent_1.addRepresentation(viewSetting.type, viewSetting.params);
-                });
-                stage.autoView();
-                context.updateVersion();
-                setComponent(newComponent_1);
-            }
-        }
-    };
-    var removeComponentIfExist = function () {
-        var _a;
-        if (component) {
-            (_a = context.stage) === null || _a === void 0 ? void 0 : _a.removeComponent(component);
-        }
-    };
-    var removeShape = function () {
-        var stage = context.stage;
-        if (stage && component) {
-            stage.removeComponent(component);
-        }
-    };
+    }, [addShapeFromProps, stage]);
     return _jsx(_Fragment, {});
 };
 export default BaseShape;
