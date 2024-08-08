@@ -1,11 +1,12 @@
 import "./index.css";
-import React from 'react'
+import React from "react";
 import ProteinViewer from "./ngl-viewer/user-interface/protein-viewer";
-import ViewerSelector from "./ngl-viewer/user-interface/component-selector";
+import FileComponent from "./ngl-viewer/file/file";
 import ViewerStage from "./ngl-viewer/user-interface/viewer-stage";
 import ViewerPanel from "./ngl-viewer/user-interface/viewer-panel";
 import ViewerComponent from "./viewer-component";
 import { ComponentUIDataT } from "./ngl-viewer/user-interface/component-data";
+import NGLBox from "./ngl-viewer/shapes/box";
 
 const exampleComponentUIData: ComponentUIDataT = {
   type: "box",
@@ -45,9 +46,11 @@ const initialComponents: Array<ComponentUIDataT> = [
 ];
 
 const App = () => {
+  const [toggle, setToggle] = React.useState(false);
   return (
     <React.StrictMode>
-      <ProteinViewer initialComponents={initialComponents}>
+      <button onClick={() => setToggle((prev) => !prev)}>haha</button>
+      <ProteinViewer>
         <div className="container1">
           <ViewerComponent />
           <div className="selector">
@@ -56,6 +59,31 @@ const App = () => {
             <ViewerPanel />
           </div>
         </div>
+        <FileComponent
+          file="https://files.rcsb.org/download/1FBL.pdb"
+          fileSettings={{ ext: "pdb" }}
+          viewSettings={[
+            {
+              type: toggle ? "licorice" : "cartoon",
+              params: {},
+            },
+          ]}
+        />
+        <NGLBox
+          size={10}
+          position={[10, 10, 10]}
+          heightAxis={[0, 0, 10]}
+          depthAxis={[0, 10, 0]}
+          color={[toggle ? 0 : 100, 100, 100]}
+          viewSettings={[
+            {
+              type: "buffer",
+              params: {
+                opacity: 1,
+              },
+            },
+          ]}
+        />
       </ProteinViewer>
     </React.StrictMode>
   );

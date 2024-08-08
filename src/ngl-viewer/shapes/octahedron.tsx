@@ -34,7 +34,7 @@ export default class NGLOctahedron extends React.Component<NGLOctahedronProps>{
         addShape      = {this.addOctahedron}
         viewSettings  = {this.props.viewSettings}
         shapeParams   = {this.props.shapeParams}
-        hash          = {this.hashProps()}
+        
       />
     )
   }

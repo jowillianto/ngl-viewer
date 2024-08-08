@@ -34,7 +34,7 @@ export default class NGLTetrahedron extends React.Component<NGLTetrahedronProps>
         addShape      = {this.addTetrahedron}
         viewSettings  = {this.props.viewSettings}
         shapeParams   = {this.props.shapeParams}
-        hash          = {this.hashProps()}
+        
       />
     )
   }

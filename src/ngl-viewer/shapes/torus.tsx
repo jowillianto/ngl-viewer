@@ -34,7 +34,7 @@ export default class NGLTorus extends React.Component<NGLTorusProps>{
         addShape      = {this.addTorus}
         viewSettings  = {this.props.viewSettings}
         shapeParams   = {this.props.shapeParams}
-        hash          = {this.hashProps()}
+        
       />
     )
   }

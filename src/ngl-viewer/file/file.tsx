@@ -23,14 +23,6 @@ const NGLFile: React.FC<NGLFileProps> = ({
   const [component, setComponent] = useState<NGL.StructureComponent | null>(
     null
   );
-  const removeComponent = React.useCallback(() => {
-    setComponent((prevComponent) => {
-      if (prevComponent === null) return null;
-      else if (stage === null) return null;
-      stage.removeComponent(prevComponent);
-      return null
-    })
-  }, [ stage ]);
   const fileExt = React.useMemo(() => {
     if (fileSettings?.ext) return fileSettings.ext;
     else if (file instanceof File) return file.name.split(".").slice(-1)[0];
@@ -42,7 +34,6 @@ const NGLFile: React.FC<NGLFileProps> = ({
   const loadFile = React.useCallback(() => {
     if (stage === null) return;
     else if (file === null) return;
-    removeComponent();
     stage.loadFile(file, { ext: fileExt, ...fileSettings }).then((comp) => {
       if (!comp) return;
       viewSettings.forEach((viewSetting) => {
@@ -52,20 +43,18 @@ const NGLFile: React.FC<NGLFileProps> = ({
       stage.autoView();
       updateVersion();
     });
-  }, [
-    stage,
-    file,
-    viewSettings,
-    fileSettings,
-    fileExt,
-    removeComponent,
-    updateVersion,
-  ]);
+  }, [stage, file, viewSettings, fileSettings, fileExt, updateVersion]);
 
   useEffect(() => {
     loadFile();
-    return () => removeComponent();
-  }, [ loadFile, removeComponent ]);
+    return () =>
+      setComponent((prevComponent) => {
+        if (prevComponent === null) return null;
+        else if (stage === null) return null;
+        stage.removeComponent(prevComponent);
+        return null;
+      });
+  }, [loadFile, stage]);
 
   return (
     <StructureComponentContext.Provider value={{ component }}>
