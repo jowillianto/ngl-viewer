@@ -28,7 +28,6 @@ export default function Stage({
     if (curDiv === null) return;
     const stage = new NGL.Stage(curDiv, viewSettings)
     setStage(stage)
-    console.log("Constructed")
     return () => {
       setStage(null)
       function disposeFunc(){
