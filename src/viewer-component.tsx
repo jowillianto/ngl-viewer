@@ -147,7 +147,7 @@ const ViewerComponent: React.FC = () => {
                   />
                 </li>
                 <li>
-                  <ViewLigands/>
+                  {/* <ViewLigands/> */}
                 </li>
                 <li>
                   

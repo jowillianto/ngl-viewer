@@ -1,5 +1,5 @@
 import React from 'react'
-import BaseShape, { ExtendedShapeProps } from './base-shape'
+import BaseShape, { ExtendedShapeProps, useComponentFromObject } from './base-shape'
 import * as NGL from 'ngl'
 
 export type NGLTextProps = ExtendedShapeProps<{
@@ -9,23 +9,17 @@ export type NGLTextProps = ExtendedShapeProps<{
   color         : [number, number, number] | NGL.Color
 }>
 
-export default class NGLText extends React.Component<NGLTextProps>{
-  addText = (shape : NGL.Shape) : NGL.Shape => {
-    const {position, text, size, color} = this.props
-    return shape.addText(position, color, size, text)
-  }
-  hashProps() : string{
-    // Very slow hash, change later
-    return JSON.stringify(this.props)
-  }
-  render(): React.ReactNode {
-    return (
-      <BaseShape 
-        addShape      = {this.addText}
-        viewSettings  = {this.props.viewSettings}
-        shapeParams   = {this.props.shapeParams}
-        
-      />
-    )
-  }
+export default function NGLText({
+  position, text, size, color, viewSettings, shapeParams
+} : NGLTextProps) {
+  const shapeCreator = React.useMemo(() => {
+    return new NGL.Shape(undefined, shapeParams).addText(
+      position,
+      color,
+      size,
+      text
+    );
+  }, [position, color, size,text, shapeParams]);
+  useComponentFromObject(shapeCreator, viewSettings);
+  return <></>
 }

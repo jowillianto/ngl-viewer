@@ -1,5 +1,5 @@
 import React from 'react'
-import BaseShape, { ExtendedShapeProps } from './base-shape'
+import { ExtendedShapeProps, useComponentFromObject } from './base-shape'
 import * as NGL from 'ngl'
 import {randomString} from '../utils/utils'
 
@@ -10,29 +10,27 @@ export type NGLCylinderProps = ExtendedShapeProps<{
   radius        : number,
 }>
 
-export default class NGLCylinder extends React.Component<NGLCylinderProps>{
-  randomName  : string
-  constructor(props : NGLCylinderProps){
-    super(props)
-    this.randomName   = randomString(10)
-  }
-  addCylinder = (shape : NGL.Shape) : NGL.Shape => {
-    const {position1, position2, color, radius}   = this.props
-    const name      = this.props.name ? this.props.name : this.randomName
-    return shape.addCylinder(position1, position2, color, radius, name)
-  }
-  hashProps() : string{
-    // Very slow hash, change later
-    return JSON.stringify(this.props)
-  }
-  render(): React.ReactNode {
-    return (
-      <BaseShape 
-        addShape      = {this.addCylinder}
-        viewSettings  = {this.props.viewSettings}
-        shapeParams   = {this.props.shapeParams}
-        
-      />
-    )
-  }
+
+export default function NGLCylinder({
+  position1,
+  position2,
+  color,
+  radius,
+  name,
+  viewSettings,
+  shapeParams,
+}: NGLCylinderProps) {
+  const shapeCreator = React.useMemo(
+    () =>
+      new NGL.Shape(undefined, shapeParams).addCylinder(
+        position1,
+        position2,
+        color,
+        radius,
+        name === undefined ? randomString(10) : name
+      ),
+    [position1, position2, color, radius, name, shapeParams]
+  );
+  useComponentFromObject(shapeCreator, viewSettings);
+  return <></>
 }

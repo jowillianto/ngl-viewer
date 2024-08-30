@@ -356,7 +356,7 @@ export const mockComponentsDataMap: Record<
   file: {
     type: "file",
     props: {
-      file: null,
+      file: "rcsb://1FBL",
       viewSettings: [
         {
           type: "cartoon",

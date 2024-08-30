@@ -15,7 +15,7 @@ export default function Stage({
   viewSettings,
   children,
 }: NGLStageProps) {
-  const { setStage, stage } = React.useContext(StageContext);
+  const { stage, setStage } = React.useContext(StageContext);
   const ref = React.useRef<HTMLDivElement>(null);
 
   const containerStyle = React.useMemo(() => {
@@ -24,13 +24,22 @@ export default function Stage({
   }, [height, width]);
 
   React.useEffect(() => {
-    if (ref.current === null) return;
-    const stage = new NGL.Stage(ref.current, viewSettings);
-    setStage((prevStage) => {
-      if (prevStage === null)
-        return stage
-      return prevStage
-    })
+    const curDiv = ref.current;
+    if (curDiv === null) return;
+    const stage = new NGL.Stage(curDiv, viewSettings)
+    setStage(stage)
+    console.log("Constructed")
+    return () => {
+      setStage(null)
+      function disposeFunc(){
+        if (stage.compList.length !== 0)
+          setTimeout(disposeFunc, 50)
+        else
+          stage.dispose()
+      }
+      disposeFunc()
+      curDiv.replaceChildren()
+    }
   }, [setStage, viewSettings]);
   React.useEffect(() => {
     if (stage === null || ref.current === null) return;

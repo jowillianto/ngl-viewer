@@ -48,15 +48,20 @@ const initialComponents: Array<ComponentUIDataT> = [
 const App = () => {
   const [toggle, setToggle] = React.useState(false);
   return (
-    <React.StrictMode>
-      <button onClick={() => setToggle((prev) => !prev)}>haha</button>
+    // <React.StrictMode>
+    <div style = {{backgroundColor: "grey"}}>
       <ProteinViewer>
+        <button onClick={() => setToggle((prev) => !prev)}>haha</button>
         <div className="container1">
           <ViewerComponent />
           <div className="selector">
             {/* <ViewerSelector/> */}
-            <ViewerStage width="100%" height="92vh" />
-            <ViewerPanel />
+            <ViewerStage
+              width="100%"
+              height="500px"
+              viewSettings={{ backgroundColor: toggle ? "black" : "white" }}
+            />
+            {/* <ViewerPanel /> */}
           </div>
         </div>
         <FileComponent
@@ -64,7 +69,7 @@ const App = () => {
           fileSettings={{ ext: "pdb" }}
           viewSettings={[
             {
-              type: toggle ? "licorice" : "cartoon",
+              type: "cartoon",
               params: {},
             },
           ]}
@@ -74,7 +79,7 @@ const App = () => {
           position={[10, 10, 10]}
           heightAxis={[0, 0, 10]}
           depthAxis={[0, 10, 0]}
-          color={[toggle ? 0 : 100, 100, 100]}
+          color={[0, 0, 100]}
           viewSettings={[
             {
               type: "buffer",
@@ -85,7 +90,8 @@ const App = () => {
           ]}
         />
       </ProteinViewer>
-    </React.StrictMode>
+    </div>
+    // </React.StrictMode>
   );
 };
 
