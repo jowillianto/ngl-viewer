@@ -1,4 +1,4 @@
-import React from 'react';
+/// <reference types="react" />
 import { ExtendedShapeProps } from './base-shape';
 import * as NGL from 'ngl';
 export type NGLTextProps = ExtendedShapeProps<{
@@ -7,8 +7,4 @@ export type NGLTextProps = ExtendedShapeProps<{
     size: number;
     color: [number, number, number] | NGL.Color;
 }>;
-export default class NGLText extends React.Component<NGLTextProps> {
-    addText: (shape: NGL.Shape) => NGL.Shape;
-    hashProps(): string;
-    render(): React.ReactNode;
-}
+export default function NGLText({ position, text, size, color, viewSettings, shapeParams }: NGLTextProps): JSX.Element;

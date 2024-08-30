@@ -301,7 +301,7 @@ export var mockComponentsDataMap = {
     file: {
         type: "file",
         props: {
-            file: null,
+            file: "rcsb://1FBL",
             viewSettings: [
                 {
                     type: "cartoon",

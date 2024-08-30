@@ -1,4 +1,4 @@
-import React from 'react';
+/// <reference types="react" />
 import { ExtendedShapeProps } from './base-shape';
 import * as NGL from 'ngl';
 export type NGLCylinderProps = ExtendedShapeProps<{
@@ -7,10 +7,4 @@ export type NGLCylinderProps = ExtendedShapeProps<{
     color: [number, number, number] | NGL.Color;
     radius: number;
 }>;
-export default class NGLCylinder extends React.Component<NGLCylinderProps> {
-    randomName: string;
-    constructor(props: NGLCylinderProps);
-    addCylinder: (shape: NGL.Shape) => NGL.Shape;
-    hashProps(): string;
-    render(): React.ReactNode;
-}
+export default function NGLCylinder({ position1, position2, color, radius, name, viewSettings, shapeParams, }: NGLCylinderProps): JSX.Element;

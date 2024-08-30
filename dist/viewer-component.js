@@ -20,7 +20,6 @@ import SetCameraType from './ngl-viewer/user-interface/view-perspective';
 import ToggleRockSpinOrOff from './ngl-viewer/user-interface/toggle-rock-spin';
 import Select from 'react-select';
 import './viewer.css';
-import ViewLigands from './ngl-viewer/user-interface/view-ligands';
 var ViewerComponent = function () {
     var _a = useState(false), visible = _a[0], setVisible = _a[1];
     var _b = useState(''), pdb = _b[0], setPdb = _b[1];
@@ -78,6 +77,6 @@ var ViewerComponent = function () {
                                                 label: "Perspective",
                                                 value: "perspective"
                                             },
-                                        } }) }), _jsx("li", { children: _jsx(CenterStructure, { render: function (props) { return (_jsx("button", __assign({}, props, { children: "Center Structure" }))); }, props: {} }) }), _jsx("li", { children: _jsx(ViewLigands, {}) }), _jsx("li", {})] }) })] }) }) }));
+                                        } }) }), _jsx("li", { children: _jsx(CenterStructure, { render: function (props) { return (_jsx("button", __assign({}, props, { children: "Center Structure" }))); }, props: {} }) }), _jsx("li", {}), _jsx("li", {})] }) })] }) }) }));
 };
 export default ViewerComponent;

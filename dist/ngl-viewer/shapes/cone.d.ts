@@ -1,4 +1,4 @@
-import React from 'react';
+/// <reference types="react" />
 import { ExtendedShapeProps } from './base-shape';
 import * as NGL from 'ngl';
 export type NGLConeProps = ExtendedShapeProps<{
@@ -7,10 +7,4 @@ export type NGLConeProps = ExtendedShapeProps<{
     color: NGL.Color | [number, number, number];
     radius: number;
 }>;
-export default class NGLCone extends React.Component<NGLConeProps> {
-    randomName: string;
-    constructor(props: NGLConeProps);
-    addSphere: (shape: NGL.Shape) => NGL.Shape;
-    hashProps(): string;
-    render(): React.ReactNode;
-}
+export default function NGLCone({ position1, position2, color, radius, name, viewSettings, shapeParams, }: NGLConeProps): JSX.Element;
