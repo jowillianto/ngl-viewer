@@ -1,4 +1,4 @@
-import React from 'react';
+/// <reference types="react" />
 import { ExtendedShapeProps } from './base-shape';
 import * as NGL from 'ngl';
 export type NGLSphereProps = ExtendedShapeProps<{
@@ -6,10 +6,4 @@ export type NGLSphereProps = ExtendedShapeProps<{
     color: [number, number, number] | NGL.Color;
     radius: number;
 }>;
-export default class NGLSphere extends React.Component<NGLSphereProps> {
-    randomName: string;
-    constructor(props: NGLSphereProps);
-    addSphere: (shape: NGL.Shape) => NGL.Shape;
-    hashProps(): string;
-    render(): React.ReactNode;
-}
+export default function NGLSphere({ name, position, color, radius, shapeParams, viewSettings, }: NGLSphereProps): JSX.Element;

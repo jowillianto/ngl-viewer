@@ -1,4 +1,4 @@
-import React from 'react';
+/// <reference types="react" />
 import { ExtendedShapeProps } from './base-shape';
 import * as NGL from 'ngl';
 export type NGLTetrahedronProps = ExtendedShapeProps<{
@@ -8,10 +8,4 @@ export type NGLTetrahedronProps = ExtendedShapeProps<{
     color: [number, number, number] | NGL.Color;
     size: number;
 }>;
-export default class NGLTetrahedron extends React.Component<NGLTetrahedronProps> {
-    randomName: string;
-    constructor(props: NGLTetrahedronProps);
-    addTetrahedron: (shape: NGL.Shape) => NGL.Shape;
-    hashProps(): string;
-    render(): React.ReactNode;
-}
+export default function NGLTetrahedron({ name, position, color, size, heightAxis, depthAxis, shapeParams, viewSettings, }: NGLTetrahedronProps): JSX.Element;

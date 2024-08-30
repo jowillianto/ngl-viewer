@@ -1,11 +1,9 @@
 import React from "react";
 import * as NGL from "ngl";
-type StageContextT<Nullable extends boolean> = {
-    stage: Nullable extends true ? NGL.Stage | null : NGL.Stage;
-    version: number;
+type StageContextT = {
+    stage: NGL.Stage | null;
     setStage: React.Dispatch<React.SetStateAction<NGL.Stage | null>>;
-    updateVersion: () => void;
 };
-declare const StageContext: React.Context<StageContextT<true>>;
-export declare function useStage(): StageContextT<false>;
+declare const StageContext: React.Context<StageContextT>;
+export declare function useStage(): NGL.Stage | null;
 export default StageContext;

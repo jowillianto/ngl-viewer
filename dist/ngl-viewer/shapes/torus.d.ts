@@ -1,4 +1,4 @@
-import React from 'react';
+/// <reference types="react" />
 import { ExtendedShapeProps } from './base-shape';
 import * as NGL from 'ngl';
 export type NGLTorusProps = ExtendedShapeProps<{
@@ -8,10 +8,4 @@ export type NGLTorusProps = ExtendedShapeProps<{
     color: [number, number, number] | NGL.Color;
     radius: number;
 }>;
-export default class NGLTorus extends React.Component<NGLTorusProps> {
-    randomName: string;
-    constructor(props: NGLTorusProps);
-    addTorus: (shape: NGL.Shape) => NGL.Shape;
-    hashProps(): string;
-    render(): React.ReactNode;
-}
+export default function NGLEllipsoid({ position, majorAxis, minorAxis, color, radius, viewSettings, shapeParams, name }: NGLTorusProps): JSX.Element;
