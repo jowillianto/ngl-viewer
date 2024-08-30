@@ -1,5 +1,5 @@
 import React from 'react'
-import BaseShape, { ExtendedShapeProps } from './base-shape'
+import { ExtendedShapeProps, useComponentFromObject } from './base-shape'
 import * as NGL from 'ngl'
 import {randomString} from '../utils/utils'
 
@@ -11,31 +11,26 @@ export type NGLTetrahedronProps = ExtendedShapeProps<{
   size          : number
 }>
 
-export default class NGLTetrahedron extends React.Component<NGLTetrahedronProps>{
-  randomName  : string
-  constructor(props : NGLTetrahedronProps){
-    super(props)
-    this.randomName   = randomString(10)
-  }
-  addTetrahedron = (shape : NGL.Shape) : NGL.Shape => {
-    const {position, color, size, heightAxis, depthAxis} = this.props
-    const name      = this.props.name ? this.props.name : this.randomName
-    return shape.addTetrahedron(
-      position, color, size, heightAxis, depthAxis, name
-    )
-  }
-  hashProps() : string{
-    // Very slow hash, change later
-    return JSON.stringify(this.props)
-  }
-  render(): React.ReactNode {
-    return (
-      <BaseShape 
-        addShape      = {this.addTetrahedron}
-        viewSettings  = {this.props.viewSettings}
-        shapeParams   = {this.props.shapeParams}
-        
-      />
-    )
-  }
+export default function NGLTetrahedron({
+  name,
+  position,
+  color,
+  size,
+  heightAxis,
+  depthAxis,
+  shapeParams,
+  viewSettings,
+}: NGLTetrahedronProps) {
+  const shapeCreator = React.useMemo(() => {
+    return new NGL.Shape(undefined, shapeParams).addTetrahedron(
+      position,
+      color,
+      size,
+      heightAxis,
+      depthAxis,
+      name === undefined ? randomString(10) : name
+    );
+  }, [name, position, color, size, heightAxis, depthAxis, shapeParams]);
+  useComponentFromObject(shapeCreator, viewSettings);
+  return <></>
 }

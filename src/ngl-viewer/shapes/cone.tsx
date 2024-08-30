@@ -1,5 +1,5 @@
 import React from 'react'
-import BaseShape, { ExtendedShapeProps } from './base-shape'
+import { ExtendedShapeProps, useComponentFromObject } from './base-shape'
 import * as NGL from 'ngl'
 import {randomString} from '../utils/utils'
 
@@ -10,31 +10,26 @@ export type NGLConeProps = ExtendedShapeProps<{
   radius      : number, 
 }>
 
-export default class NGLCone extends React.Component<NGLConeProps>{
-  randomName  : string
-  constructor(props : NGLConeProps){
-    super(props)
-    this.randomName   = randomString(10)
-  }
-  addSphere = (shape : NGL.Shape) : NGL.Shape => {
-    const {position1, position2, color, radius}   = this.props
-    const name      = this.props.name ? this.props.name : this.randomName
-    return shape.addCone(
-      position1, position2, color, radius, name
-    )
-  }
-  hashProps() : string{
-    // Very slow hash, change later
-    return JSON.stringify(this.props)
-  }
-  render(): React.ReactNode {
-    return (
-      <BaseShape 
-        addShape      = {this.addSphere}
-        viewSettings  = {this.props.viewSettings}
-        shapeParams   = {this.props.shapeParams}
-        
-      />
-    )
-  }
+export default function NGLCone({
+  position1,
+  position2,
+  color,
+  radius,
+  name,
+  viewSettings,
+  shapeParams,
+}: NGLConeProps) {
+  const shapeCreator = React.useMemo(
+    () =>
+      new NGL.Shape(undefined, shapeParams).addCone(
+        position1,
+        position2,
+        color,
+        radius,
+        name === undefined ? randomString(10) : name
+      ),
+    [position1, position2, color, radius, name, shapeParams]
+  );
+  useComponentFromObject(shapeCreator, viewSettings);
+  return <></>
 }

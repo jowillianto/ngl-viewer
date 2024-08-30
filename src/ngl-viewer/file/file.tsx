@@ -1,12 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import React from "react";
 import * as NGL from "ngl";
-import StageContext from "../stage-context";
 import { StageLoadFileParams } from "ngl/dist/declarations/stage/stage";
 import { ViewSettings } from "../interfaces/interfaces";
-import StructureComponentContext from "../context/component-context";
+import useComponent from "../shapes/base-shape";
 
-export type NGLFileProps = React.PropsWithChildren & {
-  file: File | string | Blob | null;
+export type NGLFileProps = {
+  file: File | string | Blob;
   viewSettings: ViewSettings;
   fileSettings?: Partial<StageLoadFileParams>;
   chains?: string[];
@@ -15,14 +14,8 @@ export type NGLFileProps = React.PropsWithChildren & {
 const NGLFile: React.FC<NGLFileProps> = ({
   file,
   viewSettings,
-  fileSettings,
-  chains,
-  children,
+  fileSettings
 }) => {
-  const { stage, updateVersion } = useContext(StageContext);
-  const [component, setComponent] = useState<NGL.StructureComponent | null>(
-    null
-  );
   const fileExt = React.useMemo(() => {
     if (fileSettings?.ext) return fileSettings.ext;
     else if (file instanceof File) return file.name.split(".").slice(-1)[0];
@@ -31,36 +24,14 @@ const NGLFile: React.FC<NGLFileProps> = ({
       return "";
     }
   }, [fileSettings, file]);
-  const loadFile = React.useCallback(() => {
-    if (stage === null) return;
-    else if (file === null) return;
-    stage.loadFile(file, { ext: fileExt, ...fileSettings }).then((comp) => {
-      if (!comp) return;
-      viewSettings.forEach((viewSetting) => {
-        comp.addRepresentation(viewSetting.type, viewSetting.params);
-      });
-      setComponent(comp as NGL.StructureComponent);
-      stage.autoView();
-      updateVersion();
+  const fileComponentCreator = React.useCallback((stage : NGL.Stage) => {
+    return stage.loadFile(file, { ext: fileExt, ...fileSettings }).then((comp) => {
+      if (!comp) return null
+      return comp
     });
-  }, [stage, file, viewSettings, fileSettings, fileExt, updateVersion]);
-
-  useEffect(() => {
-    loadFile();
-    return () =>
-      setComponent((prevComponent) => {
-        if (prevComponent === null) return null;
-        else if (stage === null) return null;
-        stage.removeComponent(prevComponent);
-        return null;
-      });
-  }, [loadFile, stage]);
-
-  return (
-    <StructureComponentContext.Provider value={{ component }}>
-      <div className="file-controls">{children}</div>
-    </StructureComponentContext.Provider>
-  );
+  }, [ fileExt, fileSettings, file ])
+  const component = useComponent(fileComponentCreator, viewSettings)
+  return (<></>)
 };
 
 export default NGLFile;

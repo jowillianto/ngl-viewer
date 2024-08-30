@@ -1,32 +1,18 @@
 import React from "react";
 import * as NGL from "ngl";
 
-type StageContextT<Nullable extends boolean> = {
-  stage: Nullable extends true ? NGL.Stage | null : NGL.Stage;
-  version: number;
+type StageContextT = {
+  stage: NGL.Stage | null;
   setStage: React.Dispatch<React.SetStateAction<NGL.Stage | null>>;
-  updateVersion: () => void;
 };
 
-const StageContext = React.createContext<StageContextT<true>>({
-  stage: null,
-  setStage: () => {},
-  version: 0,
-  updateVersion: () => {},
+const StageContext = React.createContext<StageContextT>({
+  stage : null, setStage : () => {}
 });
 
-export function useStage(): StageContextT<false> {
-  const { stage, ...ctx } = React.useContext(StageContext);
-  if (stage === null) {
-    console.error(
-      "add a ViewerStage component into the child of ProteinViewer"
-    );
-    throw Error("Add a viewer stage component into the child of ProteinViewer");
-  }
-  return {
-    stage,
-    ...ctx,
-  };
+export function useStage(): NGL.Stage | null {
+  const { stage } = React.useContext(StageContext);
+  return stage
 }
 
 export default StageContext;

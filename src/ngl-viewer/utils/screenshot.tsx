@@ -1,5 +1,5 @@
 import React from "react";
-import StageContext from "../stage-context";
+import StageContext, { useStage } from "../stage-context";
 
 export type ImageParameters = {
   trim        : boolean;
@@ -22,7 +22,7 @@ export type NGLScreenshotP<T>= {
 }
 
 const NGLScreenshot = <T,>({params, render, props} : NGLScreenshotP<T>) => {
-  const { stage } = React.useContext(StageContext)
+  const stage = useStage()
   const onClick = React.useCallback(() => {
     const image = stage?.makeImage(params)
     if (image === undefined)

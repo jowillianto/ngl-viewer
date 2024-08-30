@@ -1,5 +1,5 @@
 import React from 'react'
-import BaseShape, { ExtendedShapeProps } from './base-shape'
+import { ExtendedShapeProps, useComponentFromObject } from './base-shape'
 import * as NGL from 'ngl'
 import {randomString} from '../utils/utils'
 
@@ -11,31 +11,21 @@ export type NGLEllipsoidProps = ExtendedShapeProps<{
   radius        : number,
 }>
 
-export default class NGLEllipsoid extends React.Component<NGLEllipsoidProps>{
-  randomName  : string
-  constructor(props : NGLEllipsoidProps){
-    super(props)
-    this.randomName   = randomString(10)
-  }
-  addEllipsoid = (shape : NGL.Shape) : NGL.Shape => {
-    const {position, majorAxis, minorAxis, radius, color}   = this.props
-    const name      = this.props.name ? this.props.name : this.randomName
-    return shape.addEllipsoid(
-      position, color, radius, majorAxis, minorAxis, name
-    )
-  }
-  hashProps() : string{
-    // Very slow hash, change later
-    return JSON.stringify(this.props)
-  }
-  render(): React.ReactNode {
-    return (
-      <BaseShape 
-        addShape      = {this.addEllipsoid}
-        viewSettings  = {this.props.viewSettings}
-        shapeParams   = {this.props.shapeParams}
-        
-      />
-    )
-  }
+export default function NGLEllipsoid({
+  position, majorAxis, minorAxis, color, radius, viewSettings, shapeParams, name
+} : NGLEllipsoidProps) {
+  const shapeCreator = React.useMemo(
+    () =>
+      new NGL.Shape(undefined, shapeParams).addEllipsoid(
+        position, 
+        color, 
+        radius,
+        majorAxis, 
+        minorAxis,
+        name === undefined ? randomString(10) : name
+      ),
+    [position, majorAxis, minorAxis, color, radius, name, shapeParams]
+  );
+  useComponentFromObject(shapeCreator, viewSettings);
+  return <></>
 }
