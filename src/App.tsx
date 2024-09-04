@@ -3,7 +3,6 @@ import React from "react";
 import ProteinViewer from "./ngl-viewer/user-interface/protein-viewer";
 import FileComponent from "./ngl-viewer/file/file";
 import ViewerStage from "./ngl-viewer/user-interface/viewer-stage";
-import ViewerPanel from "./ngl-viewer/user-interface/viewer-panel";
 import ViewerComponent from "./viewer-component";
 import { ComponentUIDataT } from "./ngl-viewer/user-interface/component-data";
 import NGLBox from "./ngl-viewer/shapes/box";
@@ -57,8 +56,10 @@ const App = () => {
           <div className="selector">
             {/* <ViewerSelector/> */}
             <ViewerStage
-              width="100%"
-              height="500px"
+              style = {{
+                width : "100%",
+                height : "500px"
+              }}
               viewSettings={{ backgroundColor: toggle ? "black" : "white" }}
             />
             {/* <ViewerPanel /> */}
