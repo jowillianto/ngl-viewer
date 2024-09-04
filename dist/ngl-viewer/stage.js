@@ -1,16 +1,33 @@
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 import { jsx as _jsx } from "react/jsx-runtime";
 import React from "react";
 import * as NGL from "ngl";
 import StageContext from "./stage-context";
 export default function Stage(_a) {
-    var height = _a.height, width = _a.width, _b = _a.className, className = _b === void 0 ? "" : _b, viewSettings = _a.viewSettings, children = _a.children;
-    var _c = React.useContext(StageContext), stage = _c.stage, setStage = _c.setStage;
+    var viewSettings = _a.viewSettings, children = _a.children, props = __rest(_a, ["viewSettings", "children"]);
+    var _b = React.useContext(StageContext), stage = _b.stage, setStage = _b.setStage;
     var ref = React.useRef(null);
-    var containerStyle = React.useMemo(function () {
-        if (height === undefined || width === undefined)
-            return {};
-        return { height: height, width: width };
-    }, [height, width]);
     React.useEffect(function () {
         var curDiv = ref.current;
         if (curDiv === null)
@@ -36,5 +53,5 @@ export default function Stage(_a) {
         observer.observe(ref.current);
         return function () { return observer.disconnect(); };
     }, [stage]);
-    return (_jsx("div", { className: "ngl-viewer-canvas ".concat(className), ref: ref, style: containerStyle, children: children }));
+    return (_jsx("div", __assign({ ref: ref }, props, { children: children })));
 }
