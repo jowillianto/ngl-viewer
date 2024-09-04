@@ -10,16 +10,14 @@ type ProteinViewerP = React.PropsWithChildren<{
   initialComponents?: Array<ComponentUIDataT>;
   components?: Array<ComponentUIDataT>;
   onComponentsChange?: (arr: Array<ComponentUIDataT>) => void;
-  className?: string;
 }>;
 
 const ProteinViewer = (props: ProteinViewerP) => {
   const { initialComponents = [], children, onComponentsChange } = props;
-  const [stage, setStage] = useState<NGL.Stage | null>(null)
+  const [stage, setStage] = useState<NGL.Stage | null>(null);
   const [internalComp, setInternalComp] = React.useState(
     props.components ? props.components : initialComponents
   );
-  const nodeRef = React.createRef<HTMLDivElement>();
   const components = React.useMemo(() => {
     return props.components ? props.components : internalComp;
   }, [props.components, internalComp]);
@@ -78,7 +76,6 @@ const ProteinViewer = (props: ProteinViewerP) => {
       removeComponent,
       replaceComponent,
       addComponentByType,
-      node: nodeRef,
     };
   }, [
     components,
@@ -86,20 +83,16 @@ const ProteinViewer = (props: ProteinViewerP) => {
     removeComponent,
     replaceComponent,
     addComponentByType,
-    nodeRef,
   ]);
   const stageContext = React.useMemo<
     React.ContextType<typeof StageContext>
   >(() => {
     return { stage, setStage };
   }, [stage, setStage]);
-  const { className } = props;
   return (
     <ViewerContext.Provider value={context}>
       <StageContext.Provider value={stageContext}>
-        <div className={`protein-viewer ${className}`} ref={nodeRef}>
-          {children}
-        </div>
+        {children}
       </StageContext.Provider>
     </ViewerContext.Provider>
   );
