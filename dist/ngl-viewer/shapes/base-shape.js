@@ -41,7 +41,7 @@ export default function useComponent(component, viewSettings, autoViewTimeout) {
             viewSettings.forEach(function (viewSetting) {
                 return comp.addRepresentation(viewSetting.type, viewSetting.params);
             });
-            // stage.autoView(autoViewTimeout);
+            stage.autoView(autoViewTimeout);
             updateStage();
         })
             .catch(function (err) { return console.error(err); });
