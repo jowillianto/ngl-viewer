@@ -8,5 +8,5 @@ export type ThemeSwitcherProps<T> = {
     darkTheme?: string;
     props: T;
 };
-declare const ThemeSwitcher: <T>({ render, lightTheme, darkTheme, props }: ThemeSwitcherProps<T>) => JSX.Element;
+declare const ThemeSwitcher: <T>({ render, lightTheme, darkTheme, props, }: ThemeSwitcherProps<T>) => JSX.Element;
 export default ThemeSwitcher;

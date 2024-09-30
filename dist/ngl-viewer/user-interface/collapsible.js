@@ -25,11 +25,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash, faSquareMinus, faSquarePlus } from '@fortawesome/free-solid-svg-icons';
 import { faCircleDot, faTrash } from '@fortawesome/free-solid-svg-icons';
 import ViewerContext from './viewer-context';
-import StageContext from '../stage-context';
+import { useStage } from '../stage-context';
 var Collapsible = function (_a) {
     var component = _a.component, index = _a.index;
     var context = useContext(ViewerContext);
-    var stageContext = useContext(StageContext);
+    var stage = useStage();
     var typeListVal = component.props.viewSettings.map(function (item) { return item.type; });
     var _b = useState(false), isOpen = _b[0], setIsOpen = _b[1];
     var _c = useState(["cartoon", "ribbon", "surface", "licorice", "ball+stick"]), representation = _c[0], setRepresentation = _c[1];
@@ -58,8 +58,7 @@ var Collapsible = function (_a) {
         }
     };
     var centerStructure = function () {
-        var _a;
-        (_a = stageContext.stage) === null || _a === void 0 ? void 0 : _a.autoView();
+        stage === null || stage === void 0 ? void 0 : stage.autoView();
     };
     var changeViewSetting = function (item) {
         var newSettings = __spreadArray([], component.props.viewSettings, true);

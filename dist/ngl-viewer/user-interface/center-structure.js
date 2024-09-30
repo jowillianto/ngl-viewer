@@ -10,11 +10,10 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 import { jsx as _jsx } from "react/jsx-runtime";
-import { useContext } from "react";
-import StageContext from "../stage-context";
+import { useStage } from "../stage-context";
 var CenterStructure = function (_a) {
     var render = _a.render, props = _a.props;
-    var stage = useContext(StageContext).stage;
+    var stage = useStage();
     var centerStructure = function () {
         stage === null || stage === void 0 ? void 0 : stage.autoView();
     };

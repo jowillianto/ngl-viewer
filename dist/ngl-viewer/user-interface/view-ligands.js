@@ -19,8 +19,8 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import React, { useContext, useEffect } from "react";
-import StageContext from "../stage-context";
+import React, { useEffect } from "react";
+import { useStage } from "../stage-context";
 import * as NGL from "ngl";
 var interactions = {
     hydrophobic: "hydrophobic",
@@ -35,7 +35,6 @@ var interactions = {
     "pi-stacking": "piStacking",
 };
 var ViewLigands = function () {
-    var stage = useContext(StageContext).stage;
     var _a = React.useState(null), component = _a[0], setComponent = _a[1];
     var _b = React.useState(0), opacity = _b[0], setOpacity = _b[1];
     var _c = React.useState(0), pocketRadius = _c[0], setPocketRadius = _c[1];
@@ -44,6 +43,7 @@ var ViewLigands = function () {
     var _f = React.useState([]), ligandComps = _f[0], setLigandComps = _f[1];
     var _g = React.useState(null), concatComp = _g[0], setConcatComp = _g[1];
     var _h = React.useState({}), ligandsParams = _h[0], setLigandsParams = _h[1];
+    var stage = useStage();
     useEffect(function () {
         var comp = stage === null || stage === void 0 ? void 0 : stage.compList[0];
         if (!comp)

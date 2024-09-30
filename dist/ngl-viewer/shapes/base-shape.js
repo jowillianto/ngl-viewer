@@ -1,5 +1,5 @@
 import React from "react";
-import { useStage } from "../stage-context";
+import StageContext from "../stage-context";
 function componentToPromise(component, stage) {
     if (component === null)
         return new Promise(function (res, rej) { return res(null); });
@@ -13,31 +13,47 @@ function componentToPromise(component, stage) {
 export default function useComponent(component, viewSettings, autoViewTimeout) {
     if (autoViewTimeout === void 0) { autoViewTimeout = 0; }
     var _a = React.useState(null), comp = _a[0], setComp = _a[1];
-    var stage = useStage();
+    var _b = React.useContext(StageContext), versionedStage = _b.stage, updateStage = _b.updateStage;
+    var stage = React.useMemo(function () {
+        if (versionedStage === null)
+            return null;
+        else
+            return versionedStage.stage;
+    }, [versionedStage]);
     var removeComponent = React.useCallback(function () {
         setComp(function (prevComp) {
             if (stage !== null && prevComp !== null) {
                 stage.removeComponent(prevComp);
+                updateStage();
             }
             return null;
         });
-    }, [stage]);
+    }, [stage, updateStage]);
     React.useEffect(function () {
         if (stage === null)
             return;
-        componentToPromise(component, stage).then(function (comp) {
+        componentToPromise(component, stage)
+            .then(function (comp) {
             if (comp === null)
                 return;
             setComp(comp);
             stage.addComponent(comp);
-            stage.autoView(autoViewTimeout);
             viewSettings.forEach(function (viewSetting) {
                 return comp.addRepresentation(viewSetting.type, viewSetting.params);
             });
+            // stage.autoView(autoViewTimeout);
+            updateStage();
         })
             .catch(function (err) { return console.error(err); });
         return removeComponent;
-    }, [stage, component, viewSettings, removeComponent, autoViewTimeout]);
+    }, [
+        stage,
+        component,
+        viewSettings,
+        removeComponent,
+        autoViewTimeout,
+        updateStage,
+    ]);
     return comp;
 }
 export function useComponentFromObject(obj, viewSettings) {
