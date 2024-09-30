@@ -55,7 +55,7 @@ export default function useComponent<T extends NGL.Component>(
         viewSettings.forEach((viewSetting) =>
           comp.addRepresentation(viewSetting.type, viewSetting.params)
         );
-        // stage.autoView(autoViewTimeout);
+        stage.autoView(autoViewTimeout);
         updateStage();
       })
       .catch((err) => console.error(err));
