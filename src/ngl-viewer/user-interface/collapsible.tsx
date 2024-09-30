@@ -6,7 +6,7 @@ import { faAlignJustify, faCircleDot, faTrash } from '@fortawesome/free-solid-sv
 import { ViewSettings } from '../interfaces/interfaces';
 import { ComponentUIDataT } from './component-data';
 import ViewerContext from './viewer-context';
-import StageContext from '../stage-context';
+import StageContext, { useStage } from '../stage-context';
 
 interface CollapsibleProps {
   children: React.ReactNode[];
@@ -16,7 +16,7 @@ interface CollapsibleProps {
 
 const Collapsible: React.FC<CollapsibleProps> = ({ component, index }) => {
   const context = useContext(ViewerContext);
-  const stageContext = useContext(StageContext);
+  const stage = useStage()
   const typeListVal: string[] = component.props.viewSettings.map(item => item.type);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -47,7 +47,7 @@ const Collapsible: React.FC<CollapsibleProps> = ({ component, index }) => {
     }
   }
   const centerStructure = () => {
-    stageContext.stage?.autoView();
+    stage?.autoView();
   }
   const changeViewSetting = (item: string) => {
     let newSettings = [...component.props.viewSettings];

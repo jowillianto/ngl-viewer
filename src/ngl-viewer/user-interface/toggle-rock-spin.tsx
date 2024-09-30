@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import StageContext from "../stage-context";
+import StageContext, { useStage } from "../stage-context";
 
 export type ToggleRockProps<T> = {
   render: React.ComponentType<{ onClick: () => void } & T>;
@@ -9,7 +9,7 @@ export type ToggleRockProps<T> = {
 
 const ToggleRockSpinOrOff = <T,>({ render, initialState, props }: ToggleRockProps<T>) => {
   const [rock, setRock] = React.useState<"rock" | "spin" | "off">("off");
-  const {stage} = useContext(StageContext)
+  const stage = useStage()
   const toggleRock = () => {
     const newRock = rock === initialState ? "off" : initialState;
     setRock(newRock);

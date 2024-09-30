@@ -1,6 +1,6 @@
 import React from "react";
 import { ShapeParameters } from "ngl/dist/declarations/geometry/shape";
-import { useStage } from "../stage-context";
+import StageContext from "../stage-context";
 import * as NGL from "ngl";
 import { ViewSettings } from "../interfaces/interfaces";
 import Surface from "ngl/dist/declarations/surface/surface";
@@ -21,39 +21,53 @@ function componentToPromise<T extends NGL.Component>(
   if (component === null) return new Promise<T | null>((res, rej) => res(null));
   else if (component instanceof Promise) return component;
   else if (typeof component === "function")
-    return componentToPromise(component(stage), stage)
+    return componentToPromise(component(stage), stage);
   else return new Promise<T | null>((res, rej) => res(component));
 }
 
 export default function useComponent<T extends NGL.Component>(
   component: ComponentT<T> | ((stage: NGL.Stage) => ComponentT<T>),
   viewSettings: ViewSettings,
-  autoViewTimeout : number = 0
+  autoViewTimeout: number = 0
 ) {
   const [comp, setComp] = React.useState<T | null>(null);
-  const stage = useStage();
+  const { stage: versionedStage, updateStage } = React.useContext(StageContext);
+  const stage = React.useMemo(() => {
+    if (versionedStage === null) return null;
+    else return versionedStage.stage;
+  }, [versionedStage]);
   const removeComponent = React.useCallback(() => {
     setComp((prevComp) => {
       if (stage !== null && prevComp !== null) {
         stage.removeComponent(prevComp);
+        updateStage();
       }
       return null;
     });
-  }, [stage]);
+  }, [stage, updateStage]);
   React.useEffect(() => {
     if (stage === null) return;
-    componentToPromise(component, stage).then((comp) => {
-      if (comp === null) return;
-      setComp(comp);
-      stage.addComponent(comp);
-      stage.autoView(autoViewTimeout)
-      viewSettings.forEach((viewSetting) =>
-        comp.addRepresentation(viewSetting.type, viewSetting.params)
-      );
-    })
-    .catch((err) => console.error(err))
-    return removeComponent
-  }, [stage, component, viewSettings, removeComponent, autoViewTimeout]);
+    componentToPromise(component, stage)
+      .then((comp) => {
+        if (comp === null) return;
+        setComp(comp);
+        stage.addComponent(comp);
+        viewSettings.forEach((viewSetting) =>
+          comp.addRepresentation(viewSetting.type, viewSetting.params)
+        );
+        // stage.autoView(autoViewTimeout);
+        updateStage();
+      })
+      .catch((err) => console.error(err));
+    return removeComponent;
+  }, [
+    stage,
+    component,
+    viewSettings,
+    removeComponent,
+    autoViewTimeout,
+    updateStage,
+  ]);
   return comp;
 }
 
