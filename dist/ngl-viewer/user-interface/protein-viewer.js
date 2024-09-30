@@ -16,6 +16,13 @@ var ProteinViewer = function (props) {
     var _a = props.initialComponents, initialComponents = _a === void 0 ? [] : _a, children = props.children, onComponentsChange = props.onComponentsChange;
     var _b = useState(null), stage = _b[0], setStage = _b[1];
     var _c = React.useState(props.components ? props.components : initialComponents), internalComp = _c[0], setInternalComp = _c[1];
+    var updateStage = React.useCallback(function () {
+        setStage(function (prevStage) {
+            if (prevStage === null)
+                return null;
+            return prevStage.update();
+        });
+    }, []);
     var components = React.useMemo(function () {
         return props.components ? props.components : internalComp;
     }, [props.components, internalComp]);
@@ -70,8 +77,8 @@ var ProteinViewer = function (props) {
         addComponentByType,
     ]);
     var stageContext = React.useMemo(function () {
-        return { stage: stage, setStage: setStage };
-    }, [stage, setStage]);
+        return { stage: stage, setStage: setStage, updateStage: updateStage };
+    }, [stage, setStage, updateStage]);
     return (_jsx(ViewerContext.Provider, { value: context, children: _jsx(StageContext.Provider, { value: stageContext, children: children }) }));
 };
 export default ProteinViewer;

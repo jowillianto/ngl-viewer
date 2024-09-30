@@ -23,17 +23,25 @@ var __rest = (this && this.__rest) || function (s, e) {
 import { jsx as _jsx } from "react/jsx-runtime";
 import React from "react";
 import * as NGL from "ngl";
-import StageContext from "./stage-context";
+import StageContext, { VersionedStage } from "./stage-context";
 export default function Stage(_a) {
-    var viewSettings = _a.viewSettings, children = _a.children, props = __rest(_a, ["viewSettings", "children"]);
-    var _b = React.useContext(StageContext), stage = _b.stage, setStage = _b.setStage;
+    var viewSettings = _a.viewSettings, children = _a.children, 
+    // showAxes = true,
+    // getAxesPosition = getDefaultAxesPosition,
+    props = __rest(_a, ["viewSettings", "children"]);
+    var _b = React.useContext(StageContext), versionedStage = _b.stage, setStage = _b.setStage;
     var ref = React.useRef(null);
+    var stage = React.useMemo(function () {
+        if (versionedStage === null)
+            return null;
+        return versionedStage.stage;
+    }, [versionedStage]);
     React.useEffect(function () {
         var curDiv = ref.current;
         if (curDiv === null)
             return;
         var stage = new NGL.Stage(curDiv, viewSettings);
-        setStage(stage);
+        setStage(new VersionedStage(stage, 0));
         return function () {
             setStage(null);
             function disposeFunc() {

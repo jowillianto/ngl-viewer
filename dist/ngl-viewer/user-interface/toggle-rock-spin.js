@@ -10,12 +10,12 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 import { jsx as _jsx } from "react/jsx-runtime";
-import React, { useContext } from "react";
-import StageContext from "../stage-context";
+import React from "react";
+import { useStage } from "../stage-context";
 var ToggleRockSpinOrOff = function (_a) {
     var render = _a.render, initialState = _a.initialState, props = _a.props;
     var _b = React.useState("off"), rock = _b[0], setRock = _b[1];
-    var stage = useContext(StageContext).stage;
+    var stage = useStage();
     var toggleRock = function () {
         var newRock = rock === initialState ? "off" : initialState;
         setRock(newRock);
