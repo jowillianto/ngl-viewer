@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import StageContext from "../stage-context";
+import React from "react";
+import { useStage } from "../stage-context";
 
 export type CenterStructureProps<T> = {
   render: React.ComponentType<{ onClick: () => void } & T>;
@@ -7,7 +7,7 @@ export type CenterStructureProps<T> = {
 };
 
 const CenterStructure = <T,>({ render, props }: CenterStructureProps<T>) => {
-  const { stage } = useContext(StageContext);
+  const stage = useStage()
 
   const centerStructure = () => {
     stage?.autoView();

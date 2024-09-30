@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import StageContext from "../stage-context";
+import React from "react";
+import { useStage } from "../stage-context";
 
 export type SetCameraTypeProps<T> = {
   render: React.ComponentType<{ onClick: (cameraType: "perspective" | "orthographic" | "stereo") => void;} & T>;
@@ -7,7 +7,7 @@ export type SetCameraTypeProps<T> = {
 };
 
 const SetCameraType = <T,>({ render, props }: SetCameraTypeProps<T>) => {
-  const { stage } = useContext(StageContext);
+  const stage = useStage()
 
   const updateCameraType = (newCameraType: "perspective" | "orthographic" | "stereo") => {
     stage?.setParameters({ cameraType: newCameraType });

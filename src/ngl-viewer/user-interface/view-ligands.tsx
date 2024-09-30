@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import StageContext from "../stage-context";
+import StageContext, { useStage } from "../stage-context";
 import * as NGL from "ngl";
 const interactions: Record<string, string> = {
   hydrophobic: "hydrophobic",
@@ -22,8 +22,6 @@ type ligandParamsT = {
   pocketSele: string;
 };
 const ViewLigands = <T,>() => {
-  const { stage } = useContext(StageContext);
-
   const [component, setComponent] = React.useState(null as any);
   const [opacity, setOpacity] = React.useState<number>(0);
   const [pocketRadius, setPocketRadius] = React.useState<number>(0);
@@ -36,6 +34,8 @@ const ViewLigands = <T,>() => {
     Record<string, ligandParamsT>
   >({});
 
+  const stage = useStage();
+
   useEffect(() => {
     const comp = stage?.compList[0] as NGL.StructureComponent;
     if (!comp) return;
@@ -44,7 +44,7 @@ const ViewLigands = <T,>() => {
       1
     ) as NGL.StructureComponent[];
     setLigandComps(ligandComponents);
-  }, [ stage ]);
+  }, [stage]);
 
   const setOpacityFunction = (value: number) => {
     setOpacity(value);
