@@ -11,7 +11,6 @@ var __assign = (this && this.__assign) || function () {
 };
 import { Fragment as _Fragment, jsx as _jsx } from "react/jsx-runtime";
 import React from "react";
-import * as NGL from "ngl";
 import useComponent from "../shapes/base-shape";
 var NGLFile = function (_a) {
     var file = _a.file, viewSettings = _a.viewSettings, fileSettings = _a.fileSettings, chains = _a.chains;
@@ -44,7 +43,6 @@ var NGLFile = function (_a) {
         else
             return viewSettings;
     }, [chainSele, viewSettings]);
-    console.log(new NGL.Selection(chainSele || ""));
     var component = useComponent(fileComponentCreator, selectedViewSettings);
     return (_jsx(_Fragment, {}));
 };
