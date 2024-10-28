@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { ComponentUIDataT, mockComponentsDataMap } from "./component-data";
 import ViewerContext from "./viewer-context";
 import StageContext, { VersionedStage } from "../stage-context";
-import * as NGL from "ngl";
 
 type CompatFunc = (component: ComponentUIDataT[]) => ComponentUIDataT[];
 
