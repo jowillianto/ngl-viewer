@@ -47,7 +47,6 @@ const NGLFile: React.FC<NGLFileProps> = ({
     else
       return viewSettings
   }, [ chainSele, viewSettings ])
-  console.log(new NGL.Selection(chainSele || ""))
   const component = useComponent(fileComponentCreator, selectedViewSettings)
   return (<></>)
 };
