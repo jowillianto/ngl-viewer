@@ -11,9 +11,16 @@ var __assign = (this && this.__assign) || function () {
 };
 import { Fragment as _Fragment, jsx as _jsx } from "react/jsx-runtime";
 import React from "react";
+import * as NGL from "ngl";
 import useComponent from "../shapes/base-shape";
 var NGLFile = function (_a) {
-    var file = _a.file, viewSettings = _a.viewSettings, fileSettings = _a.fileSettings;
+    var file = _a.file, viewSettings = _a.viewSettings, fileSettings = _a.fileSettings, chains = _a.chains;
+    var chainSele = React.useMemo(function () {
+        if (chains === undefined)
+            return null;
+        else
+            return chains.map(function (chain) { return ":".concat(chain); }).join(" or ");
+    }, [chains]);
     var fileExt = React.useMemo(function () {
         if (fileSettings === null || fileSettings === void 0 ? void 0 : fileSettings.ext)
             return fileSettings.ext;
@@ -31,7 +38,14 @@ var NGLFile = function (_a) {
             return comp;
         });
     }, [fileExt, fileSettings, file]);
-    var component = useComponent(fileComponentCreator, viewSettings);
+    var selectedViewSettings = React.useMemo(function () {
+        if (chainSele !== null)
+            return viewSettings.map(function (viewSetting) { return (__assign(__assign({}, viewSetting), { params: __assign({ sele: chainSele }, viewSetting.params) })); });
+        else
+            return viewSettings;
+    }, [chainSele, viewSettings]);
+    console.log(new NGL.Selection(chainSele || ""));
+    var component = useComponent(fileComponentCreator, selectedViewSettings);
     return (_jsx(_Fragment, {}));
 };
 export default NGLFile;
