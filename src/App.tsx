@@ -31,7 +31,7 @@ const initialComponents: Array<ComponentUIDataT> = [
   {
     type: "file",
     props: {
-      file: "https://files.rcsb.org/download/1FBL.pdb",
+      file: "https://files.rcsb.org/download/2ZLF.pdb",
       fileSettings: { ext: "pdb" },
       viewSettings: [
         {
@@ -66,7 +66,7 @@ const App = () => {
           </div>
         </div>
         <FileComponent
-          file="https://files.rcsb.org/download/1FBL.pdb"
+          file="https://files.rcsb.org/download/2ZLF.pdb"
           fileSettings={{ ext: "pdb" }}
           viewSettings={[
             {
@@ -74,21 +74,7 @@ const App = () => {
               params: {},
             },
           ]}
-        />
-        <NGLBox
-          size={10}
-          position={[10, 10, 10]}
-          heightAxis={[0, 0, 10]}
-          depthAxis={[0, 10, 0]}
-          color={[0, 0, 100]}
-          viewSettings={[
-            {
-              type: "buffer",
-              params: {
-                opacity: 1,
-              },
-            },
-          ]}
+          chains = {["A"]}
         />
       </ProteinViewer>
     </div>

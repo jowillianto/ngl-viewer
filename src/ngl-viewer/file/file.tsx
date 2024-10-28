@@ -14,8 +14,15 @@ export type NGLFileProps = {
 const NGLFile: React.FC<NGLFileProps> = ({
   file,
   viewSettings,
-  fileSettings
+  fileSettings, 
+  chains
 }) => {
+  const chainSele = React.useMemo(() => {
+    if (chains === undefined)
+      return null
+    else
+      return chains.map((chain) => `:${chain}`).join(" or ")
+  }, [ chains ])
   const fileExt = React.useMemo(() => {
     if (fileSettings?.ext) return fileSettings.ext;
     else if (file instanceof File) return file.name.split(".").slice(-1)[0];
@@ -30,7 +37,18 @@ const NGLFile: React.FC<NGLFileProps> = ({
       return comp
     });
   }, [ fileExt, fileSettings, file ])
-  const component = useComponent(fileComponentCreator, viewSettings)
+  const selectedViewSettings = React.useMemo(() => {
+    if (chainSele !== null)
+      return viewSettings.map((viewSetting) => ({
+        ...viewSetting, params : {
+          sele : chainSele, ...viewSetting.params
+        }
+      }))
+    else
+      return viewSettings
+  }, [ chainSele, viewSettings ])
+  console.log(new NGL.Selection(chainSele || ""))
+  const component = useComponent(fileComponentCreator, selectedViewSettings)
   return (<></>)
 };
 
