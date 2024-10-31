@@ -1,140 +1,70 @@
 import React from "react";
 import * as NGL from "ngl";
 import StageContext, { VersionedStage } from "./stage-context";
-// import NGLArrow from "./shapes/arrow";
 
-// function getDefaultAxesPosition(s: NGL.Stage) {
-//   return new NGL.Vector2(4, 4);
-// }
+function hexToRgb(hex: string): [number, number, number] | null {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result
+    ? [
+        parseInt(result[1], 16),
+        parseInt(result[2], 16),
+        parseInt(result[3], 16),
+      ]
+    : null;
+}
 
-// function canvasToThreeDimension(s: NGL.Stage, p: NGL.Vector2) {
-//   const width = s.viewer.width;
-//   const height = s.viewer.height;
-//   const transform2d = p
-//     .multiplyScalar(2)
-//     .divide(new NGL.Vector2(width, height))
-//     .subScalar(1);
-//   const position = new NGL.Vector3(
-//     transform2d.x,
-//     transform2d.y,
-//     0
-//   );
-//   console.log(position)
-//   return position
-//     .unproject(s.viewer.camera)
-//     .applyMatrix4(new NGL.Matrix4().getInverse(s.viewer.rotationGroup.matrix))
-//     .sub(s.viewer.translationGroup.position);
-// }
-
-// type NGLAxisP = {
-//   stage: NGL.Stage;
-//   getAxesPosition?: typeof getDefaultAxesPosition;
-// };
-
-// function NGLAxis({
-//   stage,
-//   getAxesPosition = getDefaultAxesPosition,
-// }: NGLAxisP) {
-//   const [position, setPosition] = React.useState(new NGL.Vector3(0, 0, 0))
-//   React.useEffect(() => {
-//     function alwaysSet() : NodeJS.Timeout {
-//       setPosition(canvasToThreeDimension(stage, getAxesPosition(stage)))
-//       return setTimeout(() => alwaysSet(), 200)
-//     }
-//     const timer = alwaysSet()
-//     return () => clearTimeout(timer)
-//   }, [ getAxesPosition, stage ])
-
-//   const targetX = React.useMemo(() => {
-//     return new NGL.Vector3(
-//       position.x + stage.viewer.cameraDistance * 0.1,
-//       position.y,
-//       position.z
-//     );
-//   }, [position, stage.viewer.cameraDistance]);
-//   const targetY = React.useMemo(() => {
-//     return new NGL.Vector3(
-//       position.x,
-//       position.y + stage.viewer.cameraDistance * 0.1,
-//       position.z
-//     );
-//   }, [position, stage.viewer.cameraDistance]);
-//   const targetZ = React.useMemo(() => {
-//     return new NGL.Vector3(
-//       position.x,
-//       position.y,
-//       position.z + stage.viewer.cameraDistance * 0.1
-//     );
-//   }, [position, stage.viewer.cameraDistance]);
-//   const viewSettings = React.useMemo(
-//     () => [
-//       {
-//         type: "buffer",
-//         params: {
-//           opacity: 1,
-//         },
-//       },
-//     ],
-//     []
-//   );
-//   const colorX = React.useMemo(() => new NGL.Color("red"), []);
-//   const colorY = React.useMemo(() => new NGL.Color("green"), []);
-//   const colorZ = React.useMemo(() => new NGL.Color("blue"), []);
-
-//   return (
-//     <>
-//       <NGLArrow
-//         name="X Axis"
-//         position1={position}
-//         position2={targetX}
-//         color={colorX}
-//         radius={0.2}
-//         viewSettings={viewSettings}
-//       />
-//       <NGLArrow
-//         name="Y Axis"
-//         position1={position}
-//         position2={targetY}
-//         color={colorY}
-//         radius={0.2}
-//         viewSettings={viewSettings}
-//       />
-//       <NGLArrow
-//         name="Z Axis"
-//         position1={position}
-//         position2={targetZ}
-//         color={colorZ}
-//         radius={0.2}
-//         viewSettings={viewSettings}
-//       />
-//     </>
-//   );
-// }
-
-export type NGLStageProps = React.PropsWithChildren<
-  {
-    viewSettings?: ConstructorParameters<typeof NGL.Stage>[1];
-    // showAxes?: boolean;
-    // getAxesPosition?: (s: NGL.Stage) => NGL.Vector2;
-  } & React.DetailedHTMLProps<
-    React.HTMLAttributes<HTMLDivElement>,
-    HTMLDivElement
-  >
+export type NGLStageProps = {
+  viewSettings?: ConstructorParameters<typeof NGL.Stage>[1];
+  showAxes?: boolean;
+  axesConfig?: {
+    colorX?: string;
+    colorY?: string;
+    colorZ?: string;
+  };
+} & React.DetailedHTMLProps<
+  React.HTMLAttributes<HTMLDivElement>,
+  HTMLDivElement
 >;
+
+const miniStageStyle: React.CSSProperties = {
+  height: "100px",
+  width: "100px",
+  position: "absolute",
+  left: 0,
+  bottom: 0,
+  border: "red 2px solid",
+  pointerEvents: "none",
+};
+const stageStyle: React.CSSProperties = {
+  width: "100%",
+  border: "red 2px solid",
+  height: "100%",
+};
 
 export default function Stage({
   viewSettings,
-  children,
-  // showAxes = true,
-  // getAxesPosition = getDefaultAxesPosition,
+  showAxes = true,
+  axesConfig = {},
   ...props
 }: NGLStageProps) {
+  const [miniStage, setMiniStage] = React.useState<NGL.Stage | null>(null);
   const { stage: versionedStage, setStage } = React.useContext(StageContext);
   const ref = React.useRef<HTMLDivElement>(null);
+  const miniStageRef = React.useRef<HTMLDivElement>(null);
+  const {
+    colorX = "#FF0000",
+    colorY = "#00FF00",
+    colorZ = "#0000FF",
+  } = axesConfig;
   const stage = React.useMemo(() => {
     if (versionedStage === null) return null;
     return versionedStage.stage;
   }, [versionedStage]);
+  const updateMiniStageCamera = React.useCallback(() => {
+    if (stage && miniStage) {
+      miniStage.viewerControls.rotate(stage.viewerControls.rotation);
+    }
+  }, [stage, miniStage]);
   React.useEffect(() => {
     const curDiv = ref.current;
     if (curDiv === null) return;
@@ -150,16 +80,99 @@ export default function Stage({
       curDiv.replaceChildren();
     };
   }, [setStage, viewSettings]);
+  // Subscribe to stage changes
+  React.useEffect(() => {
+    // This thing is in JS
+    if (showAxes) {
+      stage?.viewerControls.signals.changed.add(updateMiniStageCamera);
+      return () => {
+        stage?.viewerControls.signals.changed.remove(updateMiniStageCamera);
+      };
+    }
+  }, [stage, updateMiniStageCamera, showAxes]);
   React.useEffect(() => {
     if (stage === null || ref.current === null) return;
     const observer = new ResizeObserver(() => stage.handleResize());
     observer.observe(ref.current);
     return () => observer.disconnect();
   }, [stage]);
+  React.useEffect(() => {
+    const curDiv = miniStageRef.current;
+    if (curDiv === null) return;
+    if (showAxes) {
+      const stage = new NGL.Stage(curDiv, {
+        backgroundColor: viewSettings?.backgroundColor,
+      });
+      setMiniStage(stage);
+      return () => {
+        setMiniStage(null);
+        function disposeFunc() {
+          if (stage.compList.length !== 0) setTimeout(disposeFunc, 50);
+          else stage.dispose();
+        }
+        disposeFunc();
+        curDiv.replaceChildren();
+      };
+    }
+  }, [viewSettings?.backgroundColor, showAxes]);
+  React.useEffect(() => {
+    if (miniStage !== null) {
+      const shape = new NGL.Shape(undefined, {})
+        .addArrow(
+          [0, 0, 0],
+          [5, 0, 0],
+          hexToRgb(colorX) || [255, 0, 0],
+          0.5,
+          "X"
+        )
+        .addArrow(
+          [0, 0, 0],
+          [0, 5, 0],
+          hexToRgb(colorY) || [0, 255, 0],
+          0.5,
+          "Y"
+        )
+        .addArrow(
+          [0, 0, 0],
+          [0, 0, 5],
+          hexToRgb(colorZ) || [0, 0, 255],
+          0.5,
+          "Z"
+        );
+      const component = miniStage.addComponentFromObject(shape);
+      component?.addRepresentation("buffer", { opacity: 1 });
+      miniStage.viewerControls.center([0, 0, 0]);
+      miniStage.viewerControls.zoom(0.8);
+    }
+  }, [miniStage, colorX, colorY, colorZ]);
   return (
-    <div ref={ref} {...props}>
-      {children}
-      {/* {stage && <NGLAxis stage={stage} getAxesPosition={getAxesPosition} />} */}
+    <div
+      {...props}
+      style={{
+        position: "relative",
+        ...props.style,
+      }}
+    >
+      <div ref={ref} style={stageStyle} />
+      <div ref={miniStageRef} style={miniStageStyle} />
     </div>
+    // <div ref={ref} {...props} style = {{
+    //   position: "relative",
+    //   border: "2px red solid",
+    //   ...props.style
+    // }}>
+    //   <div ref = {miniStageRef} style = {{
+    //     position : "absolute",
+    //     left: 0,
+    //     bottom: 0,
+    //     height: "100px",
+    //     width: "100px",
+    //     border: "1px red solid",
+    //     zIndex: 9999
+    //   }}>
+
+    //   </div>
+    //   {children}
+    // </div>
   );
 }
