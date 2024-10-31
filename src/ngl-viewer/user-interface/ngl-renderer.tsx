@@ -7,7 +7,7 @@ type NGLRenderererP = NGLStageProps & {
   components : ComponentUIDataT[]
 }
 
-const NGLRenderer = ({ components, children = [], ...stageProps} : NGLRenderererP) => {
+const NGLRenderer = ({ components, ...stageProps} : NGLRenderererP) => {
   const filteredComponents = React.useMemo(() => {
     return components
       .filter((entry) => "props" in entry)
@@ -20,7 +20,6 @@ const NGLRenderer = ({ components, children = [], ...stageProps} : NGLRendererer
   }, [components])
   return (
     <NGLStage {...stageProps}>
-      {children}
       {filteredComponents}
     </NGLStage>
   )
