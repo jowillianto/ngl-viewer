@@ -4,5 +4,5 @@ import { NGLStageProps } from '../stage';
 type NGLRenderererP = NGLStageProps & {
     components: ComponentUIDataT[];
 };
-declare const NGLRenderer: ({ components, children, ...stageProps }: NGLRenderererP) => JSX.Element;
+declare const NGLRenderer: ({ components, ...stageProps }: NGLRenderererP) => JSX.Element;
 export default NGLRenderer;

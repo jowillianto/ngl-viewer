@@ -8,5 +8,11 @@ export type NGLStageProps = {
         colorY?: string;
         colorZ?: string;
     };
-} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
-export default function Stage({ viewSettings, showAxes, axesConfig, ...props }: NGLStageProps): JSX.Element;
+    containerClassName?: string;
+    containerStyles?: React.CSSProperties;
+    axesClassName?: string;
+    axesStyles?: React.CSSProperties;
+    stageClassName?: string;
+    stageStyles?: React.CSSProperties;
+};
+export default function Stage({ viewSettings, showAxes, axesConfig, containerClassName, containerStyles, axesClassName, axesStyles, stageClassName, stageStyles, }: NGLStageProps): JSX.Element;
