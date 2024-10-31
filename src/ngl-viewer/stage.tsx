@@ -21,10 +21,13 @@ export type NGLStageProps = {
     colorY?: string;
     colorZ?: string;
   };
-} & React.DetailedHTMLProps<
-  React.HTMLAttributes<HTMLDivElement>,
-  HTMLDivElement
->;
+  containerClassName?: string;
+  containerStyles?: React.CSSProperties;
+  axesClassName?: string;
+  axesStyles?: React.CSSProperties;
+  stageClassName?: string;
+  stageStyles?: React.CSSProperties;
+};
 
 const miniStageStyle: React.CSSProperties = {
   height: "100px",
@@ -32,12 +35,10 @@ const miniStageStyle: React.CSSProperties = {
   position: "absolute",
   left: 0,
   bottom: 0,
-  border: "red 2px solid",
   pointerEvents: "none",
 };
 const stageStyle: React.CSSProperties = {
   width: "100%",
-  border: "red 2px solid",
   height: "100%",
 };
 
@@ -45,7 +46,12 @@ export default function Stage({
   viewSettings,
   showAxes = true,
   axesConfig = {},
-  ...props
+  containerClassName = "",
+  containerStyles,
+  axesClassName = "",
+  axesStyles,
+  stageClassName = "",
+  stageStyles,
 }: NGLStageProps) {
   const [miniStage, setMiniStage] = React.useState<NGL.Stage | null>(null);
   const { stage: versionedStage, setStage } = React.useContext(StageContext);
@@ -146,15 +152,17 @@ export default function Stage({
     }
   }, [miniStage, colorX, colorY, colorZ]);
   return (
-    <div
-      {...props}
-      style={{
-        position: "relative",
-        ...props.style,
-      }}
-    >
-      <div ref={ref} style={stageStyle} />
-      <div ref={miniStageRef} style={miniStageStyle} />
+    <div style={containerStyles} className={containerClassName}>
+      <div
+        ref={ref}
+        style={{ ...stageStyle, ...stageStyles }}
+        className={stageClassName}
+      />
+      <div
+        ref={miniStageRef}
+        style={{ ...miniStageStyle, ...axesStyles }}
+        className={axesClassName}
+      />
     </div>
     // <div ref={ref} {...props} style = {{
     //   position: "relative",

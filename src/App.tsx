@@ -56,7 +56,7 @@ const App = () => {
           <div className="selector">
             {/* <ViewerSelector/> */}
             <ViewerStage
-              style = {{
+              containerStyles = {{
                 width : "100%",
                 height : "500px"
               }}
