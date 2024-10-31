@@ -1,6 +1,12 @@
 import React from "react";
 import * as NGL from "ngl";
-export type NGLStageProps = React.PropsWithChildren<{
+export type NGLStageProps = {
     viewSettings?: ConstructorParameters<typeof NGL.Stage>[1];
-} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>>;
-export default function Stage({ viewSettings, children, ...props }: NGLStageProps): JSX.Element;
+    showAxes?: boolean;
+    axesConfig?: {
+        colorX?: string;
+        colorY?: string;
+        colorZ?: string;
+    };
+} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+export default function Stage({ viewSettings, showAxes, axesConfig, ...props }: NGLStageProps): JSX.Element;
