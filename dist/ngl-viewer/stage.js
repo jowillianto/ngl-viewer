@@ -35,6 +35,7 @@ var stageStyle = {
     width: "100%",
     height: "100%",
 };
+var stageZoom = 0.75;
 export default function Stage(_a) {
     var viewSettings = _a.viewSettings, _b = _a.showAxes, showAxes = _b === void 0 ? true : _b, _c = _a.axesConfig, axesConfig = _c === void 0 ? {} : _c, _d = _a.containerClassName, containerClassName = _d === void 0 ? "" : _d, containerStyles = _a.containerStyles, _e = _a.axesClassName, axesClassName = _e === void 0 ? "" : _e, axesStyles = _a.axesStyles, _f = _a.stageClassName, stageClassName = _f === void 0 ? "" : _f, stageStyles = _a.stageStyles;
     var _g = React.useState(null), miniStage = _g[0], setMiniStage = _g[1];
@@ -49,7 +50,11 @@ export default function Stage(_a) {
     }, [versionedStage]);
     var updateMiniStageCamera = React.useCallback(function () {
         if (stage && miniStage) {
-            miniStage.viewerControls.rotate(stage.viewerControls.rotation);
+            var stageQuaternion = stage.viewerControls.rotation;
+            var miniStageQuaternion = miniStage.viewerControls.rotation;
+            if (!stageQuaternion.equals(miniStageQuaternion)) {
+                miniStage.viewerControls.rotate(stage.viewerControls.rotation);
+            }
         }
     }, [stage, miniStage]);
     React.useEffect(function () {
@@ -70,13 +75,18 @@ export default function Stage(_a) {
             curDiv.replaceChildren();
         };
     }, [setStage, viewSettings]);
-    // Subscribe to stage changes
+    /**
+     * This attaches a signal handler to the stage so that updates to the stage will be reflected on
+     * the miniStage
+     */
     React.useEffect(function () {
         // This thing is in JS
+        if (stage === null)
+            return;
         if (showAxes) {
-            stage === null || stage === void 0 ? void 0 : stage.viewerControls.signals.changed.add(updateMiniStageCamera);
+            stage.viewerControls.signals.changed.add(updateMiniStageCamera);
             return function () {
-                stage === null || stage === void 0 ? void 0 : stage.viewerControls.signals.changed.remove(updateMiniStageCamera);
+                stage.viewerControls.signals.changed.remove(updateMiniStageCamera);
             };
         }
     }, [stage, updateMiniStageCamera, showAxes]);
@@ -96,6 +106,8 @@ export default function Stage(_a) {
                 backgroundColor: viewSettings === null || viewSettings === void 0 ? void 0 : viewSettings.backgroundColor,
             });
             setMiniStage(stage_1);
+            stage_1.viewerControls.center([0, 0, 0]);
+            stage_1.viewerControls.zoom(stageZoom);
             return function () {
                 setMiniStage(null);
                 function disposeFunc() {
@@ -114,30 +126,13 @@ export default function Stage(_a) {
             var shape = new NGL.Shape(undefined, {})
                 .addArrow([0, 0, 0], [5, 0, 0], hexToRgb(colorX) || [255, 0, 0], 0.5, "X")
                 .addArrow([0, 0, 0], [0, 5, 0], hexToRgb(colorY) || [0, 255, 0], 0.5, "Y")
-                .addArrow([0, 0, 0], [0, 0, 5], hexToRgb(colorZ) || [0, 0, 255], 0.5, "Z");
+                .addArrow([0, 0, 0], [0, 0, 5], hexToRgb(colorZ) || [0, 0, 255], 0.5, "Z")
+                .addText([5, 0, 0], [0, 0, 0], 4, "X")
+                .addText([0, 5, 0], [0, 0, 0], 4, "Y")
+                .addText([0, 0, 5], [0, 0, 0], 4, "Z");
             var component = miniStage.addComponentFromObject(shape);
             component === null || component === void 0 ? void 0 : component.addRepresentation("buffer", { opacity: 1 });
-            miniStage.viewerControls.center([0, 0, 0]);
-            miniStage.viewerControls.zoom(0.8);
         }
     }, [miniStage, colorX, colorY, colorZ]);
-    return (_jsxs("div", { style: containerStyles, className: containerClassName, children: [_jsx("div", { ref: ref, style: __assign(__assign({}, stageStyle), stageStyles), className: stageClassName }), _jsx("div", { ref: miniStageRef, style: __assign(__assign({}, miniStageStyle), axesStyles), className: axesClassName })] })
-    // <div ref={ref} {...props} style = {{
-    //   position: "relative",
-    //   border: "2px red solid",
-    //   ...props.style
-    // }}>
-    //   <div ref = {miniStageRef} style = {{
-    //     position : "absolute",
-    //     left: 0,
-    //     bottom: 0,
-    //     height: "100px",
-    //     width: "100px",
-    //     border: "1px red solid",
-    //     zIndex: 9999
-    //   }}>
-    //   </div>
-    //   {children}
-    // </div>
-    );
+    return (_jsxs("div", { style: containerStyles, className: containerClassName, children: [_jsx("div", { ref: ref, style: __assign(__assign({}, stageStyle), stageStyles), className: stageClassName }), _jsx("div", { ref: miniStageRef, style: __assign(__assign({}, miniStageStyle), axesStyles), className: axesClassName })] }));
 }
