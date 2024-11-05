@@ -42,6 +42,8 @@ const stageStyle: React.CSSProperties = {
   height: "100%",
 };
 
+const stageZoom = 0.75;
+
 export default function Stage({
   viewSettings,
   showAxes = true,
@@ -68,7 +70,11 @@ export default function Stage({
   }, [versionedStage]);
   const updateMiniStageCamera = React.useCallback(() => {
     if (stage && miniStage) {
-      miniStage.viewerControls.rotate(stage.viewerControls.rotation);
+      const stageQuaternion = stage.viewerControls.rotation;
+      const miniStageQuaternion = miniStage.viewerControls.rotation;
+      if (!stageQuaternion.equals(miniStageQuaternion)) {
+        miniStage.viewerControls.rotate(stage.viewerControls.rotation);
+      }
     }
   }, [stage, miniStage]);
   React.useEffect(() => {
@@ -86,13 +92,17 @@ export default function Stage({
       curDiv.replaceChildren();
     };
   }, [setStage, viewSettings]);
-  // Subscribe to stage changes
+  /**
+   * This attaches a signal handler to the stage so that updates to the stage will be reflected on
+   * the miniStage
+   */
   React.useEffect(() => {
     // This thing is in JS
+    if (stage === null) return;
     if (showAxes) {
-      stage?.viewerControls.signals.changed.add(updateMiniStageCamera);
+      stage.viewerControls.signals.changed.add(updateMiniStageCamera);
       return () => {
-        stage?.viewerControls.signals.changed.remove(updateMiniStageCamera);
+        stage.viewerControls.signals.changed.remove(updateMiniStageCamera);
       };
     }
   }, [stage, updateMiniStageCamera, showAxes]);
@@ -110,6 +120,8 @@ export default function Stage({
         backgroundColor: viewSettings?.backgroundColor,
       });
       setMiniStage(stage);
+      stage.viewerControls.center([0, 0, 0]);
+      stage.viewerControls.zoom(stageZoom);
       return () => {
         setMiniStage(null);
         function disposeFunc() {
@@ -144,11 +156,12 @@ export default function Stage({
           hexToRgb(colorZ) || [0, 0, 255],
           0.5,
           "Z"
-        );
+        )
+        .addText([5, 0, 0], [0, 0, 0], 4, "X")
+        .addText([0, 5, 0], [0, 0, 0], 4, "Y")
+        .addText([0, 0, 5], [0, 0, 0], 4, "Z");
       const component = miniStage.addComponentFromObject(shape);
       component?.addRepresentation("buffer", { opacity: 1 });
-      miniStage.viewerControls.center([0, 0, 0]);
-      miniStage.viewerControls.zoom(0.8);
     }
   }, [miniStage, colorX, colorY, colorZ]);
   return (
@@ -164,23 +177,5 @@ export default function Stage({
         className={axesClassName}
       />
     </div>
-    // <div ref={ref} {...props} style = {{
-    //   position: "relative",
-    //   border: "2px red solid",
-    //   ...props.style
-    // }}>
-    //   <div ref = {miniStageRef} style = {{
-    //     position : "absolute",
-    //     left: 0,
-    //     bottom: 0,
-    //     height: "100px",
-    //     width: "100px",
-    //     border: "1px red solid",
-    //     zIndex: 9999
-    //   }}>
-
-    //   </div>
-    //   {children}
-    // </div>
   );
 }
