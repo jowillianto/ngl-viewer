@@ -110,13 +110,7 @@ export default function Stage(_a) {
             stage_1.viewerControls.zoom(stageZoom);
             return function () {
                 setMiniStage(null);
-                function disposeFunc() {
-                    if (stage_1.compList.length !== 0)
-                        setTimeout(disposeFunc, 50);
-                    else
-                        stage_1.dispose();
-                }
-                disposeFunc();
+                stage_1.dispose();
                 curDiv.replaceChildren();
             };
         }
