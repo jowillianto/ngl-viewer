@@ -55,13 +55,12 @@ export default function Stage(_a) {
         return versionedStage.stage;
     }, [versionedStage]);
     var updateMiniStageCamera = React.useCallback(function () {
-        if (stage && miniStage) {
-            var stageQuaternion = stage.viewerControls.rotation;
-            var miniStageQuaternion = miniStage.viewerControls.rotation;
-            if (!stageQuaternion.equals(miniStageQuaternion)) {
-                miniStage.viewerControls.rotate(stage.viewerControls.rotation);
-            }
-        }
+        if (stage === null || miniStage === null)
+            return;
+        /**
+         * rotate the ministage based on the larger stage
+         */
+        miniStage.viewerControls.rotate(stage.viewerControls.rotation);
     }, [stage, miniStage]);
     React.useEffect(function () {
         var curDiv = ref.current;
@@ -87,14 +86,12 @@ export default function Stage(_a) {
      */
     React.useEffect(function () {
         // This thing is in JS
-        if (stage === null)
+        if (stage === null || !showAxes)
             return;
-        if (showAxes) {
-            stage.viewerControls.signals.changed.add(updateMiniStageCamera);
-            return function () {
-                stage.viewerControls.signals.changed.remove(updateMiniStageCamera);
-            };
-        }
+        stage.viewerControls.signals.changed.add(updateMiniStageCamera);
+        return function () {
+            stage.viewerControls.signals.changed.remove(updateMiniStageCamera);
+        };
     }, [stage, updateMiniStageCamera, showAxes]);
     React.useEffect(function () {
         if (stage === null || ref.current === null)
@@ -105,51 +102,49 @@ export default function Stage(_a) {
     }, [stage]);
     React.useEffect(function () {
         var curDiv = miniStageRef.current;
-        if (curDiv === null)
+        if (curDiv === null || !showAxes)
             return;
-        if (showAxes) {
-            var stage_1 = new NGL.Stage(curDiv, {
-                backgroundColor: viewSettings === null || viewSettings === void 0 ? void 0 : viewSettings.backgroundColor,
-            });
-            setMiniStage(stage_1);
-            stage_1.viewerControls.center([0, 0, 0]);
-            stage_1.viewerControls.zoom(stageZoom);
-            return function () {
-                setMiniStage(null);
-                stage_1.dispose();
-                curDiv.replaceChildren();
-            };
-        }
+        var stage = new NGL.Stage(curDiv, {
+            backgroundColor: viewSettings === null || viewSettings === void 0 ? void 0 : viewSettings.backgroundColor,
+        });
+        setMiniStage(stage);
+        stage.viewerControls.center([0, 0, 0]);
+        stage.viewerControls.zoom(stageZoom);
+        return function () {
+            setMiniStage(null);
+            stage.dispose();
+            curDiv.replaceChildren();
+        };
     }, [viewSettings === null || viewSettings === void 0 ? void 0 : viewSettings.backgroundColor, showAxes]);
     // console.log(miniStage === null ? "Lol" : miniStage.viewer.renderer.getClearColor())
     React.useEffect(function () {
-        if (miniStage !== null) {
-            var bgColor = miniStage.viewer.renderer.getClearColor();
-            // This inverts the background color, will not work if the background color is 128, 128, 128
-            /**
-             * Follows the following formula for inversion :
-             * invert = 1 - original_color
-             * To handle the 0.5 no effect problem :
-             * invert = 1 - original_color + ||original_color - 0.5| - 0.5|
-             */
-            var invertBgColor = bgColor
-                .clone()
-                .multiplyScalar(-1)
-                .addScalar(1)
-                .add(absColor(absColor(bgColor.clone().sub(new NGL.Color(0.5, 0.5, 0.5))).sub(new NGL.Color(0.5, 0.5, 0.5))));
-            /*
-              Creates the axes.
-            */
-            var shape = new NGL.Shape(undefined, {})
-                .addArrow([0, 0, 0], [5, 0, 0], hexToRgb(colorX) || [255, 0, 0], 0.5, "X")
-                .addArrow([0, 0, 0], [0, 5, 0], hexToRgb(colorY) || [0, 255, 0], 0.5, "Y")
-                .addArrow([0, 0, 0], [0, 0, 5], hexToRgb(colorZ) || [0, 0, 255], 0.5, "Z")
-                .addText([5, 0, 0], invertBgColor, 4, "X")
-                .addText([0, 5, 0], invertBgColor, 4, "Y")
-                .addText([0, 0, 5], invertBgColor, 4, "Z");
-            var component = miniStage.addComponentFromObject(shape);
-            component === null || component === void 0 ? void 0 : component.addRepresentation("buffer", { opacity: 1 });
-        }
+        if (miniStage === null)
+            return;
+        var bgColor = miniStage.viewer.renderer.getClearColor();
+        // This inverts the background color, will not work if the background color is 128, 128, 128
+        /**
+         * Follows the following formula for inversion :
+         * invert = 1 - original_color
+         * To handle the 0.5 no effect problem :
+         * invert = 1 - original_color + ||original_color - 0.5| - 0.5|
+         */
+        var invertBgColor = bgColor
+            .clone()
+            .multiplyScalar(-1)
+            .addScalar(1)
+            .add(absColor(absColor(bgColor.clone().sub(new NGL.Color(0.5, 0.5, 0.5))).sub(new NGL.Color(0.5, 0.5, 0.5))));
+        /*
+            Creates the axes.
+          */
+        var shape = new NGL.Shape(undefined, {})
+            .addArrow([0, 0, 0], [5, 0, 0], hexToRgb(colorX) || [255, 0, 0], 0.5, "X")
+            .addArrow([0, 0, 0], [0, 5, 0], hexToRgb(colorY) || [0, 255, 0], 0.5, "Y")
+            .addArrow([0, 0, 0], [0, 0, 5], hexToRgb(colorZ) || [0, 0, 255], 0.5, "Z")
+            .addText([5, 0, 0], invertBgColor, 4, "X")
+            .addText([0, 5, 0], invertBgColor, 4, "Y")
+            .addText([0, 0, 5], invertBgColor, 4, "Z");
+        var component = miniStage.addComponentFromObject(shape);
+        component === null || component === void 0 ? void 0 : component.addRepresentation("buffer", { opacity: 1 });
     }, [miniStage, colorX, colorY, colorZ]);
     return (_jsxs("div", { style: containerStyles, className: containerClassName, children: [_jsx("div", { ref: ref, style: __assign(__assign({}, stageStyle), stageStyles), className: stageClassName }), _jsx("div", { ref: miniStageRef, style: __assign(__assign({}, miniStageStyle), axesStyles), className: axesClassName })] }));
 }
