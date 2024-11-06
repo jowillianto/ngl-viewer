@@ -13,6 +13,14 @@ function hexToRgb(hex: string): [number, number, number] | null {
     : null;
 }
 
+function abs(v: number) {
+  return v > 0 ? v : -v;
+}
+
+function absColor(color: NGL.Color): NGL.Color {
+  return new NGL.Color(abs(color.r), abs(color.g), abs(color.b));
+}
+
 export type NGLStageProps = {
   viewSettings?: ConstructorParameters<typeof NGL.Stage>[1];
   showAxes?: boolean;
@@ -124,13 +132,36 @@ export default function Stage({
       stage.viewerControls.zoom(stageZoom);
       return () => {
         setMiniStage(null);
-        stage.dispose()
+        stage.dispose();
         curDiv.replaceChildren();
       };
     }
   }, [viewSettings?.backgroundColor, showAxes]);
   React.useEffect(() => {
     if (miniStage !== null) {
+      const bgColor = miniStage.viewer.renderer.getClearColor();
+      // This inverts the background color, will not work if the background color is 128, 128, 128
+      /**
+       * Follows the following formula for inversion :
+       * invert = 1 - original_color
+       * To handle the 0.5 no effect problem :
+       * invert = 1 - original_color + ||original_color - 0.5| - 0.5|
+       */
+      const invertBgColor = bgColor
+        .clone()
+        .multiplyScalar(-1)
+        .addScalar(1)
+        .add(
+          absColor(
+            absColor(bgColor.clone().sub(new NGL.Color(0.5, 0.5, 0.5))).sub(
+              new NGL.Color(0.5, 0.5, 0.5)
+            )
+          )
+        );
+      
+      /*
+        Creates the axes. 
+      */
       const shape = new NGL.Shape(undefined, {})
         .addArrow(
           [0, 0, 0],
@@ -153,9 +184,9 @@ export default function Stage({
           0.5,
           "Z"
         )
-        .addText([5, 0, 0], [0, 0, 0], 4, "X")
-        .addText([0, 5, 0], [0, 0, 0], 4, "Y")
-        .addText([0, 0, 5], [0, 0, 0], 4, "Z");
+        .addText([5, 0, 0], invertBgColor, 4, "X")
+        .addText([0, 5, 0], invertBgColor, 4, "Y")
+        .addText([0, 0, 5], invertBgColor, 4, "Z");
       const component = miniStage.addComponentFromObject(shape);
       component?.addRepresentation("buffer", { opacity: 1 });
     }
