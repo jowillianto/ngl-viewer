@@ -137,6 +137,7 @@ export default function Stage({
       };
     }
   }, [viewSettings?.backgroundColor, showAxes]);
+  // console.log(miniStage === null ? "Lol" : miniStage.viewer.renderer.getClearColor())
   React.useEffect(() => {
     if (miniStage !== null) {
       const bgColor = miniStage.viewer.renderer.getClearColor();
