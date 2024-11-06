@@ -140,9 +140,9 @@ export default function Stage(_a) {
             .addArrow([0, 0, 0], [5, 0, 0], hexToRgb(colorX) || [255, 0, 0], 0.5, "X")
             .addArrow([0, 0, 0], [0, 5, 0], hexToRgb(colorY) || [0, 255, 0], 0.5, "Y")
             .addArrow([0, 0, 0], [0, 0, 5], hexToRgb(colorZ) || [0, 0, 255], 0.5, "Z")
-            .addText([5, 0, 0], invertBgColor, 4, "X")
-            .addText([0, 5, 0], invertBgColor, 4, "Y")
-            .addText([0, 0, 5], invertBgColor, 4, "Z");
+            .addText([5, 0, 0], invertBgColor.clone(), 4, "X")
+            .addText([0, 5, 0], invertBgColor.clone(), 4, "Y")
+            .addText([0, 0, 5], invertBgColor.clone(), 4, "Z");
         var component = miniStage.addComponentFromObject(shape);
         component === null || component === void 0 ? void 0 : component.addRepresentation("buffer", { opacity: 1 });
     }, [miniStage, colorX, colorY, colorZ]);
