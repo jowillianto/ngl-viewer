@@ -121,6 +121,7 @@ export default function Stage(_a) {
             };
         }
     }, [viewSettings === null || viewSettings === void 0 ? void 0 : viewSettings.backgroundColor, showAxes]);
+    // console.log(miniStage === null ? "Lol" : miniStage.viewer.renderer.getClearColor())
     React.useEffect(function () {
         if (miniStage !== null) {
             var bgColor = miniStage.viewer.renderer.getClearColor();
