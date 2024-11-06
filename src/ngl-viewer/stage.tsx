@@ -134,7 +134,9 @@ export default function Stage({
   // console.log(miniStage === null ? "Lol" : miniStage.viewer.renderer.getClearColor())
   React.useEffect(() => {
     if (miniStage === null) return;
-    const bgColor = miniStage.viewer.renderer.getClearColor();
+    const bgColor = miniStage.viewer.renderer.getClearColor(
+      new NGL.Color(0, 0, 0)
+    );
     // This inverts the background color, will not work if the background color is 128, 128, 128
     /**
      * Follows the following formula for inversion :
