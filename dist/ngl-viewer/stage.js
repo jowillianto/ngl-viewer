@@ -23,6 +23,12 @@ function hexToRgb(hex) {
         ]
         : null;
 }
+function abs(v) {
+    return v > 0 ? v : -v;
+}
+function absColor(color) {
+    return new NGL.Color(abs(color.r), abs(color.g), abs(color.b));
+}
 var miniStageStyle = {
     height: "100px",
     width: "100px",
@@ -117,13 +123,29 @@ export default function Stage(_a) {
     }, [viewSettings === null || viewSettings === void 0 ? void 0 : viewSettings.backgroundColor, showAxes]);
     React.useEffect(function () {
         if (miniStage !== null) {
+            var bgColor = miniStage.viewer.renderer.getClearColor();
+            // This inverts the background color, will not work if the background color is 128, 128, 128
+            /**
+             * Follows the following formula for inversion :
+             * invert = 1 - original_color
+             * To handle the 0.5 no effect problem :
+             * invert = 1 - original_color + ||original_color - 0.5| - 0.5|
+             */
+            var invertBgColor = bgColor
+                .clone()
+                .multiplyScalar(-1)
+                .addScalar(1)
+                .add(absColor(absColor(bgColor.clone().sub(new NGL.Color(0.5, 0.5, 0.5))).sub(new NGL.Color(0.5, 0.5, 0.5))));
+            /*
+              Creates the axes.
+            */
             var shape = new NGL.Shape(undefined, {})
                 .addArrow([0, 0, 0], [5, 0, 0], hexToRgb(colorX) || [255, 0, 0], 0.5, "X")
                 .addArrow([0, 0, 0], [0, 5, 0], hexToRgb(colorY) || [0, 255, 0], 0.5, "Y")
                 .addArrow([0, 0, 0], [0, 0, 5], hexToRgb(colorZ) || [0, 0, 255], 0.5, "Z")
-                .addText([5, 0, 0], [0, 0, 0], 4, "X")
-                .addText([0, 5, 0], [0, 0, 0], 4, "Y")
-                .addText([0, 0, 5], [0, 0, 0], 4, "Z");
+                .addText([5, 0, 0], invertBgColor, 4, "X")
+                .addText([0, 5, 0], invertBgColor, 4, "Y")
+                .addText([0, 0, 5], invertBgColor, 4, "Z");
             var component = miniStage.addComponentFromObject(shape);
             component === null || component === void 0 ? void 0 : component.addRepresentation("buffer", { opacity: 1 });
         }
