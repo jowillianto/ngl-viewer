@@ -8,4 +8,4 @@ export type NGLTetrahedronProps = ExtendedShapeProps<{
     color: [number, number, number] | NGL.Color;
     size: number;
 }>;
-export default function NGLTetrahedron({ name, position, color, size, heightAxis, depthAxis, shapeParams, viewSettings, }: NGLTetrahedronProps): JSX.Element;
+export default function NGLTetrahedron({ name, position, color, size, heightAxis, depthAxis, shapeParams, viewSettings, autoViewTimeout }: NGLTetrahedronProps): JSX.Element;

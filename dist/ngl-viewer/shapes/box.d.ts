@@ -9,4 +9,4 @@ export type NGLBoxProps = ExtendedShapeProps<{
     heightAxis: NGL.Vector3 | [number, number, number];
     depthAxis: NGL.Vector3 | [number, number, number];
 }>;
-export default function NGLBox({ name, position, color, size, heightAxis, depthAxis, shapeParams, viewSettings, }: NGLBoxProps): JSX.Element;
+export default function NGLBox({ name, position, color, size, heightAxis, depthAxis, shapeParams, viewSettings, autoViewTimeout, }: NGLBoxProps): JSX.Element;

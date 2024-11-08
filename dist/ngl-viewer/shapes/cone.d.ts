@@ -7,4 +7,4 @@ export type NGLConeProps = ExtendedShapeProps<{
     color: NGL.Color | [number, number, number];
     radius: number;
 }>;
-export default function NGLCone({ position1, position2, color, radius, name, viewSettings, shapeParams, }: NGLConeProps): JSX.Element;
+export default function NGLCone({ position1, position2, color, radius, name, viewSettings, shapeParams, autoViewTimeout }: NGLConeProps): JSX.Element;

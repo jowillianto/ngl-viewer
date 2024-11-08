@@ -41,7 +41,8 @@ export default function useComponent(component, viewSettings, autoViewTimeout) {
             viewSettings.forEach(function (viewSetting) {
                 return comp.addRepresentation(viewSetting.type, viewSetting.params);
             });
-            stage.autoView(autoViewTimeout);
+            if (autoViewTimeout >= 0)
+                stage.autoView(autoViewTimeout);
             updateStage();
         })
             .catch(function (err) { return console.error(err); });
@@ -56,7 +57,7 @@ export default function useComponent(component, viewSettings, autoViewTimeout) {
     ]);
     return comp;
 }
-export function useComponentFromObject(obj, viewSettings) {
+export function useComponentFromObject(obj, viewSettings, autoViewTimeout) {
     var objCreator = React.useCallback(function (stage) {
         if (obj === null || stage === null)
             return null;
@@ -65,5 +66,5 @@ export function useComponentFromObject(obj, viewSettings) {
             return null;
         return component;
     }, [obj]);
-    return useComponent(objCreator, viewSettings);
+    return useComponent(objCreator, viewSettings, autoViewTimeout);
 }

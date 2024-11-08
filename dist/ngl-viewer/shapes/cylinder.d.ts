@@ -7,4 +7,4 @@ export type NGLCylinderProps = ExtendedShapeProps<{
     color: [number, number, number] | NGL.Color;
     radius: number;
 }>;
-export default function NGLCylinder({ position1, position2, color, radius, name, viewSettings, shapeParams, }: NGLCylinderProps): JSX.Element;
+export default function NGLCylinder({ position1, position2, color, radius, name, viewSettings, shapeParams, autoViewTimeout }: NGLCylinderProps): JSX.Element;
