@@ -9,6 +9,7 @@ export type BasicShapeProps<T = {}> = {
   viewSettings: ViewSettings;
   name?: string;
   shapeParams?: Partial<ShapeParameters>;
+  autoViewTimeout?: number;
 } & T;
 
 export type ExtendedShapeProps<T = {}> = BasicShapeProps<{ name?: string } & T>;
@@ -55,7 +56,7 @@ export default function useComponent<T extends NGL.Component>(
         viewSettings.forEach((viewSetting) =>
           comp.addRepresentation(viewSetting.type, viewSetting.params)
         );
-        stage.autoView(autoViewTimeout);
+        if (autoViewTimeout >= 0) stage.autoView(autoViewTimeout);
         updateStage();
       })
       .catch((err) => console.error(err));
@@ -73,7 +74,8 @@ export default function useComponent<T extends NGL.Component>(
 
 export function useComponentFromObject(
   obj: NGL.Structure | Surface | NGL.Volume | NGL.Shape | null,
-  viewSettings: ViewSettings
+  viewSettings: ViewSettings,
+  autoViewTimeout?: number
 ) {
   const objCreator = React.useCallback(
     (stage: NGL.Stage) => {
@@ -84,5 +86,5 @@ export function useComponentFromObject(
     },
     [obj]
   );
-  return useComponent(objCreator, viewSettings);
+  return useComponent(objCreator, viewSettings, autoViewTimeout);
 }

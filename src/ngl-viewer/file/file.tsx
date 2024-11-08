@@ -9,20 +9,20 @@ export type NGLFileProps = {
   viewSettings: ViewSettings;
   fileSettings?: Partial<StageLoadFileParams>;
   chains?: string[];
+  autoViewTimeout?: number;
 };
 
 const NGLFile: React.FC<NGLFileProps> = ({
   file,
   viewSettings,
-  fileSettings, 
-  chains
+  fileSettings,
+  chains,
+  autoViewTimeout,
 }) => {
   const chainSele = React.useMemo(() => {
-    if (chains === undefined)
-      return null
-    else
-      return chains.map((chain) => `:${chain}`).join(" or ")
-  }, [ chains ])
+    if (chains === undefined) return null;
+    else return chains.map((chain) => `:${chain}`).join(" or ");
+  }, [chains]);
   const fileExt = React.useMemo(() => {
     if (fileSettings?.ext) return fileSettings.ext;
     else if (file instanceof File) return file.name.split(".").slice(-1)[0];
@@ -31,24 +31,30 @@ const NGLFile: React.FC<NGLFileProps> = ({
       return "";
     }
   }, [fileSettings, file]);
-  const fileComponentCreator = React.useCallback((stage : NGL.Stage) => {
-    return stage.loadFile(file, { ext: fileExt, ...fileSettings }).then((comp) => {
-      if (!comp) return null
-      return comp
-    });
-  }, [ fileExt, fileSettings, file ])
+  const fileComponentCreator = React.useCallback(
+    (stage: NGL.Stage) => {
+      return stage
+        .loadFile(file, { ext: fileExt, ...fileSettings })
+        .then((comp) => {
+          if (!comp) return null;
+          return comp;
+        });
+    },
+    [fileExt, fileSettings, file]
+  );
   const selectedViewSettings = React.useMemo(() => {
     if (chainSele !== null)
       return viewSettings.map((viewSetting) => ({
-        ...viewSetting, params : {
-          sele : chainSele, ...viewSetting.params
-        }
-      }))
-    else
-      return viewSettings
-  }, [ chainSele, viewSettings ])
-  const component = useComponent(fileComponentCreator, selectedViewSettings)
-  return (<></>)
+        ...viewSetting,
+        params: {
+          sele: chainSele,
+          ...viewSetting.params,
+        },
+      }));
+    else return viewSettings;
+  }, [chainSele, viewSettings]);
+  useComponent(fileComponentCreator, selectedViewSettings, autoViewTimeout);
+  return <></>;
 };
 
 export default NGLFile;

@@ -21,6 +21,7 @@ export default function NGLBox({
   depthAxis,
   shapeParams,
   viewSettings,
+  autoViewTimeout,
 }: NGLBoxProps) {
   const shapeCreator = React.useMemo(
     () =>
@@ -34,6 +35,6 @@ export default function NGLBox({
       ),
     [name, position, color, size, heightAxis, depthAxis, shapeParams]
   );
-  useComponentFromObject(shapeCreator, viewSettings);
+  useComponentFromObject(shapeCreator, viewSettings, autoViewTimeout);
   return <></>;
 }

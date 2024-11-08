@@ -19,6 +19,7 @@ export default function NGLCylinder({
   name,
   viewSettings,
   shapeParams,
+  autoViewTimeout
 }: NGLCylinderProps) {
   const shapeCreator = React.useMemo(
     () =>
@@ -31,6 +32,6 @@ export default function NGLCylinder({
       ),
     [position1, position2, color, radius, name, shapeParams]
   );
-  useComponentFromObject(shapeCreator, viewSettings);
+  useComponentFromObject(shapeCreator, viewSettings, autoViewTimeout);
   return <></>
 }

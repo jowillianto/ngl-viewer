@@ -1,16 +1,15 @@
-import React from 'react'
-import { ExtendedShapeProps, useComponentFromObject } from './base-shape'
-import * as NGL from 'ngl'
-import {randomString} from '../utils/utils'
+import React from "react";
+import { ExtendedShapeProps, useComponentFromObject } from "./base-shape";
+import * as NGL from "ngl";
+import { randomString } from "../utils/utils";
 
 export type NGLOctahedronProps = ExtendedShapeProps<{
-  position      : NGL.Vector3 | [number, number, number]
-  depthAxis     : NGL.Vector3 | [number, number, number]
-  heightAxis    : NGL.Vector3 | [number, number, number]
-  color         : [number, number, number] | NGL.Color
-  size          : number
-}>
-
+  position: NGL.Vector3 | [number, number, number];
+  depthAxis: NGL.Vector3 | [number, number, number];
+  heightAxis: NGL.Vector3 | [number, number, number];
+  color: [number, number, number] | NGL.Color;
+  size: number;
+}>;
 
 export default function NGLOctahedron({
   name,
@@ -21,6 +20,7 @@ export default function NGLOctahedron({
   depthAxis,
   shapeParams,
   viewSettings,
+  autoViewTimeout,
 }: NGLOctahedronProps) {
   const shapeCreator = React.useMemo(() => {
     return new NGL.Shape(undefined, shapeParams).addOctahedron(
@@ -32,6 +32,6 @@ export default function NGLOctahedron({
       name === undefined ? randomString(10) : name
     );
   }, [name, position, color, size, heightAxis, depthAxis, shapeParams]);
-  useComponentFromObject(shapeCreator, viewSettings);
-  return <></>
+  useComponentFromObject(shapeCreator, viewSettings, autoViewTimeout);
+  return <></>;
 }

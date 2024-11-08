@@ -20,6 +20,7 @@ export default function NGLTetrahedron({
   depthAxis,
   shapeParams,
   viewSettings,
+  autoViewTimeout
 }: NGLTetrahedronProps) {
   const shapeCreator = React.useMemo(() => {
     return new NGL.Shape(undefined, shapeParams).addTetrahedron(
@@ -31,6 +32,6 @@ export default function NGLTetrahedron({
       name === undefined ? randomString(10) : name
     );
   }, [name, position, color, size, heightAxis, depthAxis, shapeParams]);
-  useComponentFromObject(shapeCreator, viewSettings);
+  useComponentFromObject(shapeCreator, viewSettings, autoViewTimeout);
   return <></>
 }

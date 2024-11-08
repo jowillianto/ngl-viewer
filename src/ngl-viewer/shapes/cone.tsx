@@ -18,6 +18,7 @@ export default function NGLCone({
   name,
   viewSettings,
   shapeParams,
+  autoViewTimeout
 }: NGLConeProps) {
   const shapeCreator = React.useMemo(
     () =>
@@ -30,6 +31,6 @@ export default function NGLCone({
       ),
     [position1, position2, color, radius, name, shapeParams]
   );
-  useComponentFromObject(shapeCreator, viewSettings);
+  useComponentFromObject(shapeCreator, viewSettings, autoViewTimeout);
   return <></>
 }
