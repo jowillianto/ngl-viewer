@@ -6,6 +6,7 @@ export type NGLFileProps = {
     viewSettings: ViewSettings;
     fileSettings?: Partial<StageLoadFileParams>;
     chains?: string[];
+    autoViewTimeout?: number;
 };
 declare const NGLFile: React.FC<NGLFileProps>;
 export default NGLFile;

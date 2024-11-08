@@ -1,6 +1,6 @@
 /// <reference types="react" />
-import { ExtendedShapeProps } from './base-shape';
-import * as NGL from 'ngl';
+import { ExtendedShapeProps } from "./base-shape";
+import * as NGL from "ngl";
 export type NGLOctahedronProps = ExtendedShapeProps<{
     position: NGL.Vector3 | [number, number, number];
     depthAxis: NGL.Vector3 | [number, number, number];
@@ -8,4 +8,4 @@ export type NGLOctahedronProps = ExtendedShapeProps<{
     color: [number, number, number] | NGL.Color;
     size: number;
 }>;
-export default function NGLOctahedron({ name, position, color, size, heightAxis, depthAxis, shapeParams, viewSettings, }: NGLOctahedronProps): JSX.Element;
+export default function NGLOctahedron({ name, position, color, size, heightAxis, depthAxis, shapeParams, viewSettings, autoViewTimeout, }: NGLOctahedronProps): JSX.Element;

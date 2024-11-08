@@ -1,6 +1,6 @@
 /// <reference types="react" />
-import { ExtendedShapeProps } from './base-shape';
-import * as NGL from 'ngl';
+import { ExtendedShapeProps } from "./base-shape";
+import * as NGL from "ngl";
 export type NGLEllipsoidProps = ExtendedShapeProps<{
     position: NGL.Vector3 | [number, number, number];
     majorAxis: NGL.Vector3 | [number, number, number];
@@ -8,4 +8,4 @@ export type NGLEllipsoidProps = ExtendedShapeProps<{
     color: [number, number, number] | NGL.Color;
     radius: number;
 }>;
-export default function NGLEllipsoid({ position, majorAxis, minorAxis, color, radius, viewSettings, shapeParams, name }: NGLEllipsoidProps): JSX.Element;
+export default function NGLEllipsoid({ position, majorAxis, minorAxis, color, radius, viewSettings, shapeParams, name, autoViewTimeout, }: NGLEllipsoidProps): JSX.Element;

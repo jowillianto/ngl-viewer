@@ -13,7 +13,7 @@ import { Fragment as _Fragment, jsx as _jsx } from "react/jsx-runtime";
 import React from "react";
 import useComponent from "../shapes/base-shape";
 var NGLFile = function (_a) {
-    var file = _a.file, viewSettings = _a.viewSettings, fileSettings = _a.fileSettings, chains = _a.chains;
+    var file = _a.file, viewSettings = _a.viewSettings, fileSettings = _a.fileSettings, chains = _a.chains, autoViewTimeout = _a.autoViewTimeout;
     var chainSele = React.useMemo(function () {
         if (chains === undefined)
             return null;
@@ -31,7 +31,9 @@ var NGLFile = function (_a) {
         }
     }, [fileSettings, file]);
     var fileComponentCreator = React.useCallback(function (stage) {
-        return stage.loadFile(file, __assign({ ext: fileExt }, fileSettings)).then(function (comp) {
+        return stage
+            .loadFile(file, __assign({ ext: fileExt }, fileSettings))
+            .then(function (comp) {
             if (!comp)
                 return null;
             return comp;
@@ -43,7 +45,7 @@ var NGLFile = function (_a) {
         else
             return viewSettings;
     }, [chainSele, viewSettings]);
-    var component = useComponent(fileComponentCreator, selectedViewSettings);
-    return (_jsx(_Fragment, {}));
+    useComponent(fileComponentCreator, selectedViewSettings, autoViewTimeout);
+    return _jsx(_Fragment, {});
 };
 export default NGLFile;
