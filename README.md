@@ -10,7 +10,7 @@ npm install git+https://github.com/jowillianto/ngl-viewer#stable
 A very simple example of using is : 
 ```tsx
 import React from 'react'
-import ProteinViewer, {ProteinStage} from "@jowillianto/ngl-viewer/dist"
+import ProteinViewer, { ViewerStage } from "@jowillianto/ngl-viewer/dist";
 import { 
   ComponentUIDataT 
 } from "@jowillianto/ngl-viewer/dist/ngl-viewer/user-interface/component-data";
