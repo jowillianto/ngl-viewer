@@ -76,6 +76,7 @@ export function useComponent<T extends NGL_AddableComponentT>(
       .then((comp) => {
         const component = addComponent(comp);
         if (component === null) return;
+        setComp(component)
         viewSettings.forEach((viewSetting) =>
           component.addRepresentation(viewSetting.type, viewSetting.params)
         );
