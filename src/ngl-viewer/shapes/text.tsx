@@ -1,7 +1,7 @@
 import React from "react";
 import {
   ExtendedShapeProps,
-  useComponentFromObject,
+  useComponent,
 } from "./base-shape";
 import * as NGL from "ngl";
 
@@ -29,6 +29,6 @@ export default function NGLText({
       text
     );
   }, [position, color, size, text, shapeParams]);
-  useComponentFromObject(shapeCreator, viewSettings, autoViewTimeout);
+  useComponent(shapeCreator, viewSettings, autoViewTimeout);
   return <></>;
 }

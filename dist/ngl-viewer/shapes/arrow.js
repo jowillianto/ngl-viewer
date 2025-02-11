@@ -1,6 +1,6 @@
 import { Fragment as _Fragment, jsx as _jsx } from "react/jsx-runtime";
 import React from "react";
-import { useComponentFromObject, } from "./base-shape";
+import { useComponent, } from "./base-shape";
 import * as NGL from "ngl";
 import { randomString } from "../utils/utils";
 export default function NGLArrow(_a) {
@@ -8,6 +8,6 @@ export default function NGLArrow(_a) {
     var shapeCreator = React.useMemo(function () {
         return new NGL.Shape(undefined, shapeParams).addArrow(position1, position2, color, radius, name === undefined ? randomString(10) : name);
     }, [position1, position2, color, radius, name, shapeParams]);
-    useComponentFromObject(shapeCreator, viewSettings);
+    useComponent(shapeCreator, viewSettings);
     return _jsx(_Fragment, {});
 }

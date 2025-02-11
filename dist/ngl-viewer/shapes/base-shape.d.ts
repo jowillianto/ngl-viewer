@@ -8,9 +8,9 @@ export type BasicShapeProps<T = {}> = {
     shapeParams?: Partial<ShapeParameters>;
     autoViewTimeout?: number;
 } & T;
+export type NGL_AddableComponentT = NGL.Structure | Surface | NGL.Volume | NGL.Shape | NGL.Component;
 export type ExtendedShapeProps<T = {}> = BasicShapeProps<{
     name?: string;
 } & T>;
-export type ComponentT<T extends NGL.Component> = T | Promise<T | null> | null;
-export default function useComponent<T extends NGL.Component>(component: ComponentT<T> | ((stage: NGL.Stage) => ComponentT<T>), viewSettings: ViewSettings, autoViewTimeout?: number): T | null;
-export declare function useComponentFromObject(obj: NGL.Structure | Surface | NGL.Volume | NGL.Shape | null, viewSettings: ViewSettings, autoViewTimeout?: number): NGL.Component | null;
+export type ComponentT<T extends NGL_AddableComponentT> = T | Promise<T | null> | null;
+export declare function useComponent<T extends NGL_AddableComponentT>(component: ComponentT<T> | ((stage: NGL.Stage) => ComponentT<T>), viewSettings: ViewSettings, autoViewTimeout?: number, manageOnly?: boolean): NGL.Component | null;

@@ -1,6 +1,6 @@
 import { Fragment as _Fragment, jsx as _jsx } from "react/jsx-runtime";
 import React from 'react';
-import { useComponentFromObject } from './base-shape';
+import { useComponent } from './base-shape';
 import * as NGL from 'ngl';
 import { randomString } from '../utils/utils';
 export default function NGLTetrahedron(_a) {
@@ -8,6 +8,6 @@ export default function NGLTetrahedron(_a) {
     var shapeCreator = React.useMemo(function () {
         return new NGL.Shape(undefined, shapeParams).addTetrahedron(position, color, size, heightAxis, depthAxis, name === undefined ? randomString(10) : name);
     }, [name, position, color, size, heightAxis, depthAxis, shapeParams]);
-    useComponentFromObject(shapeCreator, viewSettings, autoViewTimeout);
+    useComponent(shapeCreator, viewSettings, autoViewTimeout);
     return _jsx(_Fragment, {});
 }

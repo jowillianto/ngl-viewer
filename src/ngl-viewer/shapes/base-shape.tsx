@@ -11,11 +11,19 @@ export type BasicShapeProps<T = {}> = {
   shapeParams?: Partial<ShapeParameters>;
   autoViewTimeout?: number;
 } & T;
-
+export type NGL_AddableComponentT =
+  | NGL.Structure
+  | Surface
+  | NGL.Volume
+  | NGL.Shape
+  | NGL.Component;
 export type ExtendedShapeProps<T = {}> = BasicShapeProps<{ name?: string } & T>;
-export type ComponentT<T extends NGL.Component> = T | Promise<T | null> | null;
+export type ComponentT<T extends NGL_AddableComponentT> =
+  | T
+  | Promise<T | null>
+  | null;
 
-function componentToPromise<T extends NGL.Component>(
+function componentToPromise<T extends NGL_AddableComponentT>(
   component: ComponentT<T> | ((stage: NGL.Stage) => ComponentT<T>),
   stage: NGL.Stage
 ): Promise<T | null> {
@@ -26,12 +34,13 @@ function componentToPromise<T extends NGL.Component>(
   else return new Promise<T | null>((res, rej) => res(component));
 }
 
-export default function useComponent<T extends NGL.Component>(
+export function useComponent<T extends NGL_AddableComponentT>(
   component: ComponentT<T> | ((stage: NGL.Stage) => ComponentT<T>),
   viewSettings: ViewSettings,
-  autoViewTimeout: number = 0
+  autoViewTimeout: number = 0,
+  manageOnly: boolean = false
 ) {
-  const [comp, setComp] = React.useState<T | null>(null);
+  const [comp, setComp] = React.useState<NGL.Component | null>(null);
   const { stage: versionedStage, updateStage } = React.useContext(StageContext);
   const stage = React.useMemo(() => {
     if (versionedStage === null) return null;
@@ -46,15 +55,29 @@ export default function useComponent<T extends NGL.Component>(
       return null;
     });
   }, [stage, updateStage]);
+  const addComponent = React.useCallback(
+    (v: T | null) => {
+      if (v === null) return v;
+      if (v instanceof NGL.Component) {
+        if (manageOnly) return v;
+        stage?.addComponent(v);
+        return v;
+      } else {
+        const c = stage?.addComponentFromObject(v);
+        if (!c) return null;
+        return c;
+      }
+    },
+    [stage, manageOnly]
+  );
   React.useEffect(() => {
     if (stage === null) return;
     componentToPromise(component, stage)
       .then((comp) => {
-        if (comp === null) return;
-        setComp(comp);
-        stage.addComponent(comp);
+        const component = addComponent(comp);
+        if (component === null) return;
         viewSettings.forEach((viewSetting) =>
-          comp.addRepresentation(viewSetting.type, viewSetting.params)
+          component.addRepresentation(viewSetting.type, viewSetting.params)
         );
         if (autoViewTimeout >= 0) stage.autoView(autoViewTimeout);
         updateStage();
@@ -67,24 +90,9 @@ export default function useComponent<T extends NGL.Component>(
     viewSettings,
     removeComponent,
     autoViewTimeout,
+    addComponent,
     updateStage,
   ]);
+  console.log(stage);
   return comp;
-}
-
-export function useComponentFromObject(
-  obj: NGL.Structure | Surface | NGL.Volume | NGL.Shape | null,
-  viewSettings: ViewSettings,
-  autoViewTimeout?: number
-) {
-  const objCreator = React.useCallback(
-    (stage: NGL.Stage) => {
-      if (obj === null || stage === null) return null;
-      const component = stage.addComponentFromObject(obj);
-      if (!component) return null;
-      return component;
-    },
-    [obj]
-  );
-  return useComponent(objCreator, viewSettings, autoViewTimeout);
 }
