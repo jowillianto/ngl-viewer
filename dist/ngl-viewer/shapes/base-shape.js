@@ -55,6 +55,7 @@ export function useComponent(component, viewSettings, autoViewTimeout, manageOnl
             var component = addComponent(comp);
             if (component === null)
                 return;
+            setComp(component);
             viewSettings.forEach(function (viewSetting) {
                 return component.addRepresentation(viewSetting.type, viewSetting.params);
             });
