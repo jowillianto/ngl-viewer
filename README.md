@@ -29,7 +29,7 @@ const App = () => {
   }
   return (
     <ProteinViewer initialComponents = {[component]}>
-      <ViewerStage height = "800px" width = "800px" />
+      <ViewerStage containerStyles = {{ width : "800px", height: "800px" }} />
     </ProteinViewer>
   )
 }
