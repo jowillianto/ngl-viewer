@@ -38,7 +38,7 @@ export function useComponent<T extends NGL_AddableComponentT>(
   component: ComponentT<T> | ((stage: NGL.Stage) => ComponentT<T>),
   viewSettings: ViewSettings,
   autoViewTimeout: number = 0,
-  manageOnly: boolean = true
+  manageOnly: boolean = false
 ) {
   const [comp, setComp] = React.useState<NGL.Component | null>(null);
   const { stage: versionedStage, updateStage } = React.useContext(StageContext);
@@ -57,8 +57,9 @@ export function useComponent<T extends NGL_AddableComponentT>(
   }, [stage, updateStage]);
   const addComponent = React.useCallback(
     (v: T | null) => {
-      if (manageOnly || v === null) return null;
+      if (v === null) return v;
       if (v instanceof NGL.Component) {
+        if (manageOnly) return v;
         stage?.addComponent(v);
         return v;
       } else {
@@ -92,5 +93,6 @@ export function useComponent<T extends NGL_AddableComponentT>(
     addComponent,
     updateStage,
   ]);
+  console.log(stage);
   return comp;
 }
