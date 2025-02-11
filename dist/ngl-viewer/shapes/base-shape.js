@@ -1,5 +1,6 @@
 import React from "react";
 import StageContext from "../stage-context";
+import * as NGL from "ngl";
 function componentToPromise(component, stage) {
     if (component === null)
         return new Promise(function (res, rej) { return res(null); });
@@ -10,8 +11,9 @@ function componentToPromise(component, stage) {
     else
         return new Promise(function (res, rej) { return res(component); });
 }
-export default function useComponent(component, viewSettings, autoViewTimeout) {
+export function useComponent(component, viewSettings, autoViewTimeout, manageOnly) {
     if (autoViewTimeout === void 0) { autoViewTimeout = 0; }
+    if (manageOnly === void 0) { manageOnly = false; }
     var _a = React.useState(null), comp = _a[0], setComp = _a[1];
     var _b = React.useContext(StageContext), versionedStage = _b.stage, updateStage = _b.updateStage;
     var stage = React.useMemo(function () {
@@ -29,17 +31,32 @@ export default function useComponent(component, viewSettings, autoViewTimeout) {
             return null;
         });
     }, [stage, updateStage]);
+    var addComponent = React.useCallback(function (v) {
+        if (v === null)
+            return v;
+        if (v instanceof NGL.Component) {
+            if (manageOnly)
+                return v;
+            stage === null || stage === void 0 ? void 0 : stage.addComponent(v);
+            return v;
+        }
+        else {
+            var c = stage === null || stage === void 0 ? void 0 : stage.addComponentFromObject(v);
+            if (!c)
+                return null;
+            return c;
+        }
+    }, [stage, manageOnly]);
     React.useEffect(function () {
         if (stage === null)
             return;
         componentToPromise(component, stage)
             .then(function (comp) {
-            if (comp === null)
+            var component = addComponent(comp);
+            if (component === null)
                 return;
-            setComp(comp);
-            stage.addComponent(comp);
             viewSettings.forEach(function (viewSetting) {
-                return comp.addRepresentation(viewSetting.type, viewSetting.params);
+                return component.addRepresentation(viewSetting.type, viewSetting.params);
             });
             if (autoViewTimeout >= 0)
                 stage.autoView(autoViewTimeout);
@@ -53,18 +70,9 @@ export default function useComponent(component, viewSettings, autoViewTimeout) {
         viewSettings,
         removeComponent,
         autoViewTimeout,
+        addComponent,
         updateStage,
     ]);
+    console.log(stage);
     return comp;
-}
-export function useComponentFromObject(obj, viewSettings, autoViewTimeout) {
-    var objCreator = React.useCallback(function (stage) {
-        if (obj === null || stage === null)
-            return null;
-        var component = stage.addComponentFromObject(obj);
-        if (!component)
-            return null;
-        return component;
-    }, [obj]);
-    return useComponent(objCreator, viewSettings, autoViewTimeout);
 }
