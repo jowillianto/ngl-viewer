@@ -1,7 +1,7 @@
 import React from "react";
 import {
   ExtendedShapeProps,
-  useComponentFromObject,
+  useComponent,
 } from "./base-shape";
 import * as NGL from "ngl";
 import { randomString } from "../utils/utils";
@@ -33,6 +33,6 @@ export default function NGLArrow({
       ),
     [position1, position2, color, radius, name, shapeParams]
   );
-  useComponentFromObject(shapeCreator, viewSettings);
+  useComponent(shapeCreator, viewSettings);
   return <></>
 }

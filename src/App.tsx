@@ -47,38 +47,53 @@ const initialComponents: Array<ComponentUIDataT> = [
 const App = () => {
   const [toggle, setToggle] = React.useState(false);
   return (
-    // <React.StrictMode>
-    <div style = {{backgroundColor: "grey"}}>
-      <ProteinViewer>
-        <button onClick={() => setToggle((prev) => !prev)}>haha</button>
-        <div className="container1">
-          <ViewerComponent />
-          <div className="selector">
-            {/* <ViewerSelector/> */}
-            <ViewerStage
-              containerStyles = {{
-                width : "100%",
-                height : "500px"
-              }}
-              viewSettings={{ backgroundColor: toggle ? "black" : "white" }}
-            />
-            {/* <ViewerPanel /> */}
+    <React.StrictMode>
+      <div style={{ backgroundColor: "grey" }}>
+        <ProteinViewer>
+          <button onClick={() => setToggle((prev) => !prev)}>haha</button>
+          <div className="container1">
+            <ViewerComponent />
+            <div className="selector">
+              {/* <ViewerSelector/> */}
+              <ViewerStage
+                containerStyles={{
+                  width: "100%",
+                  height: "500px",
+                }}
+                viewSettings={{ backgroundColor: toggle ? "black" : "white" }}
+              />
+              {/* <ViewerPanel /> */}
+            </div>
           </div>
-        </div>
-        <FileComponent
-          file="https://files.rcsb.org/download/2ZLF.pdb"
-          fileSettings={{ ext: "pdb" }}
-          viewSettings={[
-            {
-              type: "cartoon",
-              params: {},
-            },
-          ]}
-          chains = {["A"]}
-        />
-      </ProteinViewer>
-    </div>
-    // </React.StrictMode>
+          <FileComponent
+            file="https://files.rcsb.org/download/2ZLF.pdb"
+            fileSettings={{ ext: "pdb" }}
+            viewSettings={[
+              {
+                type: "cartoon",
+                params: {},
+              },
+            ]}
+            chains={["A"]}
+          />
+          <NGLBox
+            position={[1, 1, 1]}
+            color={[1, 1, 0]}
+            size={10}
+            heightAxis={[0, 10, 0]}
+            depthAxis={[10, 0, 0]}
+            viewSettings={[
+              {
+                type: "buffer",
+                params: {
+                  opacity: 0.8,
+                },
+              },
+            ]}
+          />
+        </ProteinViewer>
+      </div>
+    </React.StrictMode>
   );
 };
 

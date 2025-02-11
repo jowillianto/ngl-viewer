@@ -1,5 +1,5 @@
 import React from "react";
-import { ExtendedShapeProps, useComponentFromObject } from "./base-shape";
+import { ExtendedShapeProps, useComponent } from "./base-shape";
 import * as NGL from "ngl";
 import { randomString } from "../utils/utils";
 
@@ -34,6 +34,6 @@ export default function NGLEllipsoid({
       ),
     [position, majorAxis, minorAxis, color, radius, name, shapeParams]
   );
-  useComponentFromObject(shapeCreator, viewSettings, autoViewTimeout);
+  useComponent(shapeCreator, viewSettings, autoViewTimeout);
   return <></>;
 }

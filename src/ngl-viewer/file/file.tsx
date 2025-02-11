@@ -2,7 +2,7 @@ import React from "react";
 import * as NGL from "ngl";
 import { StageLoadFileParams } from "ngl/dist/declarations/stage/stage";
 import { ViewSettings } from "../interfaces/interfaces";
-import useComponent from "../shapes/base-shape";
+import { useComponent } from "../shapes/base-shape";
 
 export type NGLFileProps = {
   file: File | string | Blob;
@@ -53,7 +53,12 @@ const NGLFile: React.FC<NGLFileProps> = ({
       }));
     else return viewSettings;
   }, [chainSele, viewSettings]);
-  useComponent(fileComponentCreator, selectedViewSettings, autoViewTimeout);
+  useComponent(
+    fileComponentCreator,
+    selectedViewSettings,
+    autoViewTimeout,
+    true
+  );
   return <></>;
 };
 
