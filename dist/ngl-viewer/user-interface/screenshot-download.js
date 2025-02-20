@@ -18,24 +18,24 @@ export var ScreenshotDownload = function (_a) {
         onClick()
             .then(function (blob) {
             var url = window.URL.createObjectURL(blob);
-            var link = document.createElement('a');
+            var link = document.createElement("a");
             link.href = url;
             link.download = "".concat(Date.now().toString(), "_screenshot.png");
             link.click();
-            // clean up to free memory
             window.URL.revokeObjectURL(url);
-        }).catch(function (err) {
+        })
+            .catch(function (err) {
             console.error("Error capturing screenshot:", err);
         });
     }, [onClick]);
     var Component = render;
     var renderProps = __assign({ onClick: downloadOnClick }, props);
-    return (_jsx(Component, __assign({}, renderProps)));
+    return _jsx(Component, __assign({}, renderProps));
 };
 var ScreenshotAndDownload = function (props) {
     return (_jsx(NGLScreenshot, { render: ScreenshotDownload, props: {
             render: props.render,
-            props: props.props
+            props: props.props,
         }, params: props.params }));
 };
 export default ScreenshotAndDownload;

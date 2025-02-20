@@ -1,32 +1,50 @@
-import * as NGL from 'ngl';
-export type ViewSetting<T, P> = {
-    type: T;
-    params: P;
+import * as NGL from "ngl";
+import { DotRepresentationParameters } from "ngl/dist/declarations/representation/dot-representation";
+import { RepresentationParameters } from "ngl/dist/declarations/representation/representation";
+import { SliceRepresentationParameters } from "ngl/dist/declarations/representation/slice-representation";
+import { SurfaceRepresentationParameters } from "ngl/dist/declarations/representation/surface-representation";
+interface StructureRepresentationParametersMap {
+    angle: NGL.AngleRepresentationParameters;
+    axes: NGL.AxesRepresentationParameters;
+    backbone: NGL.BallAndStickRepresentationParameters;
+    "ball+stick": NGL.BallAndStickRepresentationParameters;
+    base: NGL.BallAndStickRepresentationParameters;
+    cartoon: NGL.CartoonRepresentationParameters;
+    contact: NGL.ContactRepresentationParameters;
+    dihedral: NGL.DihedralRepresentationParameters;
+    "dihedral-histogram": NGL.DihedralHistogramRepresentationParameters;
+    distance: NGL.DistanceRepresentationParameters;
+    dot: DotRepresentationParameters;
+    helixorient: NGL.StructureRepresentationParameters;
+    hyperball: NGL.HyperballRepresentationParameters;
+    label: NGL.LabelRepresentationParameters;
+    licorice: NGL.BallAndStickRepresentationParameters;
+    line: NGL.LineRepresentationParameters;
+    molecularsurface: NGL.MolecularSurfaceRepresentationParameters;
+    point: NGL.PointRepresentationParameters;
+    ribbon: NGL.RibbonRepresentationParameters;
+    rocket: NGL.RocketRepresentationParameters;
+    rope: NGL.CartoonRepresentationParameters;
+    slice: SliceRepresentationParameters;
+    spacefill: NGL.BallAndStickRepresentationParameters;
+    surface: SurfaceRepresentationParameters;
+    trace: NGL.TraceRepresentationParameters;
+    tube: NGL.CartoonRepresentationParameters;
+    unitcell: NGL.UnitcellRepresentationParameters;
+    validation: NGL.StructureRepresentationParameters;
+}
+export type ShapeRepresentationParametersMap = {
+    buffer: RepresentationParameters;
 };
-export type ViewSettingType = NGL.StructureRepresentationType | string;
-export type ViewSettings = Array<ViewSetting<ViewSettingType, Record<string, any>>>;
-type Molecular_BallPlusStickT = ViewSetting<'ball+stick', {
-    aspectRatio: number;
-    radiusSegments: number;
-    sphereDetail: number;
-}>;
-type Molecular_CartoonT = ViewSetting<'cartoon', {
-    aspectRatio: number;
-}>;
-type Molecular_RibbonT = ViewSetting<'ribbon', {}>;
-type Molecular_LicoriceT = ViewSetting<'licorice', {}>;
-type Molecular_SurfaceT = ViewSetting<'surface', {
-    sele: string;
-    opacity: string;
-    colorScheme: number;
-    colorDomain: [number, number];
-    surfaceType: 'av';
-}>;
-export type ViewSettingTypes = {
-    'ball+stick': Molecular_BallPlusStickT[];
-    'cartoon': Molecular_CartoonT[];
-    'ribbon': Molecular_RibbonT[];
-    'licorice': Molecular_LicoriceT[];
-    'surface': Molecular_SurfaceT[];
+export type StructureViewSetting<K extends keyof StructureRepresentationParametersMap> = {
+    type: K;
+    params: Partial<StructureRepresentationParametersMap[K]>;
 };
+export type StructureViewSettings = Array<StructureViewSetting<keyof StructureRepresentationParametersMap>>;
+export type ShapeViewSetting<K extends keyof ShapeRepresentationParametersMap> = {
+    type: K;
+    params: Partial<ShapeRepresentationParametersMap[K]>;
+};
+export type ShapeViewSettings = Array<ShapeViewSetting<keyof ShapeRepresentationParametersMap>>;
+export type ViewSettings = ShapeViewSettings | StructureViewSettings;
 export {};

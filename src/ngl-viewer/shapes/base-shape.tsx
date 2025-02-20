@@ -94,6 +94,5 @@ export function useComponent<T extends NGL_AddableComponentT>(
     addComponent,
     updateStage,
   ]);
-  console.log(stage);
   return comp;
 }
