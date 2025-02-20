@@ -8,7 +8,7 @@ export type ScreenshotDownloadT<T> = {
     props: T;
     onClick: () => Promise<Blob>;
 };
-export declare const ScreenshotDownload: <T>({ render, props, onClick }: ScreenshotDownloadT<T>) => JSX.Element;
+export declare const ScreenshotDownload: <T>({ render, props, onClick, }: ScreenshotDownloadT<T>) => JSX.Element;
 type ScreenshotAndDownloadT<T> = {
     render: ScreenshotDownloadT<T>["render"];
     props: T;

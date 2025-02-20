@@ -1,9 +1,9 @@
 import React from "react";
 import { StageLoadFileParams } from "ngl/dist/declarations/stage/stage";
-import { ViewSettings } from "../interfaces/interfaces";
+import { StructureViewSettings } from "../interfaces/interfaces";
 export type NGLFileProps = {
     file: File | string | Blob;
-    viewSettings: ViewSettings;
+    viewSettings: StructureViewSettings;
     fileSettings?: Partial<StageLoadFileParams>;
     chains?: string[];
     autoViewTimeout?: number;

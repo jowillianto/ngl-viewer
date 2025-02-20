@@ -1,4 +1,3 @@
-/// <reference types="react" />
-import { NGLStageProps } from '../stage';
-declare const ViewerStage: (props: NGLStageProps) => JSX.Element;
+import Stage from "../stage";
+declare const ViewerStage: typeof Stage;
 export default ViewerStage;

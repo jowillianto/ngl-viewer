@@ -74,6 +74,5 @@ export function useComponent(component, viewSettings, autoViewTimeout, manageOnl
         addComponent,
         updateStage,
     ]);
-    console.log(stage);
     return comp;
 }
