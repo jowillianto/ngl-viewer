@@ -34,29 +34,34 @@ function componentToPromise<T extends NGL_AddableComponentT>(
   else return new Promise<T | null>((res, rej) => res(component));
 }
 
+class DestructableValue<T> {
+  data: T | null;
+  destructor: (v: T) => void;
+  constructor(data: T, destructor: (v: T) => void) {
+    this.data = data;
+    this.destructor = destructor;
+  }
+  destroy() {
+    if (this.data !== null) this.destructor(this.data);
+    this.data = null;
+  }
+}
+
 export function useComponent<T extends NGL_AddableComponentT>(
   component: ComponentT<T> | ((stage: NGL.Stage) => ComponentT<T>),
   viewSettings: ViewSettings,
   autoViewTimeout: number = 0,
   manageOnly: boolean = false
 ) {
-  const [comp, setComp] = React.useState<NGL.Component | null>(null);
+  const [comp, setComp] =
+    React.useState<DestructableValue<NGL.Component> | null>(null);
   const { stage: versionedStage, updateStage } = React.useContext(StageContext);
   const stage = React.useMemo(() => {
     if (versionedStage === null) return null;
     else return versionedStage.stage;
   }, [versionedStage]);
-  const removeComponent = React.useCallback(() => {
-    setComp((prevComp) => {
-      if (stage !== null && prevComp !== null) {
-        stage.removeComponent(prevComp);
-        updateStage();
-      }
-      return null;
-    });
-  }, [stage, updateStage]);
   const addComponent = React.useCallback(
-    (v: T | null) => {
+    (v: T | null, stage: NGL.Stage) => {
       if (v === null) return v;
       if (v instanceof NGL.Component) {
         if (manageOnly) return v;
@@ -68,28 +73,40 @@ export function useComponent<T extends NGL_AddableComponentT>(
         return c;
       }
     },
-    [stage, manageOnly]
+    [manageOnly]
   );
   React.useEffect(() => {
-    if (stage === null) return;
+    if (comp === null) return;
+    return () => {
+      comp?.destroy();
+    };
+  }, [comp]);
+  React.useEffect(() => {
+    if (stage === null) {
+      setComp(null);
+      return;
+    }
     componentToPromise(component, stage)
       .then((comp) => {
-        const component = addComponent(comp);
-        if (component === null) return;
-        setComp(component)
-        viewSettings.forEach((viewSetting) =>
-          component.addRepresentation(viewSetting.type, viewSetting.params)
-        );
-        if (autoViewTimeout >= 0) stage.autoView(autoViewTimeout);
-        updateStage();
+        const component = addComponent(comp, stage);
+        if (component === null) {
+          setComp(null);
+        } else {
+          setComp(
+            new DestructableValue(component, (v) => stage.removeComponent(v))
+          );
+          viewSettings.forEach((viewSetting) =>
+            component.addRepresentation(viewSetting.type, viewSetting.params)
+          );
+          if (autoViewTimeout >= 0) stage.autoView(autoViewTimeout);
+          updateStage();
+        }
       })
       .catch((err) => console.error(err));
-    return removeComponent;
   }, [
     stage,
     component,
     viewSettings,
-    removeComponent,
     autoViewTimeout,
     addComponent,
     updateStage,

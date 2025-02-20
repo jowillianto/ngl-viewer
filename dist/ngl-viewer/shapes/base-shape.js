@@ -11,6 +11,18 @@ function componentToPromise(component, stage) {
     else
         return new Promise(function (res, rej) { return res(component); });
 }
+var DestructableValue = /** @class */ (function () {
+    function DestructableValue(data, destructor) {
+        this.data = data;
+        this.destructor = destructor;
+    }
+    DestructableValue.prototype.destroy = function () {
+        if (this.data !== null)
+            this.destructor(this.data);
+        this.data = null;
+    };
+    return DestructableValue;
+}());
 export function useComponent(component, viewSettings, autoViewTimeout, manageOnly) {
     if (autoViewTimeout === void 0) { autoViewTimeout = 0; }
     if (manageOnly === void 0) { manageOnly = false; }
@@ -22,16 +34,7 @@ export function useComponent(component, viewSettings, autoViewTimeout, manageOnl
         else
             return versionedStage.stage;
     }, [versionedStage]);
-    var removeComponent = React.useCallback(function () {
-        setComp(function (prevComp) {
-            if (stage !== null && prevComp !== null) {
-                stage.removeComponent(prevComp);
-                updateStage();
-            }
-            return null;
-        });
-    }, [stage, updateStage]);
-    var addComponent = React.useCallback(function (v) {
+    var addComponent = React.useCallback(function (v, stage) {
         if (v === null)
             return v;
         if (v instanceof NGL.Component) {
@@ -46,30 +49,40 @@ export function useComponent(component, viewSettings, autoViewTimeout, manageOnl
                 return null;
             return c;
         }
-    }, [stage, manageOnly]);
+    }, [manageOnly]);
     React.useEffect(function () {
-        if (stage === null)
+        if (comp === null)
             return;
+        return function () {
+            comp === null || comp === void 0 ? void 0 : comp.destroy();
+        };
+    }, [comp]);
+    React.useEffect(function () {
+        if (stage === null) {
+            setComp(null);
+            return;
+        }
         componentToPromise(component, stage)
             .then(function (comp) {
-            var component = addComponent(comp);
-            if (component === null)
-                return;
-            setComp(component);
-            viewSettings.forEach(function (viewSetting) {
-                return component.addRepresentation(viewSetting.type, viewSetting.params);
-            });
-            if (autoViewTimeout >= 0)
-                stage.autoView(autoViewTimeout);
-            updateStage();
+            var component = addComponent(comp, stage);
+            if (component === null) {
+                setComp(null);
+            }
+            else {
+                setComp(new DestructableValue(component, function (v) { return stage.removeComponent(v); }));
+                viewSettings.forEach(function (viewSetting) {
+                    return component.addRepresentation(viewSetting.type, viewSetting.params);
+                });
+                if (autoViewTimeout >= 0)
+                    stage.autoView(autoViewTimeout);
+                updateStage();
+            }
         })
             .catch(function (err) { return console.error(err); });
-        return removeComponent;
     }, [
         stage,
         component,
         viewSettings,
-        removeComponent,
         autoViewTimeout,
         addComponent,
         updateStage,

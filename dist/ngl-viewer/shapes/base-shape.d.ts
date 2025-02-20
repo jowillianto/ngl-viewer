@@ -13,4 +13,11 @@ export type ExtendedShapeProps<T = {}> = BasicShapeProps<{
     name?: string;
 } & T>;
 export type ComponentT<T extends NGL_AddableComponentT> = T | Promise<T | null> | null;
-export declare function useComponent<T extends NGL_AddableComponentT>(component: ComponentT<T> | ((stage: NGL.Stage) => ComponentT<T>), viewSettings: ViewSettings, autoViewTimeout?: number, manageOnly?: boolean): NGL.Component | null;
+declare class DestructableValue<T> {
+    data: T | null;
+    destructor: (v: T) => void;
+    constructor(data: T, destructor: (v: T) => void);
+    destroy(): void;
+}
+export declare function useComponent<T extends NGL_AddableComponentT>(component: ComponentT<T> | ((stage: NGL.Stage) => ComponentT<T>), viewSettings: ViewSettings, autoViewTimeout?: number, manageOnly?: boolean): DestructableValue<NGL.Component> | null;
+export {};
