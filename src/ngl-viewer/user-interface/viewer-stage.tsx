@@ -1,16 +1,5 @@
-import NGLRenderer  from './ngl-renderer'
-import GenericRenderer from './generic-renderer'
-import { NGLStageProps } from '../stage'
+import Stage from "../stage";
 
+const ViewerStage = Stage;
 
-const ViewerStage = (props : NGLStageProps) => {
-  
-  return (
-    <GenericRenderer 
-      render = {NGLRenderer}
-      props = {props}
-    />
-  )
-}
-
-export default ViewerStage
+export default ViewerStage;
