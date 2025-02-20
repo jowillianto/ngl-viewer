@@ -5,9 +5,10 @@ import FileComponent from "./ngl-viewer/file/file";
 import ViewerStage from "./ngl-viewer/user-interface/viewer-stage";
 import NGLBox from "./ngl-viewer/shapes/box";
 const App = () => {
-  const [toggle, setToggle] = React.useState(false);
+  const [toggle, setToggle] = React.useState(true);
   return (
     <React.StrictMode>
+      <button onClick={() => setToggle(!toggle)}>Toggle</button>
       <div style={{ backgroundColor: "grey", height: "100vh" }}>
         <ProteinViewer>
           <ViewerStage
@@ -15,7 +16,7 @@ const App = () => {
               width: "100%",
               height: "100%",
             }}
-            viewSettings={{ backgroundColor: toggle ? "black" : "white" }}
+            viewSettings={{ backgroundColor: "white" }}
           />
           {/* <ViewerPanel /> */}
           <FileComponent
@@ -32,21 +33,23 @@ const App = () => {
             ]}
             chains={["A"]}
           />
-          <NGLBox
-            position={[1, 1, 1]}
-            color={[255, 255, 0]}
-            size={1}
-            heightAxis={[0, 1, 0]}
-            depthAxis={[1, 0, 0]}
-            viewSettings={[
-              {
-                type: "buffer",
-                params: {
-                  opacity: 1,
+          {toggle && (
+            <NGLBox
+              position={[1, 1, 1]}
+              color={[255, 255, 0]}
+              size={10}
+              heightAxis={[0, 10, 0]}
+              depthAxis={[10, 0, 0]}
+              viewSettings={[
+                {
+                  type: "buffer",
+                  params: {
+                    opacity: 0.5,
+                  },
                 },
-              },
-            ]}
-          />
+              ]}
+            />
+          )}
         </ProteinViewer>
       </div>
     </React.StrictMode>
