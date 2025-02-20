@@ -64,8 +64,10 @@ export default function Stage(_a) {
     }, [stage, miniStage]);
     React.useEffect(function () {
         var curDiv = ref.current;
-        if (curDiv === null)
+        if (curDiv === null) {
+            setStage(null);
             return;
+        }
         var stage = new NGL.Stage(curDiv, viewSettings);
         setStage(new VersionedStage(stage, 0));
         return function () {
