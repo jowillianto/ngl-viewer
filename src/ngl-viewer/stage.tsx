@@ -1,6 +1,6 @@
 import React from "react";
 import * as NGL from "ngl";
-import StageContext, { VersionedStage } from "./stage-context";
+import StageContext from "./stage-context";
 
 function hexToRgb(hex: string): [number, number, number] | null {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -64,7 +64,7 @@ export default function Stage({
   stageStyles,
 }: NGLStageProps) {
   const [miniStage, setMiniStage] = React.useState<NGL.Stage | null>(null);
-  const { stage: versionedStage, setStage } = React.useContext(StageContext);
+  const { stage, setStage } = React.useContext(StageContext);
   const ref = React.useRef<HTMLDivElement>(null);
   const miniStageRef = React.useRef<HTMLDivElement>(null);
   const {
@@ -72,10 +72,6 @@ export default function Stage({
     colorY = "#00FF00",
     colorZ = "#0000FF",
   } = axesConfig;
-  const stage = React.useMemo(() => {
-    if (versionedStage === null) return null;
-    return versionedStage.stage;
-  }, [versionedStage]);
   const updateMiniStageCamera = React.useCallback(() => {
     if (stage === null || miniStage === null) return;
     /**
@@ -90,14 +86,11 @@ export default function Stage({
       return;
     }
     const stage = new NGL.Stage(curDiv, viewSettings);
-    setStage(new VersionedStage(stage, 0));
+    setStage(stage);
     return () => {
       setStage(null);
-      function disposeFunc() {
-        if (stage.compList.length !== 0) setTimeout(disposeFunc, 50);
-        else stage.dispose();
-      }
-      disposeFunc();
+      /* Postpone to another thread */
+      setTimeout(() => stage.dispose(), 0);
       curDiv.replaceChildren();
     };
   }, [setStage, viewSettings]);
@@ -173,7 +166,13 @@ export default function Stage({
     component?.addRepresentation("buffer", { opacity: 1 });
   }, [miniStage, colorX, colorY, colorZ]);
   return (
-    <div style={containerStyles} className={containerClassName}>
+    <div
+      style={{
+        ...containerStyles,
+        position: "relative",
+      }}
+      className={containerClassName}
+    >
       <div
         ref={ref}
         style={{ ...stageStyle, ...stageStyles }}

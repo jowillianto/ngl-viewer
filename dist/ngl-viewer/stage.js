@@ -12,7 +12,7 @@ var __assign = (this && this.__assign) || function () {
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from "react";
 import * as NGL from "ngl";
-import StageContext, { VersionedStage } from "./stage-context";
+import StageContext from "./stage-context";
 function hexToRgb(hex) {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
@@ -45,15 +45,10 @@ var stageZoom = 0.75;
 export default function Stage(_a) {
     var viewSettings = _a.viewSettings, _b = _a.showAxes, showAxes = _b === void 0 ? true : _b, _c = _a.axesConfig, axesConfig = _c === void 0 ? {} : _c, _d = _a.containerClassName, containerClassName = _d === void 0 ? "" : _d, containerStyles = _a.containerStyles, _e = _a.axesClassName, axesClassName = _e === void 0 ? "" : _e, axesStyles = _a.axesStyles, _f = _a.stageClassName, stageClassName = _f === void 0 ? "" : _f, stageStyles = _a.stageStyles;
     var _g = React.useState(null), miniStage = _g[0], setMiniStage = _g[1];
-    var _h = React.useContext(StageContext), versionedStage = _h.stage, setStage = _h.setStage;
+    var _h = React.useContext(StageContext), stage = _h.stage, setStage = _h.setStage;
     var ref = React.useRef(null);
     var miniStageRef = React.useRef(null);
     var _j = axesConfig.colorX, colorX = _j === void 0 ? "#FF0000" : _j, _k = axesConfig.colorY, colorY = _k === void 0 ? "#00FF00" : _k, _l = axesConfig.colorZ, colorZ = _l === void 0 ? "#0000FF" : _l;
-    var stage = React.useMemo(function () {
-        if (versionedStage === null)
-            return null;
-        return versionedStage.stage;
-    }, [versionedStage]);
     var updateMiniStageCamera = React.useCallback(function () {
         if (stage === null || miniStage === null)
             return;
@@ -69,16 +64,11 @@ export default function Stage(_a) {
             return;
         }
         var stage = new NGL.Stage(curDiv, viewSettings);
-        setStage(new VersionedStage(stage, 0));
+        setStage(stage);
         return function () {
             setStage(null);
-            function disposeFunc() {
-                if (stage.compList.length !== 0)
-                    setTimeout(disposeFunc, 50);
-                else
-                    stage.dispose();
-            }
-            disposeFunc();
+            /* Postpone to another thread */
+            setTimeout(function () { return stage.dispose(); }, 0);
             curDiv.replaceChildren();
         };
     }, [setStage, viewSettings]);
@@ -148,5 +138,5 @@ export default function Stage(_a) {
         var component = miniStage.addComponentFromObject(shape);
         component === null || component === void 0 ? void 0 : component.addRepresentation("buffer", { opacity: 1 });
     }, [miniStage, colorX, colorY, colorZ]);
-    return (_jsxs("div", { style: containerStyles, className: containerClassName, children: [_jsx("div", { ref: ref, style: __assign(__assign({}, stageStyle), stageStyles), className: stageClassName }), _jsx("div", { ref: miniStageRef, style: __assign(__assign({}, miniStageStyle), axesStyles), className: axesClassName })] }));
+    return (_jsxs("div", { style: __assign(__assign({}, containerStyles), { position: "relative" }), className: containerClassName, children: [_jsx("div", { ref: ref, style: __assign(__assign({}, stageStyle), stageStyles), className: stageClassName }), _jsx("div", { ref: miniStageRef, style: __assign(__assign({}, miniStageStyle), axesStyles), className: axesClassName })] }));
 }

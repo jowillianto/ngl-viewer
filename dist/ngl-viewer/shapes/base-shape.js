@@ -1,5 +1,5 @@
 import React from "react";
-import StageContext from "../stage-context";
+import { useStage } from "../stage-context";
 import * as NGL from "ngl";
 function componentToPromise(component, stage) {
     if (component === null)
@@ -17,8 +17,14 @@ var DestructableValue = /** @class */ (function () {
         this.destructor = destructor;
     }
     DestructableValue.prototype.destroy = function () {
-        if (this.data !== null)
-            this.destructor(this.data);
+        if (this.data !== null) {
+            try {
+                this.destructor(this.data);
+            }
+            catch (err) {
+                console.error(err);
+            }
+        }
         this.data = null;
     };
     return DestructableValue;
@@ -27,32 +33,24 @@ export function useComponent(component, viewSettings, autoViewTimeout, manageOnl
     if (autoViewTimeout === void 0) { autoViewTimeout = 0; }
     if (manageOnly === void 0) { manageOnly = false; }
     var _a = React.useState(null), comp = _a[0], setComp = _a[1];
-    var _b = React.useContext(StageContext), versionedStage = _b.stage, updateStage = _b.updateStage;
-    var stage = React.useMemo(function () {
-        if (versionedStage === null)
-            return null;
-        else
-            return versionedStage.stage;
-    }, [versionedStage]);
+    var stage = useStage();
     var addComponent = React.useCallback(function (v, stage) {
         if (v === null)
             return v;
         if (v instanceof NGL.Component) {
             if (manageOnly)
                 return v;
-            stage === null || stage === void 0 ? void 0 : stage.addComponent(v);
+            stage.addComponent(v);
             return v;
         }
         else {
-            var c = stage === null || stage === void 0 ? void 0 : stage.addComponentFromObject(v);
+            var c = stage.addComponentFromObject(v);
             if (!c)
                 return null;
             return c;
         }
     }, [manageOnly]);
     React.useEffect(function () {
-        if (comp === null)
-            return;
         return function () {
             comp === null || comp === void 0 ? void 0 : comp.destroy();
         };
@@ -67,25 +65,18 @@ export function useComponent(component, viewSettings, autoViewTimeout, manageOnl
             var component = addComponent(comp, stage);
             if (component === null) {
                 setComp(null);
+                return;
             }
             else {
                 setComp(new DestructableValue(component, function (v) { return stage.removeComponent(v); }));
-                viewSettings.forEach(function (viewSetting) {
-                    return component.addRepresentation(viewSetting.type, viewSetting.params);
-                });
-                if (autoViewTimeout >= 0)
-                    stage.autoView(autoViewTimeout);
-                updateStage();
             }
+            viewSettings.forEach(function (viewSetting) {
+                return component.addRepresentation(viewSetting.type, viewSetting.params);
+            });
+            if (autoViewTimeout >= 0)
+                stage.autoView(autoViewTimeout);
         })
             .catch(function (err) { return console.error(err); });
-    }, [
-        stage,
-        component,
-        viewSettings,
-        autoViewTimeout,
-        addComponent,
-        updateStage,
-    ]);
+    }, [stage, component, autoViewTimeout, addComponent, viewSettings]);
     return comp;
 }
