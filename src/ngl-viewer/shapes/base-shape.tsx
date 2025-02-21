@@ -59,11 +59,12 @@ export function useComponent<T extends NGL_AddableComponentT>(
   autoViewTimeout: number = 0,
   manageOnly: boolean = false
 ) {
-  const [comp, setComp] =
+  const [comp, __setComp] =
     React.useState<DestructableValue<NGL.Component> | null>(null);
   const stage = useStage();
   const addComponent = React.useCallback(
     (v: T | null, stage: NGL.Stage) => {
+      console.log("ADD");
       if (v === null) return v;
       if (v instanceof NGL.Component) {
         if (manageOnly) return v;
@@ -77,11 +78,14 @@ export function useComponent<T extends NGL_AddableComponentT>(
     },
     [manageOnly]
   );
-  React.useEffect(() => {
-    return () => {
-      comp?.destroy();
-    };
-  }, [comp]);
+  const setComp = React.useCallback<
+    (v: DestructableValue<NGL.Component> | null) => void
+  >((v) => {
+    __setComp((prevComponent) => {
+      prevComponent?.destroy();
+      return v;
+    });
+  }, []);
   React.useEffect(() => {
     if (stage === null) {
       setComp(null);
@@ -104,6 +108,7 @@ export function useComponent<T extends NGL_AddableComponentT>(
         if (autoViewTimeout >= 0) stage.autoView(autoViewTimeout);
       })
       .catch((err) => console.error(err));
-  }, [stage, component, autoViewTimeout, addComponent, viewSettings]);
+    return () => setComp(null);
+  }, [stage, component, autoViewTimeout, addComponent, viewSettings, setComp]);
   return comp;
 }
