@@ -9,14 +9,14 @@ const App = () => {
   return (
     <React.StrictMode>
       <button onClick={() => setToggle(!toggle)}>Toggle</button>
-      <div style={{ backgroundColor: "grey", height: "100vh" }}>
+      <div style={{ backgroundColor: "grey", height: `${window.innerHeight - 32}px` }}>
         <ProteinViewer>
           <ViewerStage
             containerStyles={{
               width: "100%",
               height: "100%",
             }}
-            viewSettings={{ backgroundColor: "white" }}
+            viewSettings={{ backgroundColor: toggle ? "black" : "white" }}
           />
           {/* <ViewerPanel /> */}
           <FileComponent

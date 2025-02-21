@@ -1,24 +1,13 @@
 import React, { useState } from "react";
-import StageContext, { VersionedStage } from "../stage-context";
+import StageContext from "../stage-context";
+import * as NGL from "ngl";
 
 const ProteinViewer = ({ children }: React.PropsWithChildren) => {
-  const [stage, setStage] = useState<VersionedStage | null>(null);
-  const updateStage = React.useCallback(() => {
-    setStage((prevStage) => {
-      if (prevStage === null) return null;
-      return prevStage.update();
-    });
-  }, []);
-  const stageContext = React.useMemo<
-    React.ContextType<typeof StageContext>
-  >(() => {
-    return { stage, setStage, updateStage };
-  }, [stage, setStage, updateStage]);
-  return (
-    <StageContext.Provider value={stageContext}>
-      {children}
-    </StageContext.Provider>
-  );
+  const [stage, setStage] = useState<NGL.Stage | null>(null);
+  const ctx = React.useMemo<React.ContextType<typeof StageContext>>(() => {
+    return { stage, setStage };
+  }, [stage, setStage]);
+  return <StageContext.Provider value={ctx}>{children}</StageContext.Provider>;
 };
 
 export default ProteinViewer;

@@ -1,6 +1,6 @@
 import React from "react";
 import { ShapeParameters } from "ngl/dist/declarations/geometry/shape";
-import StageContext from "../stage-context";
+import { useStage } from "../stage-context";
 import * as NGL from "ngl";
 import { ViewSettings } from "../interfaces/interfaces";
 import Surface from "ngl/dist/declarations/surface/surface";
@@ -42,7 +42,13 @@ class DestructableValue<T> {
     this.destructor = destructor;
   }
   destroy() {
-    if (this.data !== null) this.destructor(this.data);
+    if (this.data !== null) {
+      try {
+        this.destructor(this.data);
+      } catch (err) {
+        console.error(err);
+      }
+    }
     this.data = null;
   }
 }
@@ -55,20 +61,16 @@ export function useComponent<T extends NGL_AddableComponentT>(
 ) {
   const [comp, setComp] =
     React.useState<DestructableValue<NGL.Component> | null>(null);
-  const { stage: versionedStage, updateStage } = React.useContext(StageContext);
-  const stage = React.useMemo(() => {
-    if (versionedStage === null) return null;
-    else return versionedStage.stage;
-  }, [versionedStage]);
+  const stage = useStage();
   const addComponent = React.useCallback(
     (v: T | null, stage: NGL.Stage) => {
       if (v === null) return v;
       if (v instanceof NGL.Component) {
         if (manageOnly) return v;
-        stage?.addComponent(v);
+        stage.addComponent(v);
         return v;
       } else {
-        const c = stage?.addComponentFromObject(v);
+        const c = stage.addComponentFromObject(v);
         if (!c) return null;
         return c;
       }
@@ -76,7 +78,6 @@ export function useComponent<T extends NGL_AddableComponentT>(
     [manageOnly]
   );
   React.useEffect(() => {
-    if (comp === null) return;
     return () => {
       comp?.destroy();
     };
@@ -91,25 +92,18 @@ export function useComponent<T extends NGL_AddableComponentT>(
         const component = addComponent(comp, stage);
         if (component === null) {
           setComp(null);
+          return;
         } else {
           setComp(
             new DestructableValue(component, (v) => stage.removeComponent(v))
           );
-          viewSettings.forEach((viewSetting) =>
-            component.addRepresentation(viewSetting.type, viewSetting.params)
-          );
-          if (autoViewTimeout >= 0) stage.autoView(autoViewTimeout);
-          updateStage();
         }
+        viewSettings.forEach((viewSetting) =>
+          component.addRepresentation(viewSetting.type, viewSetting.params)
+        );
+        if (autoViewTimeout >= 0) stage.autoView(autoViewTimeout);
       })
       .catch((err) => console.error(err));
-  }, [
-    stage,
-    component,
-    viewSettings,
-    autoViewTimeout,
-    addComponent,
-    updateStage,
-  ]);
+  }, [stage, component, autoViewTimeout, addComponent, viewSettings]);
   return comp;
 }
