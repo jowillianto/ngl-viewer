@@ -32,9 +32,10 @@ var DestructableValue = /** @class */ (function () {
 export function useComponent(component, viewSettings, autoViewTimeout, manageOnly) {
     if (autoViewTimeout === void 0) { autoViewTimeout = 0; }
     if (manageOnly === void 0) { manageOnly = false; }
-    var _a = React.useState(null), comp = _a[0], setComp = _a[1];
+    var _a = React.useState(null), comp = _a[0], __setComp = _a[1];
     var stage = useStage();
     var addComponent = React.useCallback(function (v, stage) {
+        console.log("ADD");
         if (v === null)
             return v;
         if (v instanceof NGL.Component) {
@@ -50,11 +51,12 @@ export function useComponent(component, viewSettings, autoViewTimeout, manageOnl
             return c;
         }
     }, [manageOnly]);
-    React.useEffect(function () {
-        return function () {
-            comp === null || comp === void 0 ? void 0 : comp.destroy();
-        };
-    }, [comp]);
+    var setComp = React.useCallback(function (v) {
+        __setComp(function (prevComponent) {
+            prevComponent === null || prevComponent === void 0 ? void 0 : prevComponent.destroy();
+            return v;
+        });
+    }, []);
     React.useEffect(function () {
         if (stage === null) {
             setComp(null);
@@ -77,6 +79,7 @@ export function useComponent(component, viewSettings, autoViewTimeout, manageOnl
                 stage.autoView(autoViewTimeout);
         })
             .catch(function (err) { return console.error(err); });
-    }, [stage, component, autoViewTimeout, addComponent, viewSettings]);
+        return function () { return setComp(null); };
+    }, [stage, component, autoViewTimeout, addComponent, viewSettings, setComp]);
     return comp;
 }
